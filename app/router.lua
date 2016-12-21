@@ -21,7 +21,7 @@ local function load_plugin_api(plugin, router, store)
     local ok, plugin_api = pcall(require, plugin_api_path)
 
     if not ok or not plugin_api or type(plugin_api) ~= "table" then
-        n_log(n_err, "[plugin's api load error], plugin_api_path:", plugin_api_path)
+        print("[app.router => plugin's api load error], plugin_api_path:", plugin_api_path)
         return
     end
 

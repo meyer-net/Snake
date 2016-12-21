@@ -19,7 +19,7 @@ local lor = require("lor.index")
 ---> 加载插件式API
 local function load_plugin_api(plugin, api_router, config, store)
     local plugin_api_path = "app.plugins." .. plugin .. ".api"
-    n_log(n_err, "[plugin's api load], plugin_api_path:", plugin_api_path)
+    print("[app.api.router => plugin's api load], plugin_api_path:", plugin_api_path)
 
     local ok, plugin_api, e
     ok = xpcall(function() 
@@ -29,7 +29,7 @@ local function load_plugin_api(plugin, api_router, config, store)
     end)
 
     if not ok or not plugin_api or type(plugin_api) ~= "table" then
-        n_log(n_err, "[plugin's api load error], plugin_api_path:", plugin_api_path, " error:", e)
+        n_log(n_err, "[app.api.router => plugin's api load error], plugin_api_path:", plugin_api_path, " error:", e)
         return
     end
 
