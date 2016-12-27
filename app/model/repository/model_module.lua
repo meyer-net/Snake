@@ -1,15 +1,15 @@
 -- 
 --[[
----> 用于落地存储来自于客户端传递的流量数据
+---> 用于落地存储来自于（）的数据
 --------------------------------------------------------------------------
 ---> 参考文献如下
 -----> /
 --------------------------------------------------------------------------
 ---> Examples：
------> local r_flow_log = require("app.model.repository.flow_log")
------> local tbl_flow_log = r_flow_log(store)
+-----> local r_model_module = require("app.model.repository.model_module")
+-----> local tbl_model_module = r_model_module(store)
 
------> local success = tbl_flow_log:append({
+-----> local success = tbl_model_module:append({
 -----> 		shunt = "b.test-x => utmcmd.test", 
 -----> 		source = "b.test-x", 
 -----> 		medium = "utmcmd.test", 
@@ -52,7 +52,7 @@ local _obj = object:extend()
 --]]
 function _obj:new(config, store, name)
 	-- 指定名称
-    self._name = (name or "flow_log") .. "-repository-model"
+    self._name = (name or "model_module") .. "-repository-model"
     
     -- 用于操作缓存与DB的对象
     self.store = store
@@ -63,15 +63,15 @@ end
 --[[
 ---> 追加一条记录
 --]]
-function _obj:append(params)
-	local command_text = "INSERT INTO `flow_log` (`gid`, `shunt`, `source`, `medium`, `data`, `buffer_time`, `client_host`, `create_date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-	local command_params = { params.gid, params.shunt, params.source, params.medium, params.data, params.buffer_time, params.client_host, params.create_date }
+-- function _obj:append(params)
+-- 	local command_text = "INSERT INTO `model_module` (`gid`, `create_date`) VALUES (?, ?)"
+-- 	local command_params = { params.gid }
 
-	return self.store.db:insert({
-                sql = command_text,
-                params = command_params
-            })
-end
+-- 	return self.store.db:insert({
+--                 sql = command_text,
+--                 params = command_params
+--             })
+-- end
 
 -----------------------------------------------------------------------------------------------------------------
 

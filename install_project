@@ -23,7 +23,7 @@ function mkstart_lorsys()
 	sys_dir=$(pwd)
 	
     #添加开机启动
-	echo_startup_config $supervisorConfigRoot "buffer-sys" "$sys_dir" "sh start.sh master"
+	echo_startup_config $supervisorConfigRoot "lor-mysys" "$sys_dir" "sh start.sh master"
 
 	#配置文件修改
 	echo "LorSys: Please Ender Old OR Path To Refresh"

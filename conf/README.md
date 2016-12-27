@@ -1,3 +1,2 @@
-
-### nginx configuration directory
+### or-sys configuration directory
 
