@@ -14,6 +14,12 @@ local lor = require("lor.index")
 
 ---> 业务路由管理
 local router_test = require("app.routes.test")
+local router_gateway = require("app.routes.gateway")
+local router_buffer = require("app.routes.buffer")
+local router_log = require("app.routes.log")
+
+-----> 插件库引用
+local middleware_er4xx = require("app.middleware.Er4xx")
 
 ---> 加载插件式API
 local function load_plugin_api(plugin, router, store)
@@ -40,8 +46,22 @@ end
 
 return function(app, config, store)
 
+    ---> 控制路由是否采用严格模式匹配，即是否严格区分’/test’和’/test/‘
+    ---> 相关参考：http://lor.sumory.com/guide/strict_route.html
+    app:conf("strict_route", false)
+
     ---> group router, 对以`/test`开始的请求做过滤处理
     app:use("/test", router_test(config, store))
+
+    ---> 网关操作
+    app:use("/gateway", router_gateway(config, store))
+
+    ---> 请求缓冲
+    local ins_router_buffer, buffer_all_request = router_buffer(config, store)
+    app:use("/buffer", ins_router_buffer)
+
+    ---> 数字操作
+    app:use("/log", router_log(config, store))
 
     ---> 除使用group router外，也可单独进行路由处理，支持get/post/put/delete...
 
@@ -52,6 +72,7 @@ return function(app, config, store)
             desc = req.query.desc or config.sys.desc,
             author = req.query.author or config.sys.author
         }
+        
         res:render("index", data)
     end)
 
@@ -59,6 +80,10 @@ return function(app, config, store)
     app:get("/help", function(req, res, next)
         res:send("hi! welcome to use help.")
     end)
+    
+    ---> all req route to buffer node
+    ---> 特殊情况，将404引入至此，所有404均视为buffer
+    app:erroruse(middleware_er4xx(buffer_all_request))
 
     ---> 加载其他"可用"插件API
     local router = lor:Router()

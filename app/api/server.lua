@@ -117,7 +117,7 @@ function _M:build_app()
     ---> 公共部分的插件引用
     --]]
     ---> 404 error
-    app:use(middleware_er4xx())
+    app:erroruse(middleware_er4xx())
     
     ---> 错误处理插件，可根据需要定义多个
     app:erroruse(middleware_er5xx())

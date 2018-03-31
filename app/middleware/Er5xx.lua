@@ -16,11 +16,9 @@ local s_find = string.find
 
 return function()
 	return function(err, req, res, next)
-		    -- err是错误对象
 			n_log(n_err, err)
-		
 			local _error_text = "Unknow error 500，Server is busying！"
-			if s_find(req.headers["Accept"], "application/json") then
+			if s_find(req.headers["Accept"] or "", "application/json") then
 				res:status(500):json({
 					success = false,
 					msg = _error_text

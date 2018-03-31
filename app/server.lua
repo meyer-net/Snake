@@ -1,4 +1,4 @@
--- 
+--
 --[[
 ---> 主服务文件
 --]]
@@ -60,7 +60,7 @@ function _M:build_app()
 
 	---> 配置文件
 	local view_config = config.view_config
-	
+
 	-------------------------------------------------------------------------------------------------------------
 	--[[
 	---> 基本的APP配置
@@ -70,22 +70,22 @@ function _M:build_app()
 	app:conf("view engine", view_config.engine)  -- 模板引擎，当前lor只支持lua-resty-template，所以这个值暂时固定为"tmpl"
 	app:conf("view ext", view_config.ext)  -- 模板文件后缀，可自定义
 	app:conf("views", views_path or view_config.views)
-	
+
 	---> 插件引用：
 	app:use(function(req, res, next)
 	    -- 插件，在处理业务route之前的插件，可作编码解析、过滤等操作
 	    next()
 	end)
-	
+
 	---> 业务路由处理：
     app:use(router(app, config, store)())
-	
+
 	--[[
 	---> 公共部分的插件引用
 	--]]
 	---> 404 error
-	app:use(middleware_er4xx())
-	
+	-- app:erroruse(middleware_er4xx(app))
+
 	---> 错误处理插件，可根据需要定义多个
 	app:erroruse(middleware_er5xx())
 end
