@@ -1,6 +1,6 @@
 -- 
 --[[
----> 用于落地操作来自于（）的数据
+---> {壳子类}用于将当前插件提供为对外API
 --------------------------------------------------------------------------
 ---> 参考文献如下
 -----> /
@@ -8,6 +8,7 @@
 --[[
 ---> 统一函数指针
 --]]
+--------------------------------------------------------------------------
 local require = require
 local s_format = string.format
 --------------------------------------------------------------------------
@@ -17,7 +18,7 @@ local s_format = string.format
 --]]
 --------------------------------------------------------------------------
 -----> 基础库引用
-local o_repo = require("app.store.orm.base_repo")
+local base_api = require("app.plugins.base_api")
 
 -----> 工具引用
 --local u_object = require("app.utils.object")
@@ -32,33 +33,19 @@ local o_repo = require("app.store.orm.base_repo")
 --[[
 ---> 当前对象
 --]]
-local model = o_repo:extend()
+local api = base_api:extend()
 
 -----------------------------------------------------------------------------------------------------------------
 
 --[[
 ---> 实例构造器
-------> 子类构造器中，必须实现 model.super.new(self, config, store)
+------> 子类构造器中，必须实现 api.super.new(self, name)
 --]]
-function model:new(config, store)
-	-- 指定名称
-	self._source = "[sys_users]"
-	self._store_driver = store.db["user"] or store.db[""]
-
+function api:new(name)
 	-- 传导至父类填充基类操作对象
-    model.super.new(self, self._source, self._store_driver)
+    api.super.new(self, name)
 end
 
 -----------------------------------------------------------------------------------------------------------------
 
---[[
----> 特殊自定义需求ok，records
---]]
--- function model:find_(attr)
--- 	local cond, params = self:resolve_attr(attr)
--- 	return self._adapter.current_model.find_all(cond, table.unpack(params))
--- end
-
------------------------------------------------------------------------------------------------------------------
-
-return model
+return api

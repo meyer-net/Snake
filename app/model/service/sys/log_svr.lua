@@ -69,7 +69,7 @@ function model:new(conf, store, name)
     -- self.locker = u_locker(self._store.cache.nginx["sys_locker"], "lock-tag-name")
 
 	-- 位于在缓存中维护的KEY值
-    self.cache_prefix = s_format("%s.app<%s> => ", conf.project_name, self._name)
+    self._cache_prefix = s_format("%s.app<%s> => ", conf.project_name, self._name)
     
     -- 传导值进入父类
     model.super.new(self, conf, store, name)
@@ -131,7 +131,7 @@ end
 --]]
 function model:get_log(id)
     -- 查询缓存或数据库中是否包含指定信息
-    local cache_key = s_format("%s%s -> %s", self.cache_prefix, self._source, id)
+    local cache_key = s_format("%s%s -> %s", self._cache_prefix, self._source, id)
     local timeout = 0
     
     return self._store.cache.using:get_or_load(cache_key, function() 
@@ -146,7 +146,7 @@ end
 --]]
 function model:query_logs()
 	-- 查询缓存或数据库中是否包含指定信息
-    local cache_key = s_format("%s%s -> %s", self.cache_prefix, self._source, "*")
+    local cache_key = s_format("%s%s -> %s", self._cache_prefix, self._source, "*")
   	local timeout = 0
 	
   	return self._store.cache.using:get_or_load(cache_key, function() 

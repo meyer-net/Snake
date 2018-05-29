@@ -10,6 +10,7 @@ echo "------------------------------------------------"
 echo "Initial project server config of '${red}$PROJECT_NAME${reset}'"
 echo "------------------------------------------------"
 
+RESOLVERS=""
 PROCESSOR_COUNT=`cat /proc/cpuinfo | grep "processor"| wc -l`
 sed -i "s@\$processor_count@$PROCESSOR_COUNT@g" conf/nginx-master.conf
 

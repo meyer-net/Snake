@@ -4,7 +4,7 @@ Navicat MySQL Data Transfer
 Source Server         : LnxSvr.Dev176
 Source Server Version : 50629
 Source Host           : 192.168.1.176:8066
-Source Database       : db_sys_logs
+Source Database       : $project_name_logs
 
 Target Server Type    : MYSQL
 Target Server Version : 50629
@@ -105,7 +105,7 @@ INSERT INTO MYCAT_SEQUENCE VALUES ('GLOBAL', 0, 100);
 
   <function name="sharding-by-month" class="io.mycat.route.function.PartitionByMonth">
     <property name="dateFormat">yyyy-MM-dd</property> 
-    <property name="sBeginDate">2017-01-01</property> <!--开始日期-->
+    <property name="sBeginDate">2018-01-01</property> <!--开始日期-->
     <property name="sPartionDay">1</property>  <!--每分片天数-->
   </function>
 </mycat:rule>
@@ -113,21 +113,21 @@ INSERT INTO MYCAT_SEQUENCE VALUES ('GLOBAL', 0, 100);
 2：修改 conf/server.xml，添加如下用户及访问结构设定
   <user name="usr_sys">
     <property name="password">41878978</property>
-    <property name="schemas">db_sys_logs</property>
+    <property name="schemas">$project_name_logs</property>
   </user>
 
 3：修改 conf/schema.xml，替换为如下内容
   <mycat:schema xmlns:mycat="http://io.mycat/">
-    <schema name="gateway" checkSQLschema="false" sqlMaxLimit="100" dataNode="dn_gateway" />
+    <schema name="user" checkSQLschema="false" sqlMaxLimit="100" dataNode="dn_user" />
     <!-- sqlMaxLimit设置limit防止错误sql查询大量数据 -->
-    <schema name="db_sys_logs" checkSQLschema="false" sqlMaxLimit="100" >
+    <schema name="$project_name_logs" checkSQLschema="false" sqlMaxLimit="100" >
       <table name="sys_logs" primaryKey="create_date" dataNode="dn_sys_logs_$1-12" rule="sharding-by-month" />
     </schema>
   
-    <dataNode name="dn_gateway" dataHost="localhost1" database="gateway" />
+    <dataNode name="dn_user" dataHost="localhost1" database="$project_name_user" />
   
     <!--按照月份进行拆分，一次做好二年的数据库。同时数据库中，可以根据实际情况在做mysql分区。-->
-    <dataNode name="dn_sys_logs_$1-12" dataHost="localhost1" database="db_sys_logs_$1-12" />
+    <dataNode name="dn_sys_logs_$1-12" dataHost="localhost1" database="$project_name_logs_$1-12" />
     <!-- 可以一直按月分区下去。 -->
   
     <dataHost name="localhost1" maxCon="1000" minCon="10" balance="1"
@@ -146,7 +146,7 @@ INSERT INTO MYCAT_SEQUENCE VALUES ('GLOBAL', 0, 100);
   CREATE USER 'sys_usr'@'127.0.0.1' IDENTIFIED BY 'dbsys%127*0@usr.0/1';
   GRANT SELECT,INSERT,UPDATE,DELETE ON [数据库名称].* TO 'sys_usr'@'127.0.0.1';
 
-  GRANT SELECT,INSERT,UPDATE,DELETE ON db_sys_logs_* TO 'sys_usr'@'127.0.0.1';
+  GRANT SELECT,INSERT,UPDATE,DELETE ON $project_name_logs_* TO 'sys_usr'@'127.0.0.1';
 
   use mysql;
   DELETE FROM user WHERE HOST <> '127.0.0.1';

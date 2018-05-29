@@ -57,10 +57,10 @@ function model:new(config, store, name)
     self._source = "user"
     
     -- 用于操作缓存与DB的对象
-    self.store = store
+    self._store = store
 
     -- 当前临时操作数据的仓储
-    self.model = {
+    self._model = {
         log = s_log(config, store),
     	current_repo = r_user(config, store),
     	ref_repo = {
@@ -69,7 +69,7 @@ function model:new(config, store, name)
 	}
 
     -- 锁对象
-    -- self.locker = u_locker(self.store.cache.nginx["sys_locker"], "lock-tag-name")
+    -- self.locker = u_locker(self._store.cache.nginx["sys_locker"], "lock-tag-name")
 
 	-- 位于在缓存中维护的KEY值
     self.cache_prefix = s_format("%s.app<%s> => ", config.project_name, self._name)
@@ -91,7 +91,7 @@ function model:regist_user(params)
             enable = params.enable
         }
 
-    return self.model.current_repo:save(mdl, false)
+    return self._model.current_repo:save(mdl, false)
 end
 
 --[[
@@ -102,7 +102,7 @@ function model:remove_user(params)
             id = params.id
         }
 
-    return self.model.current_repo:delete(attr)
+    return self._model.current_repo:delete(attr)
 end
 
 --[[
@@ -120,7 +120,7 @@ function model:refresh_user(params)
             id = params.id
         }
 
-    return self.model.current_repo:update(mdl, attr)
+    return self._model.current_repo:update(mdl, attr)
 end
 
 --[[
@@ -131,8 +131,8 @@ function model:get_user(id)
     local cache_key = s_format("%s%s -> %s", self.cache_prefix, self._source, id)
     local timeout = 0
     
-    return self.store.cache.using:get_or_load(cache_key, function() 
-        return self.model.current_repo:find_one({
+    return self._store.cache.using:get_or_load(cache_key, function() 
+        return self._model.current_repo:find_one({
                 id = id
             })
     end, timeout)
@@ -146,8 +146,8 @@ function model:query_users()
     local cache_key = s_format("%s%s -> %s", self.cache_prefix, self._source, "*")
   	local timeout = 0
 	
-  	return self.store.cache.using:get_or_load(cache_key, function() 
-        return self.model.current_repo:find_all({
+  	return self._store.cache.using:get_or_load(cache_key, function() 
+        return self._model.current_repo:find_all({
 
             })
   	end, timeout)

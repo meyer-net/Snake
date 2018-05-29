@@ -123,10 +123,8 @@ return function ( config, store )
         })
 	end)
 
-	router:get("/", function (req, res, next)
-		local lib = require("resty.http")
-		
-		local res_c,err_c = ngx.location.capture('/buffer_notify', { 
+	router:get("/", function (req, res, next)		
+		local res_c,err_c = ngx.location.capture('/robots.txt', { 
 				method = ngx.HTTP_GET, 
 				body = 'hello, world' 
 			})
@@ -134,8 +132,6 @@ return function ( config, store )
 		if res_c.status == ngx.HTTP_OK then
 			res:send("OK")
  		end
-
-		res:send(res_c.status)
 	end)
 
 	-- AES 加密测试
@@ -166,13 +162,13 @@ return function ( config, store )
 		--   	host = '127.0.0.1',
 		--   	user = 'root',
 		--   	password = '123456',
-		--   	database = 'gateway',
+		--   	database = 'user',
 		--   	charset = 'utf8mb4',
 		--   	expires = 100,  -- cache expires time
 		--   	debug = true -- log sql with ngx.log 
 		-- }):open()
 
-		--local sql = orm.create_query():from('[dashboard_user]'):where('[id] = ?d', 1):one()
+		--local sql = orm.create_query():from('[sys_users]'):where('[id] = ?d', 1):one()
 		-- NOTICE: 
 		--		the table must have an auto increment column as its primary key
 		-- 		define_model accept table name as paramater and cache table fields in lrucache.
@@ -199,7 +195,7 @@ return function ( config, store )
 		-- 		model:set_dirty(attribute) make attribute dirty ( will be updated to database )
 		-- 		model:is_new() return if this instance is new or load from database
 
-		local m_usr = orm.define_model('[dashboard_user]')
+		local m_usr = orm.define_model('[sys_users]')
 
 		-- create new 
 		local attrs = { 
@@ -275,9 +271,6 @@ return function ( config, store )
 
 	-- CACHE测试 http://192.168.1.176/test/stock/000001
 	router:get("/stock/import/:code", function(req, res, next)
-		local http = require("resty.http").new()
-		http:set_timeout(9999)
-
 		local code = s_lower(req.params.code)
 		local line_index = 0
 		local message = ""
@@ -345,7 +338,7 @@ return function ( config, store )
 	-- CACHE测试 http://192.168.1.176/test/stock/000001
 	router:get("/stock/:code", function(req, res, next)
 		local http = require("resty.http").new()
-		 http:set_timeout(5000)
+		http:set_timeout(5000)
 		local u_string = require("app.utils.string")
 		local u_each = require("app.utils.each")
 		local u_table = require("app.utils.table")

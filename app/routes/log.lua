@@ -49,7 +49,7 @@ return function ( config, store )
 	local s_log = require("app.model.service.sys.log_svr")
 	local tmp_svr = s_log(config, store)
 
-	-- http://192.168.1.176/gateway/save
+	-- http://192.168.1.176/log/save
 	router:get("/save", function(req, res, next)
 		local ok, id = tmp_svr:write_log(n_debug, "test write log at '%s'", ngx.localtime())
 
@@ -61,7 +61,7 @@ return function ( config, store )
         })
 	end)
 
-	-- http://192.168.1.176/gateway/remove/3
+	-- http://192.168.1.176/log/remove/3
 	router:get("/remove/:id", function(req, res, next)
 		local ok, effects = tmp_svr:remove_log({
 				id = req.params.id
@@ -73,7 +73,7 @@ return function ( config, store )
         })
 	end)
 
-	-- http://192.168.1.176/gateway/refresh/2
+	-- http://192.168.1.176/log/refresh/2
 	router:get("/refresh/:id", function(req, res, next)
         local id = req.params.id
         local content = s_format("| test refresh log at '%s'", ngx.localtime())
@@ -86,7 +86,7 @@ return function ( config, store )
         })
 	end)
 
-	-- http://192.168.1.176/gateway/get/2
+	-- http://192.168.1.176/log/get/2
 	router:get("/get/:id", function(req, res, next)
 		local data = tmp_svr:get_log(req.params.id)
 
@@ -96,7 +96,7 @@ return function ( config, store )
         })
 	end)
 
-	-- http://192.168.1.176/gateway/query
+	-- http://192.168.1.176/log/query
 	router:get("/query", function(req, res, next)
 		local data = tmp_svr:query_logs(req.params)
 

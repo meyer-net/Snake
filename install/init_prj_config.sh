@@ -6,8 +6,10 @@
 #------------------------------------------------
 
 # Default config:
-UI_PORT=5555
-API_PORT=6666
+LOR_PORT=5555
+BIZ_PORT=$LOR_PORT
+WAF_PORT=6666
+API_PORT=7777
 
 DB_HOST='127.0.0.1'
 DB_PORT=3306
@@ -53,11 +55,17 @@ function set_project_config()
 	mv conf/vhosts/sys/$TMP_NAME.conf conf/vhosts/sys/$PROJECT_NAME.conf
 	RAM_REDIS_HPWD=$TMP_NAME
 
-	input_if_empty "UI_PORT" "Init: Please ender the ${red}ui-port${reset} of Project '${red}$PROJECT_NAME${reset}'"
-	sed -i "s@\$ui_port@$UI_PORT@g" conf/vhosts/sys/$PROJECT_NAME.conf
+	input_if_empty "LOR_PORT" "Init: Please ender the ${red}lor-port${reset} of Project '${red}$PROJECT_NAME${reset}'"
+	sed -i "s@\$lor_port@$LOR_PORT@g" conf/vhosts/sys/$PROJECT_NAME.conf
+
+	input_if_empty "WAF_PORT" "Init: Please ender the ${red}waf-port${reset} of Project '${red}$PROJECT_NAME${reset}'"
+	sed -i "s@\$waf_port@$WAF_PORT@g" conf/vhosts/sys/$PROJECT_NAME.conf
 
 	input_if_empty "API_PORT" "Init: Please ender the ${red}api-port${reset} of Project '${red}$PROJECT_NAME${reset}'"
 	sed -i "s@\$api_port@$API_PORT@g" conf/vhosts/sys/$PROJECT_NAME.conf
+
+	input_if_empty "BIZ_PORT" "Init: Please ender the ${red}biz-port${reset} of Project '${red}$PROJECT_NAME${reset}'"
+	sed -i "s@\$biz_port@$BIZ_PORT@g" conf/vhosts/sys/$PROJECT_NAME.conf
 	return $?
 }
 
@@ -72,9 +80,15 @@ function set_mysql_config() {
 	sed -i "s@\$db_uname@$DB_UNAME@g" $WORK_PATH/conf/vhosts/sys.conf
 	sed -i "s@\$db_upwd@$DB_UPWD@g" $WORK_PATH/conf/vhosts/sys.conf	
 
+	sed -i "s@\$project_name@$PROJECT_NAME@g" $WORK_PATH/install/sys-db-v0.0.1.sql
+	sed -i "s@\$project_name@$PROJECT_NAME@g" $WORK_PATH/install/sys-mysql-log-v0.0.1.sql
+	sed -i "s@\$project_name@$PROJECT_NAME@g" $WORK_PATH/install/sys-mysql-plugin-v0.0.1.sql
+	sed -i "s@\$project_name@$PROJECT_NAME@g" $WORK_PATH/install/sys-mysql-user-v0.0.1.sql
 	echo "Data init of '${red}$PROJECT_NAME${reset}' will execute, please wait"
 	mysql -u$DB_UNAME -p$DB_UPWD -e"
-	source $WORK_PATH/install/sys-db-create-v0.0.1.sql
+	source $WORK_PATH/install/sys-mysql-log-v0.0.1.sql
+	source $WORK_PATH/install/sys-mysql-plugin-v0.0.1.sql
+	source $WORK_PATH/install/sys-mysql-user-v0.0.1.sql
 	exit"
 	echo "Data init script of '${red}$PROJECT_NAME${reset}' was inited"
 

@@ -1,8 +1,8 @@
 USE mysql;
 /* ******************************************************************************* */
-DROP DATABASE IF EXISTS db_sys_logs_1;
-CREATE DATABASE db_sys_logs_1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-use db_sys_logs_1;
+DROP DATABASE IF EXISTS $project_name_log_1;
+CREATE DATABASE $project_name_log_1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+use $project_name_log_1;
 /* 通信交互信息表 */
 CREATE TABLE sys_logs
 (
@@ -29,11 +29,11 @@ BEGIN
   SET I=2;
   WHILE I<=dbn 
   DO
-    SET @creator_sql=CONCAT("CREATE DATABASE IF NOT EXISTS db_sys_logs_", I, " DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;");
+    SET @creator_sql=CONCAT("CREATE DATABASE IF NOT EXISTS $project_name_log_", I, " DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;");
     PREPARE stmt FROM @creator_sql;
     EXECUTE stmt;
 
-    SET @creator_sql=CONCAT("CREATE TABLE IF NOT EXISTS db_sys_logs_", I, ".sys_logs LIKE db_sys_logs_1.sys_logs;");
+    SET @creator_sql=CONCAT("CREATE TABLE IF NOT EXISTS $project_name_log_", I, ".sys_logs LIKE $project_name_log_1.sys_logs;");
     PREPARE stmt FROM @creator_sql;
     EXECUTE stmt;
 

@@ -32,6 +32,7 @@ local l_object = require("app.lib.classic")
 
 -----> 工具引用
 local u_object = require("app.utils.object")
+local u_lor = require("app.utils.lor")
 local u_table = require("app.utils.table")
 local u_each = require("app.utils.each")
 local u_string = require("app.utils.string")
@@ -51,9 +52,7 @@ return function ( config, store )
 	local router = lor:Router() -- 生成一个router对象
 
 	local done_all_request = function(req, res, next)
-		ngx.var.args = u_object.set_if_empty(ngx.var.args, function()
-			return c_json.encode(req.body)
-		end)
+		ngx.var.args = u_lor.get_args(req)
 		
 		local tmp_svr = s_buffer(config, store)
 		local ok, err, offset = tmp_svr:write_request("test")

@@ -49,7 +49,7 @@ return function ( config, store )
 	local s_user = require("app.model.service.user_svr")
 	local tmp_svr = s_user(config, store)
 
-	-- http://192.168.1.176/gateway/save
+	-- http://192.168.1.176/user/save
 	router:get("/save", function(req, res, next)
 		local ok, id = tmp_svr:regist_user({
         	    username = "newer_"..require("app.utils.math").random(),
@@ -66,7 +66,7 @@ return function ( config, store )
         })
 	end)
 
-	-- http://192.168.1.176/gateway/remove/3
+	-- http://192.168.1.176/user/remove/3
 	router:get("/remove/:id", function(req, res, next)
 		local ok, effects = tmp_svr:remove_user({
 				id = req.params.id
@@ -78,7 +78,7 @@ return function ( config, store )
         })
 	end)
 
-	-- http://192.168.1.176/gateway/refresh/2
+	-- http://192.168.1.176/user/refresh/2
 	router:get("/refresh/:id", function(req, res, next)
 		local ok, effects = tmp_svr:refresh_user({
 				id = req.params.id,
@@ -92,7 +92,7 @@ return function ( config, store )
         })
 	end)
 
-	-- http://192.168.1.176/gateway/get/2
+	-- http://192.168.1.176/user/get/2
 	router:get("/get/:id", function(req, res, next)
 		local data = tmp_svr:get_user(req.params.id)
 
@@ -102,7 +102,7 @@ return function ( config, store )
         })
 	end)
 
-	-- http://192.168.1.176/gateway/query
+	-- http://192.168.1.176/user/query
 	router:get("/query", function(req, res, next)
 		local data = tmp_svr:query_users(req.params)
 

@@ -73,7 +73,7 @@ function model:new(conf, store, name)
     -- self.locker = u_locker(self._store.cache.nginx["sys_locker"], "lock-tag-name")
 
 	-- 位于在缓存中维护的KEY值
-    self.cache_prefix = s_format("%s.app<%s> => ", conf.project_name, self._name)
+    self._cache_prefix = s_format("%s.app<%s> => ", conf.project_name, self._name)
 
     -- 传导值进入父类
     model.super.new(self, conf, store, name)
@@ -125,6 +125,7 @@ function model:write(key, value, partition)
     
     -- 查看长度，redis: lrange "buffer->topic{test}all_" 0 -1
     local ok, err, offset = self._store.buffer.using:lpush(key, value, partition)
+    self._model.log:write_log(n_info, value)
     if not ok then
         self._model.log:write_log(n_err, err)
     end
