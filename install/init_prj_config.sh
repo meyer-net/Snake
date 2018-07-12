@@ -86,10 +86,19 @@ function set_mysql_config() {
 	sed -i "s@\$project_name@$PROJECT_NAME@g" $WORK_PATH/install/sys-mysql-user-v0.0.1.sql
 	echo "Data init of '${red}$PROJECT_NAME${reset}' will execute, please wait"
 	mysql -u$DB_UNAME -p$DB_UPWD -e"
-	source $WORK_PATH/install/sys-mysql-log-v0.0.1.sql
+	--source $WORK_PATH/install/sys-mysql-log-v0.0.1.sql
 	source $WORK_PATH/install/sys-mysql-plugin-v0.0.1.sql
 	source $WORK_PATH/install/sys-mysql-user-v0.0.1.sql
 	exit"
+
+	sed -i "s@\$project_name@$PROJECT_NAME@g" $WORK_PATH/install/sys-clickhouse-log-v0.0.1.sh
+	input_if_empty "DB_HOST" "[$PROJECT_NAME]Clickhouse: Please ender clickhouse server ${red}address${reset}"
+	input_if_empty "DB_PORT" "[$PROJECT_NAME]Clickhouse: Please ender clickhouse server ${red}port${reset} of '${red}$DB_HOST${reset}'"
+	input_if_empty "DB_UPWD" "[$PROJECT_NAME]Clickhouse: Please ender clickhouse ${red}password${reset} of '${red}$DB_HOST${reset}(${red}$DB_UNAME${reset})'"
+	sed -i "s@\$db_host@$DB_HOST@g" $WORK_PATH/install/sys-clickhouse-log-v0.0.1.sh
+	sed -i "s@\$db_port@$DB_PORT@g" $WORK_PATH/install/sys-clickhouse-log-v0.0.1.sh
+	sed -i "s@\$db_upwd@$DB_UPWD@g" $WORK_PATH/install/sys-clickhouse-log-v0.0.1.sh	
+
 	echo "Data init script of '${red}$PROJECT_NAME${reset}' was inited"
 
 	return $?

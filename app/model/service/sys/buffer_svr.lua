@@ -15,10 +15,8 @@
 --]]
 local require = require
 
-local s_format = string.format
-local s_sub = string.sub
-
-local n_log = ngx.log
+local n_var = ngx.var
+local n_req = ngx.req
 local n_err = ngx.ERR
 local n_info = ngx.INFO
 local n_debug = ngx.DEBUG
@@ -33,12 +31,10 @@ local m_base = require("app.model.base_model")
 local l_uuid = require("app.lib.uuid")
 
 -----> 工具引用
-local u_object = require("app.utils.object")
-local u_each = require("app.utils.each")
-local u_table = require("app.utils.table")
+--
 
 -----> 外部引用
-local c_json = require("cjson.safe")
+--
 
 -----> 数据仓储引用（???buffer配合更多的是hdfs写入，DB无法承载如此级别的持久化操作，此处由于hdfs未实现，暂时禁用）
 -----> repository的base_repo将修正问base_db_repo，同时扩展base_hdfs_repo。
@@ -58,25 +54,16 @@ local model = m_base:extend()
 --]]
 function model:new(conf, store, name)
 	-- 指定名称
-    self._source = "sys.buffer"
-
-    -- 当前临时操作数据的仓储
-    self._model = {
-    	-- current_repo = r_buffer(conf, store),
-        log = s_log(conf, store),
-    	ref_repo = {
-
-    	}
-	}
-
-    -- 锁对象
-    -- self.locker = u_locker(self._store.cache.nginx["sys_locker"], "lock-tag-name")
-
-	-- 位于在缓存中维护的KEY值
-    self._cache_prefix = s_format("%s.app<%s> => ", conf.project_name, self._name)
+    self._source = "svr.sys.buffer"
 
     -- 传导值进入父类
-    model.super.new(self, conf, store, name)
+    model.super.new(self, conf, store, "svr.sys.buffer")
+
+	-- 位于在缓存中维护的KEY值
+    self._cache_prefix = self.format("%s.app<%s> => ", conf.project_name, self._name)
+
+    -- 当前临时操作数据的仓储
+    self._model.log = s_log(conf, store, self._name)
 end
 
 -----------------------------------------------------------------------------------------------------------------
@@ -85,11 +72,11 @@ end
 ---> 缓冲请求信息
 --]]
 function model:write_request(key)
-    local headers = ngx.req.get_headers()
+    local headers = n_req.get_headers()
     headers["host"] = headers["x-real-ip"]
 
     -- 移出不要的头部信息
-    u_table.clean_fields(headers, {
+    self.utils.table.clean_fields(headers, {
         "accept",
         "x-forwarded-scheme", 
         "x-forwarded-for", 
@@ -100,18 +87,23 @@ function model:write_request(key)
         "cache-control"
     })
     
+    local args = self.utils.json.decode(n_var.args) or n_var.args    
+    if not self.utils.object.check(args) then
+        return false, "no args checked", 0
+    end
+
     local data_packet = {
-        Uri = ngx.var.uri,
-        Args = ngx.var.args,
-        Method = ngx.req.get_method(),
+        Uri = n_var.uri,
+        Args = args,
+        Method = n_req.get_method(),
         ReceiveTime = ngx.now(),
         Headers = headers
     }
-
+    -- ngx.log(n_err, self.utils.json.encode(data_packet))
     -- 交给异步子线程跑（ngx.timer.at 貌似有次数限制，有待确认）
     -- local ok, err = ngx.timer.at(0, function()
     -- end)
-    return self:write(key or ngx.var.uri, data_packet, true)
+    return self:write(key or n_var.uri, data_packet, true)
 end
 
 --[[
@@ -120,7 +112,7 @@ end
 function model:write(key, value, partition)
     -- 转换json为字符串
     if type(value) ~= "string" then
-        value = c_json.encode(value)
+        value = self.utils.json.encode(value)
     end
     
     -- 查看长度，redis: lrange "buffer->topic{test}all_" 0 -1

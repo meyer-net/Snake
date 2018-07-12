@@ -9,7 +9,6 @@
 ---> 统一函数指针
 --]]
 local require = require
-local s_format = string.format
 --------------------------------------------------------------------------
 
 --[[
@@ -20,12 +19,10 @@ local s_format = string.format
 local o_repo = require("app.store.orm.base_repo")
 
 -----> 工具引用
---local u_object = require("app.utils.object")
---local u_each = require("app.utils.each")
---local u_db = require("app.utils.db")
+--
 
 -----> 外部引用
---local c_json = require("cjson.safe")
+--
 --------------------------------------------------------------------------
 
 
@@ -38,15 +35,15 @@ local model = o_repo:extend()
 
 --[[
 ---> 实例构造器
-------> 子类构造器中，必须实现 model.super.new(self, config, store)
+------> 子类构造器中，必须实现 model.super.new(self, conf, store, self._source, self._conf_db_node)
 --]]
-function model:new(config, store)
+function model:new(conf, store)
 	-- 指定名称
 	self._source = "[sys_logs]"
-	self._store_driver = store.db["log"] or store.db[""]
+	self._conf_db_node = "log"
 
 	-- 传导至父类填充基类操作对象
-    model.super.new(self, self._source, self._store_driver)
+	model.super.new(self, conf, store, self._source, self._conf_db_node)
 end
 
 -----------------------------------------------------------------------------------------------------------------

@@ -45,7 +45,7 @@ return function(app, conf, store)
     app:use("/test", router_test(conf, store))
 
     ---> 用户操作
-    -- app:use("/user", router_user(conf, store))
+    app:use("/user", router_user(conf, store))
 
     ---> 数字操作
     -- app:use("/log", router_log(conf, store))
@@ -69,9 +69,7 @@ return function(app, conf, store)
     end)
     
     ---> all req route to buffer node
-    ---> 特殊情况，将404引入至此，所有404均视为buffer，***???后期考虑将此设为插件
-
-    ---> 请求缓冲
+    ---> 请求缓冲，特殊情况，将404引入至此，所有404均视为buffer
     local ins_router_buffer, buffer_all_request = router_buffer(conf, store)
     app:use("/buffer", ins_router_buffer)
     app:erroruse(middleware_er4xx(buffer_all_request))

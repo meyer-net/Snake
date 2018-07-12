@@ -17,6 +17,7 @@ local s_match = string.match
 
 local n_today = ngx.today
 
+local n_var = ngx.var
 local n_log = ngx.log
 local n_err = ngx.ERR
 local n_info = ngx.INFO
@@ -52,10 +53,11 @@ return function ( config, store )
 	local router = lor:Router() -- 生成一个router对象
 
 	local done_all_request = function(req, res, next)
-		ngx.var.args = u_lor.get_args(req)
+		n_var.args = u_lor.get_args(req)
 		
-		local tmp_svr = s_buffer(config, store)
-		local ok, err, offset = tmp_svr:write_request("test")
+		local current_svr = s_buffer(config, store)
+		local current_group = s_sub(n_var.uri, 2)   --s_gsub(n_var.uri, "/", "#")
+		local ok, err, offset = current_svr:write_request(current_group)
 
 		res:status(202):json({
 			success = ok,
