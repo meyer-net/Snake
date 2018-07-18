@@ -105,7 +105,6 @@ end
 function handler:rewrite()
     -- 基本信息获取
     local http_method = ngx.req.get_method():lower()
-    local http_uri_args = ngx.req.get_uri_args()
 
     -- 检测函数是否合法并执行
     local check_func_exec = function(func, param, else_func)
@@ -128,12 +127,11 @@ function handler:rewrite()
 
     -- 规则匹配后的具体逻辑
     local rule_pass_func = function (rule, variables)
-        ngx.log(ngx.ERR, url)
         -- 加载远程鉴权信息，并执行上下文逻辑
-        local load_api_exec = function (node, url, flow_args, ok_exec, false_exec, ignore_event_code)
+        local load_api_exec = function (node, url, flow_args, payload, ok_exec, false_exec, ignore_event_code)
             -- 信息加载
             local args = u_table.merge(flow_args, u_args.get_from_ngx_req())
-            local api_print = self:_load_remote(node, url, args)
+            local api_print = self:_load_remote(node, "POST", "application/json;charset=utf-8", url, args, payload)
 
             -- 特定的接口，不允许明文写入日志
             local log_args = c_json.encode(args)
@@ -181,8 +179,8 @@ function handler:rewrite()
         local is_needs_check = (ignore_static or ignore_static == nil) and not u_object.check(u_request:get_static_content_type())
 
         -------- 规则验证，匹配具体的upstream(host/url)
-        local micro_uri, micro_uri_args = nil
-        local project_name = self._conf.project_name -- s_format("%s:%s", n_var.server_addr, n_var.server_port)
+        local micro_uri = nil
+        local server_name = n_var.server_name -- self._conf.project_name -- s_format("%s:%s", n_var.server_addr, n_var.server_port)
         if is_needs_check then
             ---- 展开JWT信息
             local ident_string = n_var["cookie_"..rule_handle.ident_field]
@@ -204,7 +202,7 @@ function handler:rewrite()
                     micro_host = micro_conf.server_host
                     micro_url = micro_conf.server_url
                     micro_uri = s_sub(request_uri, to + 1, #request_uri)
-                    micro_uri_args = u_json.to_url_param(http_uri_args)
+                    local micro_uri_args = u_json.to_url_param(ngx.req.get_uri_args())
                     
                     -- 判断是否为JWT信息获取源接口
                     local micro_var = s_format("{%s}", micro_name)
@@ -234,8 +232,8 @@ function handler:rewrite()
                             client_host = self._request.get_client_host(),
                             client_type = self._request.get_client_type(),
                             http_method = http_method,
-                            project_name = project_name
-                        }, function(body)
+                            server_name = server_name
+                        }, nil, function(body)
                             local payload = body.dt
                             
                             local ok, err = self._ident:check(payload)
@@ -298,9 +296,8 @@ function handler:rewrite()
 
                         if ident_is_ok then
                             load_api_exec("ident_destroy", micro_req_url, {
-                                payload = ident_payload,
-                                project_name = project_name
-                            }, function(body)
+                                server_name = server_name
+                            }, ident_payload, function(body)
                                 if not ident_payload.jti then
                                     return false, "服务器程序错误，未批对到相应的 payload.jti 不存在"
                                 end
@@ -344,11 +341,11 @@ function handler:rewrite()
                 end
 
                 -- 如果是开放接口
-                local ctrl_args = u_table.merge({ uri = request_uri, http_method = http_method, project_name = project_name }, { payload = ident_payload })
-                load_api_exec("ctrl_open", load_micro_url(rule_handle.ctrl_open), ctrl_args, nil, function(open_print)
+                local ctrl_args = { uri = request_uri, http_method = http_method, server_name = server_name }
+                load_api_exec("ctrl_open", load_micro_url(rule_handle.ctrl_open), ctrl_args, ident_payload, nil, function(open_print)
                     if ident_is_ok then
                         -- 非开放接口时，才会验证是否为鉴权接口
-                        load_api_exec("ctrl_pass", load_micro_url(rule_handle.ctrl_pass), ctrl_args, nil, function(pass_print)
+                        load_api_exec("ctrl_pass", load_micro_url(rule_handle.ctrl_pass), ctrl_args, ident_payload, nil, function(pass_print)
                             return pass_print.res, pass_print.msg, ue_error.get_err(self.utils.ex.error.EVENT_CODE.unauthorized)
                         end)
                     else
@@ -357,49 +354,26 @@ function handler:rewrite()
                     end
                 end, true)
                 
-                -- 只有在需要请求下游系统时，且JWT存在，才会追加payload参数
-                if ident_is_ok then            
-                    -- GET方式请求，需要把数据全部展开
-                    if http_method == "get" then
-                        micro_uri_args = u_json.to_url_param(u_table.merge({
-                                payload = ident_payload
-                            }, http_uri_args))
-                    else
-                        local trans_ok, trans_err = self._request:transform_post({
-                            payload = ident_payload
-                        })
-
-                        if trans_err then
-                            case_error_exit(ue_error.get_err(self.utils.ex.error.EVENT_CODE.param_format_err, err))
-                        end
-                    end
-                end
+                -- 只有在需要请求下游系统时，且JWT-OK，才会在header中追加payload参数
+                n_var.upstream_payload = self.utils.json.encode(ident_payload)
 
                 -- 重写URI，没有的情况下，不进行重写
                 ngx.req.set_uri(micro_uri)
-
-                if micro_uri_args then
-                    ngx.req.set_uri_args(micro_uri_args)
-                end
                 
                 self:rule_log_info(rule, s_format("[server-rewrite:{%s}] server_host: %s, server_url: %s, rewrite_uri: %s, rewrite_uri_args: %s", request_uri, micro_host, micro_url, micro_uri, micro_uri_args))
             end
         end
 
-        -- 反向代理设置            
-        if micro_url then
-            local extractor_type = rule.extractor.type
-            if not u_object.check(micro_host) then -- host默认取请求的host
-                n_var.upstream_host = n_var.host
-            else 
-                n_var.upstream_host = u_handle.build_upstream_host(extractor_type, micro_host, variables, self._name)
-            end
-
-            n_var.upstream_url = u_handle.build_upstream_url(extractor_type, micro_url, variables, self._name)
-            self:rule_log_debug(rule, s_format("[%s-match-micro-server:upstream] %s -> extractor_type: %s, upstream_host: %s, upstream_url: %s", self._name, rule.name, extractor_type, n_var.upstream_host, n_var.upstream_url))
-        else
-            self:rule_log_info(rule, s_format("[%s-match-micro-server:error] no upstream host or url. %s -> host: %s, uri: %s", self._name, rule.name, n_var.host, uri))
+        -- 反向代理设置           
+        local extractor_type = rule.extractor.type
+        if not u_object.check(micro_host) then -- host默认取请求的host
+            n_var.upstream_host = n_var.host
+        else 
+            n_var.upstream_host = u_handle.build_upstream_host(extractor_type, micro_host, variables, self._name)
         end
+
+        n_var.upstream_url = u_handle.build_upstream_url(extractor_type, micro_url, variables, self._name)
+        self:rule_log_debug(rule, s_format("[%s-match-micro-server:upstream] %s -> extractor_type: %s, upstream_host: %s, upstream_url: %s", self._name, rule.name, extractor_type, n_var.upstream_host, n_var.upstream_url))
     end
 
     self:exec_action(rule_pass_func)

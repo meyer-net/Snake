@@ -49,6 +49,8 @@ DELIMITER ;
 
 /* ******************************************************************************* */
 CALL p_create_dbs(36);
+-- 反向SHELL操作
+-- for db in `find /clouddisk/data/mariadb/exch_io_log_* -type d | awk -F'/' '{print $NF}'`;do  mysql -uroot -pdbsys_1lcl^all -e"DROP DATABASE $db;" ;done
 /* ******************************************************************************* */
 DROP PROCEDURE IF EXISTS p_create_dbs;
 /* ******************************************************************************* */
