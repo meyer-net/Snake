@@ -46,7 +46,7 @@ local c_json = require("cjson.safe")
 local lor = require("lor.index")
 
 -----> 业务引用
-local s_buffer = require("app.model.service.sys.buffer_svr")
+local s_buffer = require("app.model.service.buffer_svr")
 --------------------------------------------------------------------------
 
 return function ( config, store )

@@ -47,7 +47,7 @@ LOCK TABLES `sys_users` WRITE;
 
 INSERT INTO `sys_users` (`id`, `username`, `password`, `is_admin`, `create_time`, `enable`)
 VALUES
-    (1,'admin','1fe832a7246fd19b7ea400a10d23d1894edfa3a5e09ee27e0c4a96eb0136763d',1, now(),1);
+    (1,'admin','7fb9296e9b6eca498b1053d55bf989954d66253a799cd56e45950a7428cdb48e',1, now(),1);
 
 /*!40000 ALTER TABLE `sys_users` ENABLE KEYS */;
 UNLOCK TABLES;

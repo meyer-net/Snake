@@ -15,6 +15,8 @@
 --]]
 local require = require
 
+local s_lower = string.lower
+
 --------------------------------------------------------------------------
 
 --[[
@@ -25,7 +27,8 @@ local require = require
 local m_base = require("app.model.base_model")
 
 -----> 工具引用
---
+local u_each = require("app.utils.each")
+local s_sha256 = require("app.security.sha256")
 
 -----> 外部引用
 --
@@ -33,6 +36,7 @@ local m_base = require("app.model.base_model")
 -----> 数据仓储引用
 local r_user = require("app.model.repository.user_repo")
 local s_log = require("app.model.service.sys.log_svr")
+local var_secret = "ae005ceb7e9a217cced2f8aa354187c7"
 
 -----------------------------------------------------------------------------------------------------------------
 
@@ -68,7 +72,7 @@ end
 function model:regist_user(params)
     local mdl = {
             username = params.username,
-            password = params.password,
+            password = s_sha256:encode(params.password .. "#" .. var_secret),
             is_admin = params.is_admin,
             enable = params.enable
         }
@@ -91,12 +95,14 @@ end
 ---> 刷新一个用户信息
 --]]
 function model:refresh_user(params)
-    local mdl = {
-            username = params.username,
-            password = params.password,
-            is_admin = params.is_admin,
-            enable = params.enable
-        }
+    local mdl = {}
+    u_each.json_action(params, function(k, v)
+        if s_lower(k) == "password" then
+            mdl[k] = s_sha256:encode(v .. "#" .. var_secret)
+        else
+            mdl[k] = v
+        end
+    end)
 
     local attr = {
             id = params.id
@@ -109,14 +115,21 @@ end
 ---> 查询单个用户
 --]]
 function model:get_user(id)
+    return self:get_user_by({
+        id = id
+    })
+end
+
+--[[
+---> 查询单个用户
+--]]
+function model:get_user_by(mdl)
     -- 查询缓存或数据库中是否包含指定信息
     local cache_key = self.format("%s%s -> %s", self.cache_prefix, self._source, id)
-    local timeout = 0
+    local timeout = 1
     
     return self._store.cache.using:get_or_load(cache_key, function() 
-        return self._model.current_repo:find_one({
-                id = id
-            })
+        return self._model.current_repo:find_one(mdl)
     end, timeout)
 end
 
@@ -126,11 +139,28 @@ end
 function model:query_users()
 	-- 查询缓存或数据库中是否包含指定信息
     local cache_key = self.format("%s%s -> %s", self.cache_prefix, self._source, "*")
-  	local timeout = 0
-	
+    local timeout = 1
+    
   	return self._store.cache.using:get_or_load(cache_key, function() 
         return self._model.current_repo:find_all({
 
+            })
+  	end, timeout)
+end
+
+--[[
+---> 验证用户
+--]]
+function model:check_user(username, password)
+	-- 查询缓存或数据库中是否包含指定信息
+    local cache_key = self.format("%s%s -> %s", self.cache_prefix, self._source, username)
+  	local timeout = 0
+	
+    password = s_sha256:encode(password .. "#" .. var_secret)
+  	return self._store.cache.using:get_or_load(cache_key, function() 
+        return self._model.current_repo:find_one({
+                username = username,
+                password = password
             })
   	end, timeout)
 end

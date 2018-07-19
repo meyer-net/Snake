@@ -21,6 +21,7 @@ local n_debug = ngx.DEBUG
 -----> 基础库引用
 local lor = require("lor.index")
 local router = require("app.router")
+local u_string = require("app.utils.string")
 
 -----> 插件库引用
 local middleware_er4xx = require("app.middleware.Er4xx")
@@ -37,10 +38,10 @@ local _M = {}
 ---> 实例构造器
 --]]
 function _M:new(config, store, views_path)
-    local instance = {}
+	local instance = {}
+	config.view_config.views = u_string.rtrim(views_path or config.view_config.views, "/")
     instance.config = config
     instance.store = store
-    instance.views_path = views_path
 
     instance.app = lor()
 
@@ -55,7 +56,6 @@ end
 function _M:build_app()
     local config = self.config
     local store = self.store
-    local views_path = self.views_path
     local app = self.app
 
 	---> 配置文件
@@ -69,7 +69,7 @@ function _M:build_app()
 	app:conf("view enable", true)  -- 开启模板
 	app:conf("view engine", view_config.engine)  -- 模板引擎，当前lor只支持lua-resty-template，所以这个值暂时固定为"tmpl"
 	app:conf("view ext", view_config.ext)  -- 模板文件后缀，可自定义
-	app:conf("views", views_path or view_config.views)
+	app:conf("views", view_config.views)
 
 	---> 插件引用：
 	app:use(function(req, res, next)
@@ -78,6 +78,8 @@ function _M:build_app()
 	end)
 
 	---> 业务路由处理：
+	local crumbs = u_string.split(view_config.views, "/")
+	config.view_config.mode = crumbs[#crumbs]
     app:use(router(app, config, store)())
 
 	--[[

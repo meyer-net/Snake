@@ -12,7 +12,8 @@ local KEY_REQUEST_2XX = "REQUEST_2XX"
 local KEY_REQUEST_3XX = "REQUEST_3XX"
 local KEY_REQUEST_4XX = "REQUEST_4XX"
 local KEY_REQUEST_5XX = "REQUEST_5XX"
-local status = ngx.shared.status
+
+local status = ngx.shared.sys_plugin_status
 
 local _M = {}
 
