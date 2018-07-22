@@ -12,17 +12,17 @@
 -- ident_field = "jwt"                                    -- 用于标识ident插件的描述字段，可自定义。但需与上下文匹配
 -- ident_cookie = false                                   -- 用于指示ident标识信息是否由写入cookie完成
 -- ident_from = "{user}/login",                           -- 依据该请求路径返回值判断是否产生新的JWT信息 { session_time, security_code, prev_security_code, uid }            
--- ident_destroy = "{user}/logout",                       -- 依旧该请求路径销毁服务器所在JWT信息
+-- ident_destory = "{user}/logout",                       -- 依旧该请求路径销毁服务器所在JWT信息
 -- ctrl_open = "{auth}/open",                             -- 验证是否为开放的控制器            
--- ctrl_pass = "{auth}/pass",                             -- 验证请求是否具备访问该URI的权限{"time":"2018-05-05 19:31:01","enable":true,"judge":{"conditions":[{"value":"^\/(.*)","operator":"match","type":"URI"}],"type":0},"id":"16a81a2e-bbd9-41a3-bd8f-5c8c4a487335","log":true,"name":"ALL","handle":{"log":true,"match_uri":"^\/api","ctrl_open":"{auth}\/api\/open","ctrl_pass":"{auth}\/api\/pass"},"default_host":"192.168.1.141","default_server":"http://192.168.1.141:9010", "ignore_static": true, "ident_field":"jwt", "ident_cookie": false,"ident_from":"{user}\/login","ident_destroy":"{user}\/logout","server_nodes":{"user":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9002","match_uri":"\/user"},"www":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9005","match_uri":"\/www"},"ims":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9004","match_uri":"\/ims"},"order":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9001","match_uri":"\/order"},"wallet":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9003","match_uri":"\/wallet"},"auth":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9008","match_uri":"\/auth","is_open":false}},"extractor":{"extractions":[{"type":"URI","name":"uri"}],"type":1}}
+-- ctrl_pass = "{auth}/pass",                             -- 验证请求是否具备访问该URI的权限{"time":"2018-05-05 19:31:01","enable":true,"judge":{"conditions":[{"value":"^\/(.*)","operator":"match","type":"URI"}],"type":0},"id":"16a81a2e-bbd9-41a3-bd8f-5c8c4a487335","log":true,"name":"ALL","handle":{"log":true,"match_uri":"^\/api","ctrl_open":"{auth}\/api\/open","ctrl_pass":"{auth}\/api\/pass"},"default_host":"192.168.1.141","default_server":"http://192.168.1.141:9010", "ignore_static": true, "ident_field":"jwt", "ident_cookie": false,"ident_from":"{user}\/login","ident_destory":"{user}\/logout","server_nodes":{"user":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9002","match_uri":"\/user"},"www":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9005","match_uri":"\/www"},"ims":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9004","match_uri":"\/ims"},"order":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9001","match_uri":"\/order"},"wallet":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9003","match_uri":"\/wallet"},"auth":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9008","match_uri":"\/auth","is_open":false}},"extractor":{"extractions":[{"type":"URI","name":"uri"}],"type":1}}
 -- 1 {"selectors":["32f54e1a-0b2e-4368-b773-7fe488df81d1"]} meta
 -- 32f54e1a-0b2e-4368-b773-7fe488df81d1 {"time":"2018-05-05 14:37:02","enable":true,"rules":["16a81a2e-bbd9-41a3-bd8f-5c8c4a487335"],"id":"32f54e1a-0b2e-4368-b773-7fe488df81d1","judge":[],"name":"Monitor","handle":{"continue":true,"log":true},"type":0} selector
 
 -- 前台分布式微服务
--- 16a81a2e-bbd9-41a3-bd8f-5c8c4a487335 {"time":"2018-05-05 19:31:01","enable":true,"judge":{"conditions":[{"value":"^\/(.*)","operator":"match","type":"URI"}],"type":0},"id":"16a81a2e-bbd9-41a3-bd8f-5c8c4a487335","log":true,"name":"ALL","handle":{"log":true,"match_uri":"^\/api","default_host":"192.168.1.141","default_server":"http://192.168.1.141:9010","ident_field":"jwt", "ident_cookie": false,"ident_from":"{user}\/login","ident_destroy":"{user}\/logout","server_nodes":{"user":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9002","match_uri":"\/user"},"www":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9005","match_uri":"\/www"},"ims":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9004","match_uri":"\/ims"},"order":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9001","match_uri":"\/order"},"wallet":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9003","match_uri":"\/wallet"},"auth":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9008","match_uri":"\/auth","is_open":false}},"ctrl_open":"{auth}\/api\/open","ctrl_pass":"{auth}\/api\/pass"},"extractor":{"extractions":[{"type":"URI","name":"uri"}],"type":1}}
+-- 16a81a2e-bbd9-41a3-bd8f-5c8c4a487335 {"time":"2018-05-05 19:31:01","enable":true,"judge":{"conditions":[{"value":"^\/(.*)","operator":"match","type":"URI"}],"type":0},"id":"16a81a2e-bbd9-41a3-bd8f-5c8c4a487335","log":true,"name":"ALL","handle":{"log":true,"match_uri":"^\/api","default_host":"192.168.1.141","default_server":"http://192.168.1.141:9010","ident_field":"jwt", "ident_cookie": false,"ident_from":"{user}\/login","ident_destory":"{user}\/logout","server_nodes":{"user":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9002","match_uri":"\/user"},"www":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9005","match_uri":"\/www"},"ims":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9004","match_uri":"\/ims"},"order":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9001","match_uri":"\/order"},"wallet":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9003","match_uri":"\/wallet"},"auth":{"server_host":"192.168.1.141","server_url":"http://192.168.1.141:9008","match_uri":"\/auth","is_open":false}},"ctrl_open":"{auth}\/api\/open","ctrl_pass":"{auth}\/api\/pass"},"extractor":{"extractions":[{"type":"URI","name":"uri"}],"type":1}}
                                         
 -- 后台单节点
--- 16a81a2e-bbd9-41a3-bd8f-5c8c4a487335 {"time":"2018-05-05 19:31:01","enable":true,"judge":{"conditions":[{"value":"^\/(.*)","operator":"match","type":"URI"}],"type":0},"id":"16a81a2e-bbd9-41a3-bd8f-5c8c4a487335","log":true,"name":"ALL","handle":{"log":true,"match_uri":"","default_host":"127.0.0.1","default_server":"http://127.0.0.1:5555", "ignore_static": true, "ident_field":"jwt", "ident_cookie": false,"ident_from":"{api}\/manage\/users\/login","ident_destroy":"{api}\/manage\/users\/logout","ctrl_open":"{api}\/auth\/open\/?format=json","ctrl_pass":"{api}\/auth\/pass\/?format=json","server_nodes":{"api":{"server_host":"192.168.1.148","server_url":"http://192.168.1.148:8765","match_uri":"^\/api"}}},"extractor":{"extractions":[{"type":"URI","name":"uri"}],"type":1}}
+-- 16a81a2e-bbd9-41a3-bd8f-5c8c4a487335 {"time":"2018-05-05 19:31:01","enable":true,"judge":{"conditions":[{"value":"^\/(.*)","operator":"match","type":"URI"}],"type":0},"id":"16a81a2e-bbd9-41a3-bd8f-5c8c4a487335","log":true,"name":"ALL","handle":{"log":true,"match_uri":"","default_host":"127.0.0.1","default_server":"http://127.0.0.1:5555", "ignore_static": true, "ident_field":"jwt", "ident_cookie": false,"ident_from":"{api}\/manage\/users\/login","ident_destory":"{api}\/manage\/users\/logout","ctrl_open":"{api}\/auth\/open\/?format=json","ctrl_pass":"{api}\/auth\/pass\/?format=json","server_nodes":{"api":{"server_host":"192.168.1.148","server_url":"http://192.168.1.148:8765","match_uri":"^\/api"}}},"extractor":{"extractions":[{"type":"URI","name":"uri"}],"type":1}}
 -----------------------------------------------------------------------------------------------------------------
 --[[
 ---> 统一函数指针
@@ -59,6 +59,7 @@ local u_string = require("app.utils.string")
 local u_handle = require("app.utils.handle")
 local u_request = require("app.utils.request")
 local u_jwt = require("app.utils.jwt")
+local u_judge = require("app.utils.judge")
 local ue_error = require("app.utils.exception.error")
 
 -----> 外部引用
@@ -106,8 +107,15 @@ function handler:rewrite()
     -- 基本信息获取
     local http_method = ngx.req.get_method():lower()
 
+    local check_handle = function (rule)
+        local rule_handle = rule.handle
+        assert(rule_handle, s_format("[%s-rule-handle:load_handle_conf] %s -> can't load rule 'handle', maybe it's not exits", self._name, rule.name))
+
+        return rule_handle
+    end
+
     -- 检测函数是否合法并执行
-    local check_func_exec = function(func, param, else_func)
+    local check_func_exec = function(func, param)
         if func and type(func) == "function" then 
             return func(param)
         end
@@ -126,12 +134,16 @@ function handler:rewrite()
     end
 
     -- 规则匹配后的具体逻辑
-    local rule_pass_func = function (rule, variables)
+    local rule_pass_func = function (rule, variables, rule_matched)
         -- 加载远程鉴权信息，并执行上下文逻辑
         local load_api_exec = function (node, url, flow_args, payload, ok_exec, false_exec, ignore_event_code)
             -- 信息加载
             local args = u_table.merge(flow_args, u_args.get_from_ngx_req())
-            local api_print = self:_load_remote(node, "POST", "application/json;charset=utf-8", url, args, payload)
+            local headers = u_table.merge({
+                ["content-type"] = "application/json;charset=utf-8", --"application/json;charset=utf-8",
+                ["payload"] = self.utils.json.encode(payload)
+            }, ngx.req.get_headers())
+            local api_print = self:_load_remote(node, "POST", headers, url, args)
 
             -- 特定的接口，不允许明文写入日志
             local log_args = c_json.encode(args)
@@ -166,11 +178,11 @@ function handler:rewrite()
         end
         
         -- 流程1：加载配置文件
-        local rule_handle = rule.handle
-        assert(rule_handle, s_format("[%s-rule-handle:load_conf] %s -> can't load rule 'handle', maybe it's not exits", self._name, rule.name))
+        local rule_handle = check_handle(rule)
     
         -- 流程2：匹配具体需请求的子系统
-        local request_uri = n_var.uri
+        local uri = n_var.uri
+        local uri_args = n_var.query_string
         local micro_host = rule_handle.default_host
         local micro_url = rule_handle.default_server
         local ignore_static = rule_handle.ignore_static
@@ -194,14 +206,23 @@ function handler:rewrite()
                 end
 
                 local match_uri = micro_conf.match_uri
-                local full_uri_prefix = s_format("%s%s", rule_handle.match_uri, match_uri)
-                -- 通过类似replace的机制，获取实际的URI信息
-                local from, to, err = ngx.re.find(request_uri, full_uri_prefix, 'isjo')
+                local micro_pass, micro_match = u_judge.filter_and_conditions({{
+                        value = match_uri,
+                        operator = "match",
+                        type = "URI"
+                    }})
                 
-                if from then
+                if micro_pass then
                     micro_host = micro_conf.server_host
                     micro_url = micro_conf.server_url
-                    micro_uri = s_sub(request_uri, to + 1, #request_uri)
+                    micro_uri = s_gsub(uri, micro_match, "")
+                    
+                    local micro_first = s_sub(micro_uri, 1, 1)
+                    if micro_first ~= "/" then
+                        micro_uri = s_format("/%s", micro_uri)
+                    end
+
+                    -- 子系统的真实uri
                     local micro_uri_args = u_json.to_url_param(ngx.req.get_uri_args())
                     
                     -- 判断是否为JWT信息获取源接口
@@ -290,19 +311,20 @@ function handler:rewrite()
                         end, function ( api_print )
                             case_error_exit(api_print)
                         end)
-                    elseif check_uri(rule_handle.ident_destroy) then
+                    elseif check_uri(rule_handle.ident_destory) then
                         local exit_model = ue_error.get_err(ident_event_code, "登出成功")
                         exit_model.res = true
 
                         if ident_is_ok then
-                            load_api_exec("ident_destroy", micro_req_url, {
+                            load_api_exec("ident_destory", micro_req_url, {
                                 server_name = server_name
                             }, ident_payload, function(body)
                                 if not ident_payload.jti then
                                     return false, "服务器程序错误，未批对到相应的 payload.jti 不存在"
                                 end
 
-                                return self._ident_cache:del(ident_secret), exit_model
+                                local ok, err = self._ident_cache:del(ident_secret)
+                                return ok, err, (ok and body) or exit_model
                             end, function ( api_print )
                                 case_error_exit(api_print)
                             end)
@@ -341,7 +363,7 @@ function handler:rewrite()
                 end
 
                 -- 如果是开放接口
-                local ctrl_args = { uri = request_uri, http_method = http_method, server_name = server_name }
+                local ctrl_args = { uri = uri, uri_args = uri_args, http_method = http_method, server_name = server_name }
                 load_api_exec("ctrl_open", load_micro_url(rule_handle.ctrl_open), ctrl_args, ident_payload, nil, function(open_print)
                     if ident_is_ok then
                         -- 非开放接口时，才会验证是否为鉴权接口
@@ -360,7 +382,15 @@ function handler:rewrite()
                 -- 重写URI，没有的情况下，不进行重写
                 ngx.req.set_uri(micro_uri)
                 
-                self:rule_log_info(rule, s_format("[server-rewrite:{%s}] server_host: %s, server_url: %s, rewrite_uri: %s, rewrite_uri_args: %s", request_uri, micro_host, micro_url, micro_uri, micro_uri_args))
+                self:rule_log_info(rule, s_format("[server-rewrite:{%s}] server_host: %s, server_url: %s, rewrite_uri: %s, rewrite_uri_args: %s", uri, micro_host, micro_url, micro_uri, micro_uri_args))
+            else
+                micro_uri = s_gsub(uri, rule_matched, "")
+                if not u_object.check(micro_uri) then
+                    micro_uri = "/"
+                end
+
+                -- 重写URI，没有的情况下，不进行重写
+                ngx.req.set_uri(micro_uri)
             end
         end
 
@@ -384,7 +414,7 @@ function handler:access()
 end
 
 function handler:header_filter()
-    -- n_log(n_err, "load exec header_filter")
+    ngx.header.payload = nil
 end
 
 function handler:body_filter()

@@ -44,7 +44,9 @@
                 success: false,
                 data: {
                     name: null,
-                    judge: {}
+                    judge: {},
+                    extractor: {},
+                    handle: {}
                 }
             };
 
@@ -69,29 +71,103 @@
                 return result;
             }
 
-            //build upstream
-            var upstream_host = $("#rule-upstream-host").val();
-            // if (!upstream_host) {
-            //     result.success = false;
-            //     result.data = "upstream host不得为空";
-            //     return result;
-            // }
-            result.data.upstream_host = upstream_host||"";
-
-            var upstream_url = $("#rule-upstream-url").val();
-            if (!upstream_url) {
+            //build handle
+            var buildHandleResult = _this.buildHandle();
+            if (buildHandleResult.success == true) {
+                result.data.handle = buildHandleResult.handle;
+            } else {
                 result.success = false;
-                result.data = "upstream url不得为空";
+                result.data = buildHandleResult.data;
                 return result;
             }
-            result.data.upstream_url = upstream_url;
-            result.data.log = ($("#rule-log").val() === "true");
 
             //enable or not
             var enable = $('#rule-enable').is(':checked');
             result.data.enable = enable;
 
             result.success = true;
+            return result;
+        },
+
+        buildHandle: function () {
+            var result = {};
+            var handle = {};
+            
+            var default_host = $("#rule-default-host").val();
+            handle.default_host = default_host || "127.0.0.1";
+
+            var default_server = $("#rule-default-server").val();
+            if (!default_server) {
+                result.success = false;
+                result.data = "默认服务URL地址不得为空";
+                $("#rule-default-server").focus()
+                return result;
+            }
+            handle.default_server = default_server;
+
+            // var server_uri = $("#rule-server-uri").val();
+            // if (!server_uri) {
+            //     result.success = false;
+            //     result.data = "默认服务URI不得为空";
+            //     $("#rule-server-uri").focus();
+            //     return result;
+            // }
+            // handle.server_uri = server_uri;
+
+            handle.ignore_static = ($("#rule-ignore-static").is(':checked'));
+            handle.ident_cookie = ($("#rule-ident-cookie").is(':checked'));
+
+            var ident_field = $("#rule-ident-field").val();
+            handle.ident_field = ident_field || "jwt";
+
+            var ident_from = $("#rule-ident-from").val();
+            if (!ident_from) {
+                result.success = false;
+                result.data = "鉴权信息来源接口地址不得为空";
+                $("#rule-ident-from").focus();
+                return result;
+            }
+            handle.ident_from = ident_from;
+
+            var ident_destory = $("#rule-ident-destory").val();
+            if (!ident_destory) {
+                result.success = false;
+                result.data = "鉴权信息销毁接口地址不得为空";
+                $("#rule-ident-destory").focus();
+                return result;
+            }
+            handle.ident_destory = ident_destory;
+
+            var ctrl_open = $("#rule-ctrl-open").val();
+            if (!ctrl_open) {
+                result.success = false;
+                result.data = "验证开放接口地址不得为空";
+                $("#rule-ctrl-open").focus();
+                return result;
+            }
+            handle.ctrl_open = ctrl_open;
+
+            var ctrl_pass = $("#rule-ctrl-pass").val();
+            if (!ctrl_pass) {
+                result.success = false;
+                result.data = "验证鉴权接口地址不得为空";
+                $("#rule-ctrl-pass").focus();
+                return result;
+            }
+            handle.ctrl_pass = ctrl_pass;
+
+            var server_nodes = $("#rule-server-nodes").val();
+            if (!server_nodes) {
+                result.success = false;
+                result.data = "下游服务节点地址不得为空";
+                $("#rule-server-nodes").focus();
+                return result;
+            }
+            handle.server_nodes = JSON.parse(server_nodes);
+
+            handle.log = ($("#rule-handle-log").val() === "true");
+            result.success = true;
+            result.handle = handle;
             return result;
         },
     };

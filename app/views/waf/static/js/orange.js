@@ -806,9 +806,13 @@
                 var rule_id = $(this).attr("data-id");
                 var rule = {};
                 var rules = context.data.selector_rules[selector_id];
+                
                 for (var i = 0; i < rules.length; i++) {
                     var r = rules[i];
                     if (r.id == rule_id) {
+                        if (r.handle && r.handle.server_nodes) {
+                            r.handle.server_nodes_string = JSON.stringify(r.handle.server_nodes)
+                        }
                         rule = r;
                         break;
                     }

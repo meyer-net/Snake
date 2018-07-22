@@ -148,8 +148,8 @@
                         <td class="left rule-urltmpl-td">
                             <b>Upstream URL模板</b>:
                             <br/>
-                            <p class="urltmplp">${r.upstream_url}</p>
-                            <b>Upstrem Host</b>: ${r.upstream_host}
+                            <p class="urltmplp">${r.default_server}</p>
+                            <b>Upstrem Host</b>: ${r.default_host}
                             <br/>
                             <b>记录日志</b>: ${r.log}
                         </td>
@@ -189,19 +189,75 @@
                 <div class="form-group handle-holder">
                     <label class="col-sm-1 control-label">处理</label>
                     <div class="col-sm-11">
-                        <input type="text" class="form-control" id="rule-upstream-host" placeholder="upstream host, the default value is ngx.var.host if not set">
+                        <input type="text" class="form-control" id="rule-default-host" placeholder="服务器主机，如果未设置则默认取ngx.var.host">
                     </div>
                 </div><!-- handle regrex-->
                 <div class="form-group handle-holder">
                     <label class="col-sm-1 control-label"></label>
                     <div class="col-sm-11">
-                        <input type="text" class="form-control" id="rule-upstream-url" placeholder="upstream url">
+                        <input type="text" class="form-control" id="rule-default-server" placeholder="子节点未匹配时默认访问URL地址，一般用于指向前端服务项目, ex: http://192.168.1.141:9010">
                     </div>
-                </div><!-- handle rewrite to-->
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <div class="checkbox">
+                            <label>
+                                <input {@if r.handle.ignore_static==true} checked {@/if} type="checkbox" id="rule-ignore-static"> 忽略静态资源的代理
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-ident-field" placeholder="指示用于客户端识别鉴权名称的标识, ex: jwt">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-ident-from" placeholder="用于获取鉴权payload信息的接口地址, ex: {user}/login">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="rule-ident-cookie"> 鉴权通过后是否由服务端写入COOKIE
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                    <input type="text" class="form-control" id="rule-ident-destory" placeholder="用于销毁鉴权payload信息的接口地址, ex: {user}/logout">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-ctrl-open" placeholder="用于获取当前请求是否为开放特性的接口地址, ex: {auth}/open">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-ctrl-pass" placeholder="用于获取当前请求是否通过鉴权特性的接口地址, ex: {auth}/pass">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <textarea rows=6 class="form-control" id="rule-server-nodes" placeholder="用于配置当前下游鉴权的真实地址信息（建议内网地址，此接口建议后面剥离出规则区域的配置，做成单行数据的添加删除）, ex: 'auth': { 'server_host': '192.168.1.141', 'server_url': 'http://192.168.1.141:9008', 'match_uri': '\/auth', 'is_open': false }"></textarea>
+                    </div>
+                </div><!-- handle -->
                 <div class="form-group handle-holder">
                     <label class="col-sm-1 control-label"></label>
                     <div class="col-sm-3">
-                        <select class="form-control" id="rule-log">
+                        <select class="form-control" id="rule-handle-log">
                             <option value="true">记录日志</option>
                             <option value="false">不记录日志</option>
                         </select>
@@ -243,21 +299,77 @@
                 <div class="form-group handle-holder">
                     <label class="col-sm-1 control-label">处理</label>
                     <div class="col-sm-11">
-                        <input type="text" class="form-control" id="rule-upstream-host" placeholder="upstream host" value="${r.upstream_host}">
+                        <input type="text" class="form-control" id="rule-default-host" placeholder="服务器主机，如果未设置则默认取ngx.var.host" value="${r.handle.default_host}">
                     </div>
                 </div><!-- handle regrex-->
                 <div class="form-group handle-holder">
                     <label class="col-sm-1 control-label"></label>
                     <div class="col-sm-11">
-                        <input type="text" class="form-control" id="rule-upstream-url" placeholder="upstream url" value="${r.upstream_url}">
+                        <input type="text" class="form-control" id="rule-default-server" placeholder="子节点未匹配时默认访问URL地址，一般用于指向前端服务项目, ex: http://192.168.1.141:9010" value="${r.handle.default_server}">
                     </div>
-                </div><!-- handle rewrite to-->
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <div class="checkbox">
+                            <label>
+                                <input {@if r.handle.ignore_static==true} checked {@/if} type="checkbox" id="rule-ignore-static"> 忽略静态资源的代理
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-ident-field" placeholder="指示用于客户端识别鉴权名称的标识, ex: jwt" value="${r.handle.ident_field}">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-ident-from" placeholder="用于获取鉴权payload信息的接口地址, ex: {user}/login" value="${r.handle.ident_from}">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <div class="checkbox">
+                            <label>
+                                <input {@if r.handle.ident_cookie==true} checked {@/if} type="checkbox" id="rule-ident-cookie"> 鉴权通过后是否由服务端写入COOKIE
+                            </label>
+                        </div>
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                    <input type="text" class="form-control" id="rule-ident-destory" placeholder="用于销毁鉴权payload信息的接口地址, ex: {user}/logout" value="${r.handle.ident_destory}">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-ctrl-open" placeholder="用于获取当前请求是否为开放特性的接口地址, ex: {auth}/open" value="${r.handle.ctrl_open}">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-ctrl-pass" placeholder="用于获取当前请求是否通过鉴权特性的接口地址, ex: {auth}/pass" value="${r.handle.ctrl_pass}">
+                    </div>
+                </div><!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <textarea rows=6 wrap="virtual" class="form-control" id="rule-server-nodes" placeholder="用于配置当前下游鉴权的真实地址信息（建议内网地址，此接口建议后面剥离出规则区域的配置，做成单行数据的添加删除）, ex: 'auth': { 'server_host': '192.168.1.141', 'server_url': 'http://192.168.1.141:9008', 'match_uri': '\/auth', 'is_open': false }">${r.handle.server_nodes_string}</textarea>
+                    </div>
+                </div><!-- handle -->
                 <div class="form-group handle-holder">
                     <label class="col-sm-1 control-label"></label>
                     <div class="col-sm-3">
-                        <select class="form-control" id="rule-log">
-                            <option value="true" {@if r.log==true} selected {@/if}>Log</option>
-                            <option value="false" {@if r.log==false} selected {@/if}>Not Log</option>
+                        <select class="form-control" id="rule-handle-log">
+                            <option value="true" {@if r.log==true} selected {@/if}>记录日志</option>
+                            <option value="false" {@if r.log==false} selected {@/if}>不记录日志</option>
                         </select>
                     </div>
                 </div><!-- handle log-->
