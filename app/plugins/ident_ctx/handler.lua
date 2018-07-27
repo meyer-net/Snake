@@ -192,7 +192,7 @@ function handler:rewrite()
 
         -------- 规则验证，匹配具体的upstream(host/url)
         local micro_uri = nil
-        local server_name = n_var.server_name -- self._conf.project_name -- s_format("%s:%s", n_var.server_addr, n_var.server_port)
+        local referer = n_var.http_referer -- self._conf.project_name -- s_format("%s:%s", n_var.server_addr, n_var.server_port)
         if is_needs_check then
             ---- 展开JWT信息
             local ident_string = n_var["cookie_"..rule_handle.ident_field]
@@ -253,7 +253,7 @@ function handler:rewrite()
                             client_host = self._request.get_client_host(),
                             client_type = self._request.get_client_type(),
                             http_method = http_method,
-                            server_name = server_name
+                            referer = referer
                         }, nil, function(body)
                             local payload = body.dt
                             
@@ -317,7 +317,7 @@ function handler:rewrite()
 
                         if ident_is_ok then
                             load_api_exec("ident_destory", micro_req_url, {
-                                server_name = server_name
+                                referer = referer
                             }, ident_payload, function(body)
                                 if not ident_payload.jti then
                                     return false, "服务器程序错误，未批对到相应的 payload.jti 不存在"
@@ -363,7 +363,7 @@ function handler:rewrite()
                 end
 
                 -- 如果是开放接口
-                local ctrl_args = { uri = uri, uri_args = uri_args, http_method = http_method, server_name = server_name }
+                local ctrl_args = { uri = uri, uri_args = uri_args, http_method = http_method, referer = referer }
                 load_api_exec("ctrl_open", load_micro_url(rule_handle.ctrl_open), ctrl_args, ident_payload, nil, function(open_print)
                     if ident_is_ok then
                         -- 非开放接口时，才会验证是否为鉴权接口

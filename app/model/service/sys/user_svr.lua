@@ -34,7 +34,7 @@ local s_sha256 = require("app.security.sha256")
 --
 
 -----> 数据仓储引用
-local r_user = require("app.model.repository.user_repo")
+local r_user = require("app.model.repository.sys.user_repo")
 local s_log = require("app.model.service.sys.log_svr")
 local var_secret = "ae005ceb7e9a217cced2f8aa354187c7"
 
