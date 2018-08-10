@@ -20,119 +20,15 @@
 
 # ------------------------------------------------------------
 
-CREATE DATABASE $project_name_plugin DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS $project_name_plugin DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE $project_name_plugin;
+USE mysql;
+/* ******************************************************************************* */
+DROP DATABASE IF EXISTS $project_name_log_1;
+CREATE DATABASE $project_name_log_1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+use $project_name_log_1;
 
-# ------------------------------------------------------------
-
-# Dump of table ident_ctx
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `ident_ctx`;
-
-CREATE TABLE `ident_ctx` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `ident_ctx` WRITE;
-/*!40000 ALTER TABLE `ident_ctx` DISABLE KEYS */;
-
-INSERT INTO `ident_ctx` (`id`, `key`, `value`, `type`, `op_time`)
-VALUES 
-    (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `ident_ctx` ENABLE KEYS */;
-UNLOCK TABLES;
-
-# Dump of table basic_auth
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `basic_auth`;
-
-CREATE TABLE `basic_auth` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `basic_auth` WRITE;
-/*!40000 ALTER TABLE `basic_auth` DISABLE KEYS */;
-
-INSERT INTO `basic_auth` (`id`, `key`, `value`, `type`, `op_time`)
-VALUES
-    (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `basic_auth` ENABLE KEYS */;
-UNLOCK TABLES;
-
-# Dump of table divide
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `divide`;
-
-CREATE TABLE `divide` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `divide` WRITE;
-/*!40000 ALTER TABLE `divide` DISABLE KEYS */;
-
-INSERT INTO `divide` (`id`, `key`, `value`, `type`, `op_time`)
-VALUES
-    (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `divide` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table key_auth
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `key_auth`;
-
-CREATE TABLE `key_auth` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-LOCK TABLES `key_auth` WRITE;
-/*!40000 ALTER TABLE `key_auth` DISABLE KEYS */;
-
-INSERT INTO `key_auth` (`id`, `key`, `value`, `type`, `op_time`)
-VALUES
-    (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `key_auth` ENABLE KEYS */;
-UNLOCK TABLES;
-
-
-# Dump of table meta
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `meta`;
-
-CREATE TABLE `meta` (
+CREATE TABLE IF NOT EXISTS `meta` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `key` varchar(255) NOT NULL DEFAULT '',
   `value` varchar(5000) NOT NULL DEFAULT '',
@@ -141,15 +37,18 @@ CREATE TABLE `meta` (
   UNIQUE KEY `unique_key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `monitor` WRITE;
 INSERT INTO `meta` (`id`, `key`, `value`, `op_time`)
 VALUES
-    (1,'ident_ctx.enable','1', now());
+    (1,'stat.enable','1', now());
+INSERT INTO `meta` (`id`, `key`, `value`, `op_time`)
+VALUES
+    (2,'map.enable','2', now());
+UNLOCK TABLES;
 
-
-# Dump of table monitor
 # ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `monitor`;
+DROP TABLE IF NOT EXISTS `monitor`;
 
 CREATE TABLE `monitor` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -162,163 +61,102 @@ CREATE TABLE `monitor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `monitor` WRITE;
-/*!40000 ALTER TABLE `monitor` DISABLE KEYS */;
-
 INSERT INTO `monitor` (`id`, `key`, `value`, `type`, `op_time`)
 VALUES
     (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `monitor` ENABLE KEYS */;
 UNLOCK TABLES;
 
+/* ******************************************************************************* */
 
-# Dump of table rate_limiting
-# ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `ident_ctx` LIKE monitor;
+LOCK TABLES `ident_ctx` WRITE;
+INSERT INTO `ident_ctx` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
+UNLOCK TABLES;
 
-DROP TABLE IF EXISTS `rate_limiting`;
+CREATE TABLE IF NOT EXISTS `capture` LIKE monitor;
+LOCK TABLES `capture` WRITE;
+INSERT INTO `capture` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
+UNLOCK TABLES;
 
-CREATE TABLE `rate_limiting` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `filter` LIKE monitor;
+LOCK TABLES `filter` WRITE;
+INSERT INTO `filter` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
+UNLOCK TABLES;
 
+CREATE TABLE IF NOT EXISTS `basic_auth` LIKE monitor;
+LOCK TABLES `basic_auth` WRITE;
+INSERT INTO `basic_auth` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
+UNLOCK TABLES;
+
+CREATE TABLE IF NOT EXISTS `divide` LIKE monitor;
+LOCK TABLES `divide` WRITE;
+INSERT INTO `divide` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
+UNLOCK TABLES;
+
+CREATE TABLE IF NOT EXISTS `key_auth` LIKE monitor;
+LOCK TABLES `key_auth` WRITE;
+INSERT INTO `key_auth` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
+UNLOCK TABLES;
+
+CREATE TABLE IF NOT EXISTS `rate_limiting` LIKE monitor;
 LOCK TABLES `rate_limiting` WRITE;
-/*!40000 ALTER TABLE `rate_limiting` DISABLE KEYS */;
-
 INSERT INTO `rate_limiting` (`id`, `key`, `value`, `type`, `op_time`)
 VALUES
     (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `rate_limiting` ENABLE KEYS */;
 UNLOCK TABLES;
 
-DROP TABLE IF EXISTS `property_rate_limiting`;
-
-CREATE TABLE `property_rate_limiting` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+CREATE TABLE IF NOT EXISTS `property_rate_limiting` LIKE monitor;
 LOCK TABLES `property_rate_limiting` WRITE;
-/*!40000 ALTER TABLE `property_rate_limiting` DISABLE KEYS */;
-
 INSERT INTO `property_rate_limiting` (`id`, `key`, `value`, `type`, `op_time`)
 VALUES
     (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `property_rate_limiting` ENABLE KEYS */;
 UNLOCK TABLES;
 
-# Dump of table signature_auth
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `signature_auth`;
-
-CREATE TABLE `signature_auth` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+CREATE TABLE IF NOT EXISTS `signature_auth` LIKE monitor;
 LOCK TABLES `signature_auth` WRITE;
-/*!40000 ALTER TABLE `signature_auth` DISABLE KEYS */;
-
 INSERT INTO `signature_auth` (`id`, `key`, `value`, `type`, `op_time`)
 VALUES
     (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `signature_auth` ENABLE KEYS */;
 UNLOCK TABLES;
 
-# Dump of table redirect
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `redirect`;
-
-CREATE TABLE `redirect` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+CREATE TABLE IF NOT EXISTS `redirect` LIKE monitor;
 LOCK TABLES `redirect` WRITE;
-/*!40000 ALTER TABLE `redirect` DISABLE KEYS */;
-
 INSERT INTO `redirect` (`id`, `key`, `value`, `type`, `op_time`)
 VALUES
     (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `redirect` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# Dump of table rewrite
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `rewrite`;
-
-CREATE TABLE `rewrite` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+CREATE TABLE IF NOT EXISTS `rewrite` LIKE monitor;
 LOCK TABLES `rewrite` WRITE;
-/*!40000 ALTER TABLE `rewrite` DISABLE KEYS */;
-
 INSERT INTO `rewrite` (`id`, `key`, `value`, `type`, `op_time`)
 VALUES
     (1,'1','{}','meta', now());
-
-/*!40000 ALTER TABLE `rewrite` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
-# Dump of table waf
-# ------------------------------------------------------------
-
-DROP TABLE IF EXISTS `waf`;
-
-CREATE TABLE `waf` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) NOT NULL DEFAULT '',
-  `value` varchar(2000) NOT NULL DEFAULT '',
-  `type` varchar(11) DEFAULT '0',
-  `op_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+CREATE TABLE IF NOT EXISTS `waf` LIKE monitor;
 LOCK TABLES `waf` WRITE;
-/*!40000 ALTER TABLE `waf` DISABLE KEYS */;
-
 INSERT INTO `waf` (`id`, `key`, `value`, `type`, `op_time`)
 VALUES
     (1,'1','{}','meta', now());
+UNLOCK TABLES;
 
-/*!40000 ALTER TABLE `waf` ENABLE KEYS */;
+CREATE TABLE IF NOT EXISTS `map` LIKE monitor;
+LOCK TABLES `map` WRITE;
+INSERT INTO `map` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
 UNLOCK TABLES;
 
 

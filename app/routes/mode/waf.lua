@@ -63,6 +63,7 @@ return function(app, conf, store)
 
     local _router = base_router(conf, store, "waf_router")
     return _router:load_router(function (router)
+        -- 没有特殊的数据渲染，则按请求路径展示HTML
         app:erroruse(middleware_er4xx(function (req, res, next)
             local uri = u_string.ltrim(ngx.var.uri, "/")
             res:render(uri)

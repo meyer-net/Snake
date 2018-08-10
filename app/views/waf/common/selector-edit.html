@@ -106,8 +106,8 @@
                 <label class="col-sm-1 control-label">处理</label>
                 <div class="col-sm-3">
                     <select class="form-control" id="selector-continue">
-                        <option {@if s.handle.continue == true } selected {@/if} value="true">继续后续选择器</option>
-                        <option {@if s.handle.continue == false } selected {@/if} value="false">略过后续选择器</option>
+                        <option {@if s.handle.continue == true } selected {@/if} value="true">继续后续<span class="replace">{!g_name!}</span></option>
+                        <option {@if s.handle.continue == false } selected {@/if} value="false">略过后续<span class="replace">{!g_name!}</span></option>
                     </select>
                 </div>
                 <div class="col-sm-3" style="padding-left:0;">

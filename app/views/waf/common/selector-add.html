@@ -18,10 +18,10 @@
                 </div>
             </div><!-- type -->
 
-            <!-- add - 选择器-条件编辑器模板 start -->
+            <!-- add - <span class="replace">{!g_name!}</span>-条件编辑器模板 start -->
             <div id="judge-area" style="display: none;">
                 <div class="form-group">
-                    <label for="input-judge-type" class="col-sm-1 control-label">规则</label>
+                    <label for="input-judge-type" class="col-sm-1 control-label">{!c_name!}</label>
                     <div class="col-sm-3">
                         <select class="form-control" id="rule-judge-type">
                             <option value="0">单一条件匹配</option>
@@ -32,13 +32,13 @@
                     </div>
 
                     <div class="col-sm-8" id="expression-area" style="display:none;">
-                         <input type="text" class="form-control" id="rule-judge-expression" placeholder="规则表达式，示例: (v[1] or v[2]) and v[3]">
+                         <input type="text" class="form-control" id="rule-judge-expression" placeholder="{!c_name!}表达式，示例: (v[1] or v[2]) and v[3]">
                     </div>
                 </div><!-- 类型 -->
 
                 {(common/selector-judge-condition-part.html)}<!-- 条件编辑共用部分 -->
             </div>
-            <!-- add - 选择器-条件编辑器模板 end -->
+            <!-- add - <span class="replace">{!g_name!}</span>-条件编辑器模板 end -->
 
             <div class="form-group">
                 <label class="col-sm-1 control-label">处理</label>

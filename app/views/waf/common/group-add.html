@@ -1,0 +1,53 @@
+<script id="add-selector-tpl" type="application/template">
+    <div id="selector-add-area">
+        <form id="add-selector-form" class="form-horizontal">
+            <div class="form-group">
+                <label for="input-name" class="col-sm-1 control-label">名称</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="selector-name" placeholder="名称">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input-name" class="col-sm-1 control-label">标记</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="selector-key" placeholder="标记">
+                </div>
+            </div>
+            <!-- name -->
+
+            <div class="form-group">
+                <label for="input-name" class="col-sm-1 control-label">开放</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="selector-open">
+                        <option value="0">不限</option>
+                        <option value="1">本机</option>
+                        <option value="2">局域网</option>
+                        <option value="3">广域网</option>
+                    </select>
+                </div>
+            </div>
+            <!-- type -->
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label">日志</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="selector-log">
+                        <option value="false" selected>不记录日志</option>
+                        <option value="true">记录日志</option>
+                    </select>
+                </div>
+            </div>
+            <!-- handle log-->
+
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" id="selector-enable"> 启用
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>

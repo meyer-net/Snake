@@ -31,22 +31,14 @@
                 </a>
             </li>
 
-            <li class="line dk"></li>
-
 
             <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                 <span class="ng-scope">插件</span>
             </li>
-            <li id="nav-divide">
-                <a href="/ident_ctx">
-                    <i class="fa fa-arrows"></i>
-                    <span class="nav-label">鉴权&代理</span>
-                </a>
-            </li>
-            <!-- <li id="nav-monitor">
-                <a href="/monitor">
-                    <i class="fa fa-desktop"></i>
-                    <span class="nav-label">自定义监控</span>
+            <li id="nav-capture">
+                <a href="/capture">
+                    <i class="fa fa-balance-scale"></i>
+                    <span class="nav-label">子请求</span>
                 </a>
             </li>
             <li id="nav-redirect">
@@ -59,6 +51,30 @@
                 <a href="/rewrite">
                     <i class="fa fa-pencil-square-o"></i>
                     <span class="nav-label">URI重写</span>
+                </a>
+            </li>
+            <li id="nav-divide">
+                <a href="/divide">
+                    <i class="fa fa-arrows"></i>
+                    <span class="nav-label">代理&分流</span>
+                </a>
+            </li>
+            <li id="nav-filter">
+                <a href="/filter">
+                    <i class="fa fa-filter"></i>
+                    <span class="nav-label">响应过滤</span>
+                </a>
+            </li>
+            <li id="nav-ident_ctx">
+                <a href="/ident_ctx">
+                    <i class="fa fa-credit-card"></i>
+                    <span class="nav-label">鉴权&代理</span>
+                </a>
+            </li>
+            <!-- <li id="nav-monitor">
+                <a href="/monitor">
+                    <i class="fa fa-desktop"></i>
+                    <span class="nav-label">自定义监控</span>
                 </a>
             </li>
             <li id="nav-basic-auth">
@@ -97,12 +113,6 @@
                     <span class="nav-label">WAF</span>
                 </a>
             </li>
-            <li id="nav-divide">
-                <a href="/divide">
-                    <i class="fa fa-arrows"></i>
-                    <span class="nav-label">代理&分流</span>
-                </a>
-            </li>
             <li id="nav-kvstore">
                 <a href="/kvstore">
                     <i class="fa fa-th"></i>
@@ -110,7 +120,22 @@
                 </a>
             </li> -->
 
-
+            <li class="line dk"></li>
+            <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                <span class="ng-scope">公海</span>
+            </li>
+            <li id="nav-micros">
+                <a href="/micros">
+                    <i class="fa fa-cloud"></i>
+                    <span class="nav-label">服务</span>
+                </a>
+            </li>
+            <li id="nav-map">
+                <a href="/map">
+                    <i class="fa fa-map-signs"></i>
+                    <span class="nav-label">映射</span>
+                </a>
+            </li>
 
             {%
                 if locals and locals.login and locals.login == true then

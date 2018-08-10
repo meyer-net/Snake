@@ -28,9 +28,6 @@ local n_debug = ngx.DEBUG
 ---> 统一引用导入APP-LIBS
 --]]
 --------------------------------------------------------------------------
------> 基础库引用
-local l_object = require("app.lib.classic")
-
 -----> 工具引用
 local u_object = require("app.utils.object")
 local u_lor = require("app.utils.lor")
@@ -49,13 +46,13 @@ local lor = require("lor.index")
 local s_buffer = require("app.model.service.buffer_svr")
 --------------------------------------------------------------------------
 
-return function ( config, store )
+return function ( conf, store )
 	local router = lor:Router() -- 生成一个router对象
 
 	local done_all_request = function(req, res, next)
 		n_var.args = u_lor.get_args(req)
 		
-		local current_svr = s_buffer(config, store)
+		local current_svr = s_buffer(conf, store)
 		local current_group = s_sub(n_var.uri, 2)   --s_gsub(n_var.uri, "/", "#")
 		local ok, err, offset = current_svr:write_request(current_group)
 

@@ -27,9 +27,6 @@ local n_debug = ngx.DEBUG
 ---> 统一引用导入APP-LIBS
 --]]
 --------------------------------------------------------------------------
------> 基础库引用
-local l_object = require("app.lib.classic")
-
 -----> 工具引用
 local u_object = require("app.utils.object")
 local u_table = require("app.utils.table")
@@ -44,10 +41,10 @@ local c_json = require("cjson.safe")
 local lor = require("lor.index")
 --------------------------------------------------------------------------
 
-return function ( config, store )
+return function ( conf, store )
 	local router = lor:Router() -- 生成一个router对象
 	local s_user = require("app.model.service.user_svr")
-	local tmp_svr = s_user(config, store)
+	local tmp_svr = s_user(conf, store)
 
 	-- http://192.168.1.176/user
 	router:post("", function(req, res, next)

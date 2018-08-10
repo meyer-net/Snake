@@ -28,9 +28,6 @@ local n_debug = ngx.DEBUG
 ---> 统一引用导入APP-LIBS
 --]]
 --------------------------------------------------------------------------
------> 基础库引用
-local l_object = require("app.lib.classic")
-
 -----> 工具引用
 local u_object = require("app.utils.object")
 local u_table = require("app.utils.table")

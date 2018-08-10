@@ -1,17 +1,17 @@
 (function (L) {
     var _this = null;
-    L.Divide = L.Divide || {};
-    _this = L.Divide = {
+    L.Capture = L.Capture || {};
+    _this = L.Capture = {
         data: {
         },
 
         init: function () {
-            L.Common.loadConfigs("divide", _this, true);
+            L.Common.loadConfigs("capture", _this, true);
             _this.initEvents();
         },
 
         initEvents: function () {
-            var op_type = "divide";
+            var op_type = "capture";
             L.Common.initRuleAddDialog(op_type, _this);//添加规则对话框
             L.Common.initRuleDeleteDialog(op_type, _this);//删除规则对话框
             L.Common.initRuleEditDialog(op_type, _this);//编辑规则对话框
@@ -74,11 +74,11 @@
             var handle_type = $("#rule-micro-type").val()
 
             if (handle_type == "0") {
-                //build upstream
+                //build capture
                 var host = $("#rule-host").val();
                 // if (!host) {
                 //     result.success = false;
-                //     result.data = "upstream host不得为空";
+                //     result.data = "capture host不得为空";
                 //     return result;
                 // }
                 
@@ -87,7 +87,7 @@
                 var url = $("#rule-url").val();
                 if (!url) {
                     result.success = false;
-                    result.data = "upstream url不得为空";
+                    result.data = "capture url不得为空";
                     return result;
                 }
                 handle.url = url;
@@ -100,6 +100,9 @@
                 }
                 handle.micro = micro;
             }
+
+            var content_type = $("#rule-content-type").val();
+            handle.content_type = content_type || "";
 
             result.data.type = parseInt(handle_type);
             handle.log = ($("#rule-handle-log").val() === "true");

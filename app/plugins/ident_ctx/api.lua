@@ -41,9 +41,9 @@ local api = base_api:extend()
 ---> 实例构造器
 ------> 子类构造器中，必须实现 api.super.new(self, name)
 --]]
-function api:new(name)
+function api:new(conf, store, name)
 	-- 传导至父类填充基类操作对象
-    api.super.new(self, name)
+    api.super.new(self, conf, store, name)
 end
 
 -----------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {(common/meta.html)}
+    <script type="text/javascript">
+        global_settings.t_name = "";
+        global_settings.c_name = "服务";    //分组子名称
+        global_settings.g_name = "服务组";  //分组名称
+    </script>
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg">
+    
+    <div id="wrapper">
+        <!-- {(common/left_nav.html)} -->
+        <!-- 左侧导航 -->
+
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg dashbard-1">
+
+            <div class="row J_mainContent">
+                <!-- content start -->
+                <div class="row content-header">
+                    <div class="col-md-12">
+                        <div class="pull-left">
+                            <h4 class="head_title">服务</h4>
+                        </div>
+                        <div class="pull-right">
+                            {(common/title-op.html)}
+                        </div>
+                    </div>
+                </div>
+
+                {(common/data-view-part.html)} {(common/right-layout-part.html)}
+                <!-- content end -->
+            </div>
+        </div>
+        <!--右侧部分结束-->
+</div>
+<script id="rule-item-tpl" type="text/template">
+    {@each rules as r, index}
+    <li data-id="${r.id}" {@if r.enable==true } class="info-element" {@/if} {@if r.enable!=true } class="warning-element" {@/if}>
+        <table class="table table-hover single-rule-table">
+            <tbody>
+                <tr>
+                    <td class="center rule-enable-td">
+                        {@if r.enable==true }
+                        <span class="label label-primary">已启用</span>
+                        {@/if} {@if r.enable!=true }
+                        <span class="label label-warning">已禁用</span>
+                        {@/if}
+                    </td>
+                    <td class="rule-name-td">
+                        <b class="namep">${r.name}</b>
+                    </td>
+                    <td class="left rule-condition-td">
+                        <p>
+                            <b>主机</b>: ${r.handle.host}
+                        </p>
+                        <p class="conditionp">
+                            <b>开放</b>: 
+                            {@if r.open == 0 }
+                                不限
+                            {@/if}
+                            {@if r.open == 1 }
+                                本机
+                            {@/if}
+                            {@if r.open == 2 }
+                                局域网
+                            {@/if}
+                            {@if r.open == 3 }
+                                广域网
+                            {@/if}
+                        </p>
+                    </td>
+
+                    <td class="left rule-extractor-td">
+                        <p><b>服务API</b>: 
+                            <br/>${r.handle.url}</p>
+                    </td>
+
+                    <td class="left rule-extractor-td">
+                        <p><b>记录日志</b>: ${r.handle.log}</p>
+                    </td>
+
+                    <td class="left" title="变更时间">
+                        <small>${r.time}</small>
+                    </td>
+                    <td class="center rule-op-td">
+                        <a class="btn btn-white btn-sm edit-btn" data-id="${r.id}" data-name="${r.name}">
+                            <i title="编辑" class="fa fa-pencil"></i>
+                        </a>
+                        <a class="btn btn-white btn-sm delete-btn" data-id="${r.id}" data-name="${r.name}">
+                            <i title="删除" class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+    {@/each}
+</script>
+
+    <script id="add-tpl" type="application/template">
+        <div id="rule-edit-area">
+            <form id="add-rule-form" class="form-horizontal">
+                <div class="form-group">
+                    <label for="input-name" class="col-sm-1 control-label">名称</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-name" placeholder="名称">
+                    </div>
+                </div>
+                <!-- name -->
+                <div class="form-group">
+                    <label for="input-name" class="col-sm-1 control-label">标记</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-key" placeholder="标记">
+                    </div>
+                </div>
+                <!-- name -->
+
+                <div class="form-group">
+                    <label for="input-name" class="col-sm-1 control-label">开放</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="rule-open">
+                            <option value="0">不限</option>
+                            <option value="1">本机</option>
+                            <option value="2">局域网</option>
+                            <option value="3">广域网</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label">处理</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-host" placeholder="服务主机，如果未设置则默认取 ngx.var.host">
+                    </div>
+                </div>
+                <!-- handle regrex-->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-url" placeholder="服务默认访问URL地址, ex: http://127.0.0.1:8080">
+                    </div>
+                </div>
+                <!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="rule-handle-log">
+                            <option value="true">记录日志</option>
+                            <option value="false">不记录日志</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- handle log-->
+
+
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-11">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="rule-enable"> 启用
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </script>
+
+    <script id="edit-tpl" type="application/template">
+        <div id="rule-edit-area">
+            <form id="edit-rule-form" class="form-horizontal">
+                <div class="form-group">
+                    <label for="input-name" class="col-sm-1 control-label">名称</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-name" value="${r.name}" placeholder="名称">
+                    </div>
+                </div>
+                <!-- name -->
+                <div class="form-group">
+                    <label for="input-name" class="col-sm-1 control-label">标记</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-key" value="${r.key}" placeholder="标记">
+                    </div>
+                </div>
+                <!-- name -->
+
+                <div class="form-group">
+                    <label for="input-name" class="col-sm-1 control-label">开放</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="rule-open">
+                            <option value="0" {@if r.open==0} selected {@/if}>不限</option>
+                            <option value="1" {@if r.open==1} selected {@/if}>本机</option>
+                            <option value="2" {@if r.open==2} selected {@/if}>局域网</option>
+                            <option value="3" {@if r.open==3} selected {@/if}>广域网</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label">处理</label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-host" placeholder="服务主机，如果未设置则默认取 ngx.var.host" value="${r.handle.host}">
+                    </div>
+                </div>
+                <!-- handle regrex-->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-11">
+                        <input type="text" class="form-control" id="rule-url" placeholder="服务默认访问URL地址, ex: http://127.0.0.1:8080"
+                            value="${r.handle.url}">
+                    </div>
+                </div>
+                <!-- handle -->
+                <div class="form-group handle-holder">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="rule-handle-log">
+                            <option value="true" {@if r.log==true} selected {@/if}>记录日志</option>
+                            <option value="false" {@if r.log==false} selected {@/if}>不记录日志</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- handle log-->
+
+                <div class="form-group">
+                    <div class="col-sm-offset-1 col-sm-11">
+                        <div class="checkbox">
+                            <label>
+                                <input {@if r.enable==true} checked {@/if} type="checkbox" id="rule-enable"> 启用
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!-- type -->
+
+            </form>
+        </div>
+    </script>
+
+
+    {(common/selector-item-tpl.html)} {(common/group-add.html)} {(common/group-edit.html)}
+    {(common/common_js.html)}
+
+    <!-- 通用js -->
+    <script src="/static/js/micros.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            APP.Common.resetNav("nav-micros");
+            APP.Micros.init();
+            $(".sortable-list").sortable().disableSelection();
+        });
+    </script>
+</body>
+
+</html>

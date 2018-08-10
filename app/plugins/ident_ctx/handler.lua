@@ -82,7 +82,7 @@ local s_log = require("app.model.service.sys.log_svr")
 local handler = base_handler:extend()
 
 function handler:new(conf, store)
-    self.PRIORITY = 9999
+    self.PRIORITY = 0
 
     -- 控件名称
     self._source = "ident_ctx"

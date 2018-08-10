@@ -1,0 +1,53 @@
+<script id="edit-selector-tpl" type="application/template">
+    <div id="selector-edit-area">
+        <form id="edit-selector-form" class="form-horizontal">
+            <div class="form-group">
+                <label for="input-name" class="col-sm-1 control-label">名称</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="selector-name" placeholder="名称" value="${s.name}" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="input-name" class="col-sm-1 control-label">标记</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="selector-key" placeholder="标记" value="${s.key}">
+                </div>
+            </div>
+            <!-- name -->
+
+            <div class="form-group">
+                <label for="input-name" class="col-sm-1 control-label">开放</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="selector-open">
+                        <option value="0" {@if s.open=="0" } selected {@/if}>不限</option>
+                        <option value="1" {@if s.open=="1" } selected {@/if}>本机</option>
+                        <option value="2" {@if s.open=="2" } selected {@/if}>局域网</option>
+                        <option value="3" {@if s.open=="3" } selected {@/if}>广域网</option>
+                    </select>
+                </div>
+            </div>
+            <!-- type -->
+
+            <div class="form-group">
+                <label class="col-sm-1 control-label">日志</label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="selector-log">
+                        <option {@if s.handle.log == false } selected {@/if} value="false" selected>不记录日志</option>
+                        <option {@if s.handle.log == true } selected {@/if} value="true">记录日志</option>
+                    </select>
+                </div>
+            </div>
+            <!-- handle log-->
+
+            <div class="form-group">
+                <div class="col-sm-offset-1 col-sm-11">
+                    <div class="checkbox">
+                        <label>
+                            <input {@if s.enable==true} checked {@/if} type="checkbox" id="selector-enable"> 启用
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>

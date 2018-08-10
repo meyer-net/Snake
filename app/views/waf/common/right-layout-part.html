@@ -23,10 +23,10 @@
     <div class="col-sm-9">
         <div class="ibox">
             <div class="ibox-content">
-                <h4 id="rules-section-header"><span class="replace">{!g_name!}</span>-<span class="replace">{!c_name!}</span>列表</h4>
+                <h4 id="rules-section-header"><span class="replace">{!c_name!}</span>列表</h4>
                 <div class="rule-section-header">
                     <p class="small" style="float: left">
-                        <i class="fa fa-hand-o-up"></i> 在列表之间拖动以改变<span class="replace">{!c_name!}</span>顺序
+                        <i class="fa fa-hand-o-up"></i> 在列表之间拖动以改变规则顺序
                     </p>
                     <div style="float:right;">
                         <button class="btn btn-default btn-xs" href="javascript:void(0);" id="rule-sort-btn">
@@ -37,10 +37,16 @@
                             <i class="fa fa-filter"></i>
                             <span>添加新<span class="replace">{!c_name!}</span></span>
                         </button>
+                        <div class="btn btn-default btn-xs" href="javascript:void(0);" id="add-plugin-select">
+                            <i class="fa fa-filter"></i>
+                            <select style="border: 0px;">
+                                <option value="">-- 请选择要新添加的{!c_name!}种类 --</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
-                <ul id="rules"  class="sortable-list agile-list">
+                <ul id="rules" class="sortable-list agile-list">
 
                 </ul>
             </div>

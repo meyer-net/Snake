@@ -161,6 +161,10 @@ tr.highlight{
     padding:6px;
 }
 
+#server-list li {
+    padding: 6px;
+}
+
 .selector-op{
     height:23px;
     line-height: 23px;

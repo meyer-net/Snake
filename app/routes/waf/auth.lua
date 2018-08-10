@@ -27,9 +27,6 @@ local n_debug = ngx.DEBUG
 ---> 统一引用导入APP-LIBS
 --]]
 --------------------------------------------------------------------------
------> 基础库引用
-local l_object = require("app.lib.classic")
-
 -----> 工具引用
 local u_object = require("app.utils.object")
 local u_table = require("app.utils.table")
@@ -47,9 +44,9 @@ local s_user = require("app.model.service.sys.user_svr")
 
 --------------------------------------------------------------------------
 
-return function ( config, store )
+return function ( conf, store )
 	local router = lor:Router() -- 生成一个router对象
-	local tmp_svr = s_user(config, store)
+	local tmp_svr = s_user(conf, store)
 
     router:get("/login", function(req, res, next)
         res:render("login")

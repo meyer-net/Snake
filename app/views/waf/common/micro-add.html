@@ -1,0 +1,51 @@
+<div id="micro-holder">
+    <div class="form-group">
+        <label class="col-sm-1 control-label">类型</label>
+        <div class="col-sm-11">
+            <div class="col-sm-3" style="padding-left:0px;">
+                <select class="form-control" id="rule-micro-type">
+                    <option value="0">自定义</option>
+                    <option value="1">服务组</option>
+                </select>
+            </div>
+            <!-- <div class="col-sm-1" style="line-height: 30px;">
+                <a id="add-micro-btn" class="btn btn-success" style="padding:0 5px;">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>-->
+        </div>
+        <!-- add - <span class="replace">{!g_name!}</span>-条件编辑器模板 end -->
+    </div>
+    <!-- 描述 -->
+    <div id="micro-define">
+        <div class="form-group" >
+            <label class="col-sm-1 control-label">处理</label>
+            <div class="col-sm-11">
+                <input type="text" class="form-control" id="rule-host" placeholder="服务主机，如果未设置则默认取 ngx.var.host" />
+            </div>
+        </div>
+        <div class="form-group" >
+            <label class="col-sm-1 control-label"></label>
+            <div class="col-sm-11">
+                <input type="text" class="form-control" id="rule-url" placeholder="服务默认访问URL地址, ex: http://127.0.0.1:8080" />
+            </div>
+        </div>
+    </div>
+    <div id="micro-area" style="display: none">
+        <!-- add - 服务编辑器模板 start -->
+        <div class="form-group">
+            <label for="input-micro-type" class="col-sm-1 control-label">处理</label>
+            <div class="col-sm-3">
+                <select class="form-control" id="rule-micro-group">
+                    <option value="">-- 暂未配置服务组 --</option>
+                </select>
+            </div>
+            <div class="col-sm-3" style="padding-left:0;">
+                <select class="form-control" id="rule-micros">
+                    <option value="">-- 暂未配置服务 --</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- micro -->

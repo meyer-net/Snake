@@ -1,17 +1,17 @@
 (function (L) {
     var _this = null;
-    L.Divide = L.Divide || {};
-    _this = L.Divide = {
+    L.Filter = L.Filter || {};
+    _this = L.Filter = {
         data: {
         },
 
         init: function () {
-            L.Common.loadConfigs("divide", _this, true);
+            L.Common.loadConfigs("filter", _this, true);
             _this.initEvents();
         },
 
         initEvents: function () {
-            var op_type = "divide";
+            var op_type = "filter";
             L.Common.initRuleAddDialog(op_type, _this);//添加规则对话框
             L.Common.initRuleDeleteDialog(op_type, _this);//删除规则对话框
             L.Common.initRuleEditDialog(op_type, _this);//编辑规则对话框
@@ -27,7 +27,7 @@
             L.Common.initConditionAddOrRemove();//添加或删除条件
             L.Common.initJudgeTypeChangeEvent();//judge类型选择事件
             L.Common.initConditionTypeChangeEvent();//condition类型选择事件
-            
+
             L.Common.initExtractionAddOrRemove();//添加或删除条件
             L.Common.initExtractionTypeChangeEvent();//extraction类型选择事件
             L.Common.initExtractionAddBtnEvent();//添加提前项按钮事件
@@ -38,24 +38,24 @@
             L.Common.initSyncDialog(op_type, _this);//编辑规则对话框
         },
 
-
-        buildRule: function () {
+        
+        buildRule: function(){
             var result = {
                 success: false,
                 data: {
                     name: null,
-                    type: null,
-                    judge: {}
+                    judge:{},
+                    extractor: {},
+                    handle:{}
                 }
             };
-            var handle = {};
 
             //build name and judge
             var buildJudgeResult = L.Common.buildJudge();
-            if (buildJudgeResult.success == true) {
+            if(buildJudgeResult.success == true){
                 result.data.name = buildJudgeResult.data.name;
                 result.data.judge = buildJudgeResult.data.judge;
-            } else {
+            }else{
                 result.success = false;
                 result.data = buildJudgeResult.data;
                 return result;
@@ -71,45 +71,59 @@
                 return result;
             }
 
-            var handle_type = $("#rule-micro-type").val()
-
-            if (handle_type == "0") {
-                //build upstream
-                var host = $("#rule-host").val();
-                // if (!host) {
-                //     result.success = false;
-                //     result.data = "upstream host不得为空";
-                //     return result;
-                // }
-                
-                handle.host = host||"";
-
-                var url = $("#rule-url").val();
-                if (!url) {
-                    result.success = false;
-                    result.data = "upstream url不得为空";
-                    return result;
-                }
-                handle.url = url;
-            } else {
-                var micro = $("#rule-micros").val()
-                if (!micro) {
-                    result.success = false;
-                    result.data = "未选择对应处理的服务";
-                    return result;
-                }
-                handle.micro = micro;
+            //build handle
+            var buildHandleResult = _this.buildHandle();
+            if(buildHandleResult.success == true){
+                result.data.handle = buildHandleResult.handle;
+            }else{
+                result.success = false;
+                result.data = buildHandleResult.data;
+                return result;
             }
-
-            result.data.type = parseInt(handle_type);
-            handle.log = ($("#rule-handle-log").val() === "true");
 
             //enable or not
             var enable = $('#rule-enable').is(':checked');
             result.data.enable = enable;
 
             result.success = true;
-            result.data.handle = handle;
+            return result;
+        },
+
+        buildHandle: function(){
+            var result = {};
+            var handle = {
+                header: [],
+                body: []
+            };
+
+            $("#filter-area .filter-holder").each(function() {
+                var filter_type = $(this).find("select[name=rule-filter-type]").val();
+                var filter_header_key = $(this).find(".filter-key-hodler input").val();
+                var filter_header_value = $(this).find(".filter-value-hodler input").val();
+                var filter_body = $(this).find("select[name=rule-filter-body]").val();
+                
+                if (filter_type == "0") {
+                    handle.header.push({
+                        key: filter_header_key,
+                        value: filter_header_value
+                    })
+                } else if (filter_type == "1") {
+                    handle.body.push({
+                        type: parseInt(filter_body)
+                    })
+                }
+
+            })
+            // var uri_tmpl = $("#rule-handle-uri-template").val();
+            // if (!uri_tmpl) {
+            //     result.success = false;
+            //     result.data = "rewrite使用的uri template不得为空";
+            //     return result;
+            // }
+            // handle.uri_tmpl = uri_tmpl;
+            handle.log = ($("#rule-handle-log").val() === "true");
+            result.success = true;
+            result.handle = handle;
             return result;
         },
     };
