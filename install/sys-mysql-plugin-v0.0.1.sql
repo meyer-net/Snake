@@ -89,6 +89,13 @@ VALUES
     (1,'1','{}','meta', now());
 UNLOCK TABLES;
 
+CREATE TABLE IF NOT EXISTS `micros` LIKE monitor;
+LOCK TABLES `micros` WRITE;
+INSERT INTO `micros` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
+UNLOCK TABLES;
+
 CREATE TABLE IF NOT EXISTS `basic_auth` LIKE monitor;
 LOCK TABLES `basic_auth` WRITE;
 INSERT INTO `basic_auth` (`id`, `key`, `value`, `type`, `op_time`)
