@@ -12,26 +12,6 @@
 local require = require
 local s_format = string.format
 
---------------------------------------------------------------------------
-
---[[
----> 统一引用导入APP-LIBS
---]]
---------------------------------------------------------------------------
----> 业务路由管理
-local router_test = require("app.routes.test")
-local router_user = require("app.routes.user")
-local router_buffer = require("app.routes.buffer")
-local router_log = require("app.routes.log")
-
------> 插件库引用
-local middleware_er4xx = require("app.middleware.Er4xx")
-
----> 加载插件式API
-local base_router = require("app.routes.base_router")
-local mode_router_lor = require("app.routes.mode.lor")
-local mode_router_waf = require("app.routes.mode.waf")
-
 -----------------------------------------------------------------------------------------------------------------
 
 return function(app, conf, store)

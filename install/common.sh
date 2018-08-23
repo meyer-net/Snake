@@ -19,11 +19,11 @@ function setup_soft_basic()
 		return $?
 	fi
 
-	TMP_SOFT_SETUP_NAME=$1
-	TMP_SOFT_SETUP_FUNC=$2
+	local TMP_SOFT_SETUP_NAME=$1
+	local TMP_SOFT_SETUP_FUNC=$2
 
-	TMP_SOFT_SETUP_NAME_LEN=${#TMP_SOFT_SETUP_NAME}
-	TMP_VAR_SPLITER=""
+	local TMP_SOFT_SETUP_NAME_LEN=${#TMP_SOFT_SETUP_NAME}
+	local TMP_VAR_SPLITER=""
 	#TMP_SOFT_
 
 	fill_right "TMP_VAR_SPLITER" "-" $((TMP_SOFT_SETUP_NAME_LEN+20))
@@ -118,11 +118,38 @@ function wget_unpack_dist()
 	return $?
 }
 
+#无限循环重试下载
+#参数1：软件下载地址
+#参数2：软件下载后执行函数名称
+function while_wget()
+{
+	if [ $? -ne 0 ]; then
+		return $?
+	fi
+
+	local TMP_SOFT_WGET_URL=$1
+	local TMP_SOFT_WGET_SCRIPT=$2
+	
+	TMP_SOFT_WGET_FILE_NAME=`echo "$TMP_SOFT_WGET_URL" | awk -F'/' '{print $NF}'`
+	if [ "$TMP_SOFT_WGET_FILE_NAME" == "download.rpm" ]; then
+		TMP_SOFT_WGET_FILE_NAME=`echo "$TMP_SOFT_WGET_URL" | awk -F'/' '{print $(NF-1)}'`
+	fi
+
+	while [ ! -f "$TMP_SOFT_WGET_FILE_NAME" ]; do
+		wget -t1 -T30 $TMP_SOFT_WGET_URL
+	done
+
+	if [ -n "$TMP_SOFT_WGET_SCRIPT" ]; then
+		eval "$TMP_SOFT_WGET_SCRIPT"
+	fi
+
+	return $?
+}
+
 #安装软件下载模式
 #参数1：软件安装名称
 #参数2：软件下载地址
 #参数3：软件下载后执行函数名称
-#参数4：软件配置函数
 function setup_soft_wget() 
 {
 	if [ $? -ne 0 ]; then
@@ -132,17 +159,14 @@ function setup_soft_wget()
 	TMP_SOFT_WGET_NAME=$1
 	TMP_SOFT_WGET_URL=$2
 	TMP_SOFT_WGET_SETUP_FUNC=$3
-	TMP_SOFT_WGET_SET_FUNC=$4
 	
 	typeset -l TMP_SOFT_LOWER_NAME
 	TMP_SOFT_LOWER_NAME=$TMP_SOFT_WGET_NAME
 
 	TMP_SOFT_SETUP_PATH=$SETUP_DIR/$TMP_SOFT_LOWER_NAME
+
     ls -d $TMP_SOFT_SETUP_PATH   #ps -fe | grep $TMP_SOFT_WGET_NAME | grep -v grep
 	if [ $? -ne 0 ]; then
-		if [ -n "$TMP_SOFT_WGET_SET_FUNC" ]; then
-			$TMP_SOFT_WGET_SET_FUNC
-		fi
 		TMP_SOFT_WGET_FILE_NAME=`echo "$TMP_SOFT_WGET_URL" | awk -F'/' '{print $NF}'`
 
 		cd $DOWN_DIR
@@ -175,6 +199,43 @@ function setup_soft_wget()
 
 #安装软件下载模式
 #参数1：软件安装名称
+#参数2：软件下载地址
+#参数3：软件下载后执行函数名称
+function setup_soft_git() 
+{	
+	if [ $? -ne 0 ]; then
+		return $?
+	fi
+
+	local TMP_SOFT_GIT_NAME=$1
+	local TMP_SOFT_GIT_URL=$2
+	local TMP_SOFT_GIT_SETUP_FUNC=$3
+	
+	typeset -l TMP_SOFT_LOWER_NAME
+	local TMP_SOFT_LOWER_NAME=$TMP_SOFT_GIT_NAME
+
+	local TMP_SOFT_SETUP_PATH=$SETUP_DIR/$TMP_SOFT_LOWER_NAME
+
+    ls -d $TMP_SOFT_SETUP_PATH   #ps -fe | grep $TMP_SOFT_GIT_NAME | grep -v grep
+	if [ $? -ne 0 ]; then
+		local TMP_SOFT_GIT_FOLDER_NAME=`echo "$TMP_SOFT_GIT_URL" | awk -F'/' '{print $NF}'`
+
+		cd $DOWN_DIR
+		if [ ! -f "$TMP_SOFT_GIT_FOLDER_NAME" ]; then
+			git clone $TMP_SOFT_GIT_URL
+		fi
+		
+		cd $TMP_SOFT_GIT_FOLDER_NAME
+
+		#安装函数调用
+		$TMP_SOFT_GIT_SETUP_FUNC "$TMP_SOFT_SETUP_PATH"
+	fi
+
+	return $?
+}
+
+#安装软件下载模式
+#参数1：软件安装名称
 #参数2：软件下载后执行函数名称
 #参数3：软件配置函数
 function setup_soft_pip() 
@@ -195,7 +256,11 @@ function setup_soft_pip()
 			$TMP_SOFT_PIP_SET_FUNC
 		fi
 
+		easy_install pip
+
+		echo "Pip start to install $TMP_SOFT_PIP_NAME"
 		pip install $TMP_SOFT_PIP_NAME
+		echo "Pip installed $TMP_SOFT_PIP_NAME"
 
 		#安装后配置函数
 		$TMP_SOFT_PIP_SETUP_FUNC
@@ -231,7 +296,7 @@ function set_if_empty()
 	TMP_DFT=`eval echo '$'$TMP_VAR_NAME`
 
 	if [ -n "$TMP_VAR_VAL" ]; then
-		eval ${1}="$TMP_VAR_VAL"
+		eval ${1}='$TMP_VAR_VAL'
 	fi
 
 	return $?
@@ -246,16 +311,17 @@ function input_if_empty()
 		return $?
 	fi
 
-	TMP_VAR_NAME=$1
-	TMP_NOTICE=$2
+	local TMP_VAR_NAME=$1
+	local TMP_NOTICE=$2
+	local INPUT_CURRENT=""
 
-	TMP_DFT=`eval expr '$'$TMP_VAR_NAME`
+	TMP_DFT=`eval echo '$'$TMP_VAR_NAME`
 	echo "$TMP_NOTICE, default '${red}$TMP_DFT${reset}'"
-	read -e CURRENT
+	read -e INPUT_CURRENT
 	echo ""
 
-	if [ -n "$CURRENT" ]; then
-		eval ${1}="$CURRENT"
+	if [ -n "$INPUT_CURRENT" ]; then
+		eval ${1}=`echo '$INPUT_CURRENT'`
 	fi
 
 	return $?
@@ -360,7 +426,7 @@ function set_if_choice()
 	
 	typeset -l NEW_VAL
 	NEW_VAL=${arr[$((KEY-1))]}
-	eval ${1}="$NEW_VAL"
+	eval ${1}='$NEW_VAL'
 	echo "Choice of '$NEW_VAL' checked"
 
 	# if [ -n "$TMP_PREFIX" ]; then
@@ -438,7 +504,7 @@ function exec_check_action() {
 }
 
 #执行需要判断的Y/N逻辑函数
-#参数1：并行逻辑执行参数
+#参数1：并行逻辑执行参数/脚本
 #参数2：提示信息
 function exec_yn_action()
 {
@@ -462,8 +528,8 @@ function exec_yn_action()
 	arr=(${TMP_FUNCS_ON_Y//,/ })
 	#echo ${#arr[@]} 
 	for TMP_FUNC_ON_Y in ${arr[@]};  
-	do  
-		$TMP_FUNC_ON_Y
+	do
+		exec_check_action "$TMP_FUNC_ON_Y"
 		RETURN=$?
 		#返回非0，跳出循环，指导后续请求不再进行
 		if [ $RETURN != 0 ]; then
@@ -509,9 +575,29 @@ function exec_repeat_funcs()
 		if [ $I -gt 0 ]; then
 			eval ${1}=`eval expr '$'$TMP_VAR_NAME,$TMP_OUTPUT`
 		else
-			eval ${1}="$TMP_OUTPUT"
+			eval ${1}='$TMP_OUTPUT'
 		fi
 	done
+
+	return $?
+}
+
+#执行文本格式化
+#参数1：需要格式化的变量名
+#参数2：格式化字符串规格
+function exec_text_format()
+{
+	if [ $? -ne 0 ]; then
+		return $?
+	fi
+
+	TMP_EXEC_TEXT_FORMAT_VAR_NAME=$1
+	TMP_EXEC_TEXT_FORMAT_VAR_VAL=`eval echo '$'$TMP_EXEC_TEXT_FORMAT_VAR_NAME`
+	TMP_EXEC_TEXT_FORMAT_VAR_FORMAT=$2
+
+	if [ -n "$TMP_EXEC_TEXT_FORMAT_VAR_FORMAT" ]; then
+		eval ${1}=`echo "$TMP_EXEC_TEXT_FORMAT_VAR_FORMAT" | sed s@%@"$TMP_EXEC_TEXT_FORMAT_VAR_VAL"@g`
+	fi
 
 	return $?
 }
@@ -519,7 +605,7 @@ function exec_repeat_funcs()
 #循环读取值
 #参数1：需要设置的变量名
 #参数2：提示信息
-#参数3：包裹字符串
+#参数3：格式化字符串
 #参数4：需执行的脚本
 function exec_while_read() 
 {
@@ -527,40 +613,52 @@ function exec_while_read()
 		return $?
 	fi
 
-	TMP_VAR_NAME=$1
-	TMP_NOTICE=$2
-	TMP_WRAP_CHAR=$3
+	TMP_EXEC_WHILE_READ_VAR_NAME=$1
+	TMP_EXEC_WHILE_READ_NOTICE=$2
+	TMP_EXEC_WHILE_READ_FORMAT=$3
 	TMP_EXEC_WHILE_READ_SCRIPTS=$4
-	TMP_EXEC_WHILE_READ_DFT=`eval expr '$'$TMP_VAR_NAME`
+	TMP_EXEC_WHILE_READ_DFT=`eval echo '$'$TMP_EXEC_WHILE_READ_VAR_NAME`
 
+	I=1
 	for I in $(seq 99);
 	do
-		echo "$TMP_NOTICE Or '${red}enter key${reset}' To Quit"
+		TMP_EXEC_WHILE_READ_CURRENT_NOTICE=`eval echo "$TMP_EXEC_WHILE_READ_NOTICE"`
+		echo "$TMP_EXEC_WHILE_READ_CURRENT_NOTICE Or '${red}enter key${reset}' To Quit"
 		read -e CURRENT
+
+		echo "Item of '${red}$CURRENT${reset}' inputed"
+		
+		if [ ! -n "$CURRENT" ]; then
+			if [ $I -eq 1 ] && [ -n "$TMP_EXEC_WHILE_READ_DFT" ]; then
+				echo "No input, set value to default '$TMP_EXEC_WHILE_READ_DFT'"
+				CURRENT="$TMP_EXEC_WHILE_READ_DFT"
+			else
+				TMP_EXEC_WHILE_READ_BREAK_ACTION=true
+			fi
+		fi
+
+		TMP_EXEC_WHILE_READ_FORMAT_CURRENT="$CURRENT"
+		exec_text_format "TMP_EXEC_WHILE_READ_FORMAT_CURRENT" "$TMP_EXEC_WHILE_READ_FORMAT"
 
 		if [ -n "$CURRENT" ]; then
 			if [ $I -gt 1 ]; then
-				eval ${1}=`eval expr '$'$TMP_VAR_NAME,$CURRENT`
+				eval ${TMP_EXEC_WHILE_READ_VAR_NAME}=`eval echo '$'$TMP_EXEC_WHILE_READ_VAR_NAME,$TMP_EXEC_WHILE_READ_FORMAT_CURRENT`
 			else
-				eval ${1}="$CURRENT"
+				eval ${TMP_EXEC_WHILE_READ_VAR_NAME}="$TMP_EXEC_WHILE_READ_FORMAT_CURRENT"
 			fi
-
-			echo "Item of '${red}$CURRENT${reset}' inputed"
-
+			
 			exec_check_action "$TMP_EXEC_WHILE_READ_SCRIPTS"
-		else
-			if [ $I -eq 1 ] && [ -n "$TMP_EXEC_WHILE_READ_DFT" ]; then
-				echo "No input, set value to default '$TMP_EXEC_WHILE_READ_DFT'"
-				eval ${1}="$TMP_EXEC_WHILE_READ_DFT"
-			fi
+			echo
+		fi
 
+		if [ $TMP_EXEC_WHILE_READ_BREAK_ACTION ]; then
 			break
 		fi
 	done
 
 	# TMP_FORMAT_VAL="$TMP_WRAP_CHAR$CURRENT$TMP_WRAP_CHAR"
-	NEW_VAL=`eval expr '$'$TMP_VAR_NAME`
-	NEW_VAL=`echo "$NEW_VAL" | sed 's@\w*@ \"&\"@g'`
+	NEW_VAL=`eval echo '$'$TMP_EXEC_WHILE_READ_VAR_NAME`
+	NEW_VAL=`echo "$NEW_VAL" | sed "s/^[,]\{1,\}//g;s/[,]\{1,\}$//g"`
 	eval ${1}='$NEW_VAL'
 	
 	if [ -z "$NEW_VAL" ]; then
@@ -645,12 +743,12 @@ function echo_startup_config()
 	
 	set_if_empty "SUPERVISOR_CONF_ROOT" "/clouddisk/attach/supervisor"
 
-	TMP_SUPERVISOR_STARTUP_NAME="$1"
-	TMP_SUPERVISOR_STARTUP_FILENAME="$TMP_SUPERVISOR_STARTUP_NAME.conf"
-	TMP_SUPERVISOR_STARTUP_DIR="$2"
-	TMP_SUPERVISOR_STARTUP_COMMAND="$3"
-	TMP_SUPERVISOR_STARTUP_ENV="$4"
-	TMP_SUPERVISOR_STARTUP_PRIORITY="$5"
+	local STARTUP_NAME="$1"
+	local STARTUP_FILENAME="$STARTUP_NAME.conf"
+	local STARTUP_DIR="$2"
+	local STARTUP_COMMAND="$3"
+	local STARTUP_ENV="$4"
+	local STARTUP_PRIORITY="$5"
 
 	SUPERVISOR_LOGS_DIR="$SUPERVISOR_CONF_ROOT/logs"
 	SUPERVISOR_SCRIPTS_DIR="$SUPERVISOR_CONF_ROOT/scripts"
@@ -660,24 +758,30 @@ function echo_startup_config()
 	mkdir -pv $SUPERVISOR_SCRIPTS_DIR
 	mkdir -pv $SUPERVISOR_FILE_DIR
 
-	SUPERVISOR_FILE_OUTPUT_PATH=${SUPERVISOR_FILE_DIR}${TMP_SUPERVISOR_STARTUP_FILENAME}
+	SUPERVISOR_FILE_OUTPUT_PATH=${SUPERVISOR_FILE_DIR}${STARTUP_FILENAME}
 	mkdir -pv $SUPERVISOR_FILE_DIR
 
-	if [ "$TMP_SUPERVISOR_STARTUP_DIR" != "" ]; then
-		STARTUP_DIR="directory = $TMP_SUPERVISOR_STARTUP_DIR ; 程序的启动目录"
+	if [ "$STARTUP_DIR" != "" ]; then
+		STARTUP_DIR="directory = $STARTUP_DIR ; 程序的启动目录"
 	fi
 
-	if [ "$TMP_SUPERVISOR_STARTUP_ENV" != "" ]; then
-		STARTUP_ENV="environment = PATH=\"$TMP_SUPERVISOR_STARTUP_ENV:%(ENV_PATH)s\" ; 程序启动的环境变量信息"
+	if [ "$STARTUP_ENV" != "" ]; then
+		local EQUAL_CHECK="$(echo $STARTUP_ENV | grep '=')"
+		local ENV_STRING="$EQUAL_CHECK"
+		if [ -n "$EQUAL_CHECK" ]; then
+			ENV_STRING="PATH=\"$STARTUP_ENV:%(ENV_PATH)s\""
+		fi
+
+		STARTUP_ENV="environment = $ENV_STRING ; 程序启动的环境变量信息"
 	fi
 
-	if [ "$TMP_SUPERVISOR_STARTUP_PRIORITY" != "" ]; then
-		STARTUP_PRIORITY="priority = $TMP_SUPERVISOR_STARTUP_PRIORITY ; 启动优先级，默认999"
+	if [ "$STARTUP_PRIORITY" != "" ]; then
+		STARTUP_PRIORITY="priority = $STARTUP_PRIORITY ; 启动优先级，默认999"
 	fi
-
+	
 	cat >$SUPERVISOR_FILE_OUTPUT_PATH<<EOF
-[program:$TMP_SUPERVISOR_STARTUP_NAME]
-command = $TMP_SUPERVISOR_STARTUP_COMMAND  ; 启动命令，可以看出与手动在命令行启动的命令是一样的
+[program:$STARTUP_NAME]
+command = $STARTUP_COMMAND  ; 启动命令，可以看出与手动在命令行启动的命令是一样的
 autostart = true     ; 在 supervisord 启动的时候也自动启动
 startsecs = 60       ; 启动 60 秒后没有异常退出，就当作已经正常启动了
 autorestart = false   ; 程序异常退出后自动重启
@@ -690,7 +794,7 @@ $STARTUP_PRIORITY
 $STARTUP_DIR
 $STARTUP_ENV
 
-stdout_logfile = ${SUPERVISOR_LOGS_DIR}/${SUPERVISOR_STARTUP_FILENAME}_stdout.log  ; stdout 日志文件，需要注意当指定目录不存在时无法正常启动，所以需要手动创建目录（supervisord 会自动创建日志文件）
+stdout_logfile = ${SUPERVISOR_LOGS_DIR}/${STARTUP_NAME}_stdout.log  ; stdout 日志文件，需要注意当指定目录不存在时无法正常启动，所以需要手动创建目录（supervisord 会自动创建日志文件）
 numprocs=1           ;
 EOF
 
@@ -716,6 +820,8 @@ function echo_soft_port()
 	sed -i "11a-A INPUT $TMP_ECHO_SOFT_PORT_IP-p tcp -m state --state NEW -m tcp --dport $TMP_ECHO_SOFT_PORT -j ACCEPT" /etc/sysconfig/iptables
 
 	service iptables restart
+
+	sleep 2
 
 	return $?
 }

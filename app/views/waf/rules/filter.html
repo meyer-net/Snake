@@ -90,6 +90,8 @@
                         <b>URI模板</b>:
                         <br/>
                         <p class="urltmplp">${r.handle.uri_tmpl}</p>
+                        <b>继续规则</b>: ${r.handle.continue}
+                        <br />
                         <b>记录日志</b>: ${r.handle.log}
                     </td>
 
@@ -136,6 +138,13 @@
             <!-- handle url template-->
             <div class="form-group handle-holder">
                 <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="rule-continue">
+                        <option value="0">匹配则略过后续规则</option>
+                        <option value="true">继续后续规则</option>
+                        <option value="false">略过后续规则</option>
+                    </select>
+                </div>
                 <div class="col-sm-3">
                     <select class="form-control" id="rule-handle-log">
                         <option value="true">记录日志</option>
@@ -188,6 +197,13 @@
             <!-- handle url template-->
             <div class="form-group handle-holder">
                 <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-3">
+                    <select class="form-control" id="rule-continue">
+                        <option {@if r.handle.continue === 0 } selected {@/if} value="0">匹配则略过后续规则</option>
+                        <option {@if r.handle.continue === true } selected {@/if} value="true">继续后续规则</option>
+                        <option {@if r.handle.continue === false } selected {@/if} value="false">略过后续规则</option>
+                    </select>
+                </div>
                 <div class="col-sm-3">
                     <select class="form-control" id="rule-handle-log">
                         <option value="true" {@if r.handle.log==true} selected {@/if}>记录日志</option>

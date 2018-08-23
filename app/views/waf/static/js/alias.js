@@ -1,26 +1,26 @@
 (function (L) {
     var _this = null;
-    L.Rewrite = L.Rewrite || {};
-    _this = L.Rewrite = {
+    L.Alias = L.Alias || {};
+    _this = L.Alias = {
         data: {
         },
 
         init: function () {
-            L.Common.loadConfigs("rewrite", _this, true);
+            L.Common.loadConfigs("alias", _this, true);
             _this.initEvents();
         },
 
-        initEvents: function(){
-            L.Common.initRuleAddDialog("rewrite", _this);//添加规则对话框
-            L.Common.initRuleDeleteDialog("rewrite", _this);//删除规则对话框
-            L.Common.initRuleEditDialog("rewrite", _this);//编辑规则对话框
-            L.Common.initRuleSortEvent("rewrite", _this);
+        initEvents: function () {
+            L.Common.initRuleAddDialog("alias", _this);//添加规则对话框
+            L.Common.initRuleDeleteDialog("alias", _this);//删除规则对话框
+            L.Common.initRuleEditDialog("alias", _this);//编辑规则对话框
+            L.Common.initRuleSortEvent("alias", _this);
 
-            L.Common.initSelectorAddDialog("rewrite", _this);
-            L.Common.initSelectorDeleteDialog("rewrite", _this);
-            L.Common.initSelectorEditDialog("rewrite", _this);
-            L.Common.initSelectorSortEvent("rewrite", _this);
-            L.Common.initSelectorClickEvent("rewrite", _this);
+            L.Common.initSelectorAddDialog("alias", _this);
+            L.Common.initSelectorDeleteDialog("alias", _this);
+            L.Common.initSelectorEditDialog("alias", _this);
+            L.Common.initSelectorSortEvent("alias", _this);
+            L.Common.initSelectorClickEvent("alias", _this);
 
             L.Common.initSelectorTypeChangeEvent();//选择器类型选择事件
             L.Common.initConditionAddOrRemove();//添加或删除条件
@@ -32,29 +32,29 @@
             L.Common.initExtractionAddBtnEvent();//添加提前项按钮事件
             L.Common.initExtractionHasDefaultValueOrNotEvent();//提取项是否有默认值选择事件
 
-            L.Common.initViewAndDownloadEvent("rewrite", _this);
-            L.Common.initSwitchBtn("rewrite", _this);//redirect关闭、开启
-            L.Common.initSyncDialog("rewrite", _this);//编辑规则对话框
+            L.Common.initViewAndDownloadEvent("alias", _this);
+            L.Common.initSwitchBtn("alias", _this);//redirect关闭、开启
+            L.Common.initSyncDialog("alias", _this);//编辑规则对话框
         },
 
-        
-        buildRule: function(){
+
+        buildRule: function () {
             var result = {
                 success: false,
                 data: {
                     name: null,
-                    judge:{},
+                    judge: {},
                     extractor: {},
-                    handle:{}
+                    handle: {}
                 }
             };
 
             //build name and judge
             var buildJudgeResult = L.Common.buildJudge();
-            if(buildJudgeResult.success == true){
+            if (buildJudgeResult.success == true) {
                 result.data.name = buildJudgeResult.data.name;
                 result.data.judge = buildJudgeResult.data.judge;
-            }else{
+            } else {
                 result.success = false;
                 result.data = buildJudgeResult.data;
                 return result;
@@ -72,9 +72,9 @@
 
             //build handle
             var buildHandleResult = _this.buildHandle();
-            if(buildHandleResult.success == true){
+            if (buildHandleResult.success == true) {
                 result.data.handle = buildHandleResult.handle;
-            }else{
+            } else {
                 result.success = false;
                 result.data = buildHandleResult.data;
                 return result;
@@ -88,18 +88,19 @@
             return result;
         },
 
-        buildHandle: function(){
+        buildHandle: function () {
             var result = {};
             var handle = {};
-            var uri_tmpl = $("#rule-handle-uri-template").val();
-            if (!uri_tmpl) {
+            var alias = $("#rule-handle-alias").val();
+            if (!alias) {
                 result.success = false;
-                result.data = "rewrite使用的uri template不得为空";
+                result.data = "alias值不得为空";
                 return result;
             }
-            handle.uri_tmpl = uri_tmpl;
+            handle.alias = alias;
+
             var string_continue = $("#rule-continue").val()
-            var int_continue = parseInt(string_continue)
+            var int_continue = parseInt(string_continue) 
             if (isNaN(int_continue)) {
                 handle.continue = string_continue === "true";
             } else {

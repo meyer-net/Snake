@@ -97,6 +97,13 @@
                 return result;
             }
             handle.url_tmpl = url_tmpl;
+            var string_continue = $("#rule-continue").val()
+            var int_continue = parseInt(string_continue)
+            if (isNaN(int_continue)) {
+                handle.continue = string_continue === "true";
+            } else {
+                handle.continue = int_continue
+            }
             handle.trim_qs = ($("#rule-handle-trim-qs").val() === "true");
             handle.redirect_status = $("#rule-handle-redirect-status").val() == "301"?"301":"302";
             handle.log = ($("#rule-handle-log").val() === "true");

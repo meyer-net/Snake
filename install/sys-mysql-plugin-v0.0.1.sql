@@ -18,15 +18,10 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-# ------------------------------------------------------------
-
+/* ******************************************************************************* */
+USE mysql;
 CREATE DATABASE IF NOT EXISTS $project_name_plugin DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE $project_name_plugin;
-USE mysql;
-/* ******************************************************************************* */
-DROP DATABASE IF EXISTS $project_name_log_1;
-CREATE DATABASE $project_name_log_1 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-use $project_name_log_1;
 
 CREATE TABLE IF NOT EXISTS `meta` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -37,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `meta` (
   UNIQUE KEY `unique_key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-LOCK TABLES `monitor` WRITE;
+LOCK TABLES `meta` WRITE;
 INSERT INTO `meta` (`id`, `key`, `value`, `op_time`)
 VALUES
     (1,'stat.enable','1', now());
@@ -47,8 +42,6 @@ VALUES
 UNLOCK TABLES;
 
 # ------------------------------------------------------------
-
-DROP TABLE IF NOT EXISTS `monitor`;
 
 CREATE TABLE `monitor` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -71,6 +64,13 @@ UNLOCK TABLES;
 CREATE TABLE IF NOT EXISTS `ident_ctx` LIKE monitor;
 LOCK TABLES `ident_ctx` WRITE;
 INSERT INTO `ident_ctx` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
+UNLOCK TABLES;
+
+CREATE TABLE IF NOT EXISTS `alias` LIKE monitor;
+LOCK TABLES `alias` WRITE;
+INSERT INTO `alias` (`id`, `key`, `value`, `type`, `op_time`)
 VALUES
     (1,'1','{}','meta', now());
 UNLOCK TABLES;

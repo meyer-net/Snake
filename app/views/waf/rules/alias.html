@@ -17,8 +17,7 @@
                     <td class="left rule-condition-td">
                         <p>
                             {@if r.plugin}
-                            <b>插件</b>: ${r.plugin}
-                            {@/if}
+                            <b>插件</b>: ${r.plugin} {@/if}
                         </p>
                         <p>
                             <b>类型</b>: {@if r.judge.type==0 } 单一条件匹配 {@/if} {@if r.judge.type==1 } and匹配 {@/if} {@if r.judge.type==2
@@ -88,11 +87,9 @@
                     </td>
 
                     <td class="left rule-urltmpl-td">
-                        <b>Upstream URL模板</b>:
+                        <b>URI模板</b>:
                         <br/>
-                        <p class="urltmplp">${r.handle.url}</p>
-                        <b>Upstrem Host</b>: ${r.handle.host}
-                        <br/>
+                        <p class="urltmplp">${r.handle.alias}</p>
                         <b>继续规则</b>: ${r.handle.continue}
                         <br />
                         <b>记录日志</b>: ${r.handle.log}
@@ -135,11 +132,13 @@
             {(common/extraction-add.html)}
             <!-- add - 变量提取器模板 end -->
 
-            <!-- add - 服务提取器模板 start -->
-            {(common/micro-add.html)}
-            <!-- add - 服务提取器模板 end -->
-            
-            <!-- handle rewrite to-->
+            <div class="form-group handle-holder">
+                <label class="col-sm-1 control-label">处理</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="rule-handle-alias" placeholder="alias path to write">
+                </div>
+            </div>
+            <!-- handle url template-->
             <div class="form-group handle-holder">
                 <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-3">
@@ -150,14 +149,13 @@
                     </select>
                 </div>
                 <div class="col-sm-3">
-                    <select class="form-control" id="rule-log">
+                    <select class="form-control" id="rule-handle-log">
                         <option value="true">记录日志</option>
                         <option value="false">不记录日志</option>
                     </select>
                 </div>
             </div>
             <!-- handle log-->
-
 
             <div class="form-group">
                 <div class="col-sm-offset-1 col-sm-11">
@@ -187,15 +185,19 @@
             <!-- edit - 条件编辑器模板 start -->
             {(common/condition-edit.html)}
             <!-- edit - 条件编辑器模板 end -->
-            <!-- add - 变量提取器模板 start -->
+
+            <!-- edit - 变量提取器模板 start -->
             {(common/extraction-edit.html)}
-            <!-- add - 变量提取器模板 end -->
+            <!-- edit - 变量提取器模板 end -->
 
-            <!-- add - 服务提取器模板 start -->
-            {(common/micro-edit.html)}
-            <!-- add - 服务提取器模板 end -->
 
-            <!-- handle rewrite to-->
+            <div class="form-group handle-holder">
+                <label class="col-sm-1 control-label">处理</label>
+                <div class="col-sm-11">
+                    <input type="text" class="form-control" id="rule-handle-alias" placeholder="alias path to write" value="${r.handle.alias}">
+                </div>
+            </div>
+            <!-- handle url template-->
             <div class="form-group handle-holder">
                 <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-3">

@@ -54,3 +54,4 @@ CALL p_create_dbs(36);
 /* ******************************************************************************* */
 DROP PROCEDURE IF EXISTS p_create_dbs;
 /* ******************************************************************************* */
+-- mysql -uroot -p"dbclean&1st->$" -e"show databases" | grep "snake_com_log_" | xargs -I {} mysql -uroot -p"dbclean&1st->$" -e"drop database {}"

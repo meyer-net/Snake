@@ -4,6 +4,7 @@
 #      copyright https://echat.oshit.com/
 #      email: meyer_net@foxmail.com
 #------------------------------------------------
+#git remote set-url origin https://meyer-net@github.com/meyer-net/snake.git
 
 rm -rf logs/*
 

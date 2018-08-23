@@ -93,6 +93,8 @@
                         <br/>
                         <b>状态码</b>: ${r.handle.redirect_status}
                         <br/>
+                        <b>继续规则</b>: ${r.handle.continue}
+                        <br />
                         <b>记录日志</b>: ${r.handle.log}
                     </td>
 
@@ -152,6 +154,13 @@
                     <select class="form-control" id="rule-handle-redirect-status">
                         <option value="301">301</option>
                         <option value="302">302</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <select class="form-control" id="rule-continue">
+                        <option value="0">匹配则略过后续规则</option>
+                        <option value="true">继续后续规则</option>
+                        <option value="false">略过后续规则</option>
                     </select>
                 </div>
                 <div class="col-sm-3">
@@ -218,6 +227,13 @@
                     <select class="form-control" id="rule-handle-redirect-status">
                         <option value="301" {@if r.handle.redirect_status=="301" } selected {@/if}>301</option>
                         <option value="302" {@if r.handle.redirect_status=="302" } selected {@/if}>302</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <select class="form-control" id="rule-continue">
+                        <option {@if r.handle.continue === 0 } selected {@/if} value="0">匹配则略过后续规则</option>
+                        <option {@if r.handle.continue === true } selected {@/if} value="true">继续后续规则</option>
+                        <option {@if r.handle.continue === false } selected {@/if} value="false">略过后续规则</option>
                     </select>
                 </div>
                 <div class="col-sm-3">

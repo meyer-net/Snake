@@ -121,6 +121,13 @@
             //     return result;
             // }
             // handle.uri_tmpl = uri_tmpl;
+            var string_continue = $("#rule-continue").val()
+            var int_continue = parseInt(string_continue)
+            if (isNaN(int_continue)) {
+                handle.continue = string_continue === "true";
+            } else {
+                handle.continue = int_continue
+            }
             handle.log = ($("#rule-handle-log").val() === "true");
             result.success = true;
             result.handle = handle;

@@ -19,9 +19,8 @@ local require = require
 --------------------------------------------------------------------------
 ---> 业务路由管理
 local router_test = require("app.routes.test")
-local router_user = require("app.routes.user")
 local router_buffer = require("app.routes.buffer")
-local router_log = require("app.routes.log")
+-- local router_log = require("app.routes.log")
 
 -----> 插件库引用
 local middleware_er4xx = require("app.middleware.Er4xx")

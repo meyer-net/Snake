@@ -105,6 +105,13 @@
             handle.content_type = content_type || "";
 
             result.data.type = parseInt(handle_type);
+            var string_continue = $("#rule-continue").val()
+            var int_continue = parseInt(string_continue)
+            if (isNaN(int_continue)) {
+                handle.continue = string_continue === "true";
+            } else {
+                handle.continue = int_continue
+            }
             handle.log = ($("#rule-handle-log").val() === "true");
 
             //enable or not

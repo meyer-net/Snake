@@ -16,7 +16,7 @@
                 <div class="row content-header">
                     <div class="col-md-12">
                         <div class="pull-left">
-                            <h4 class="head_title">URI Rewrite</h4>
+                            <h4 class="head_title">Alias</h4>
                         </div>
                         <div class="pull-right">
                              {(common/title-op.html)}
@@ -32,7 +32,7 @@
         </div><!--右侧部分结束-->
     </div>
 
-    {(rules/rewrite.html)}
+    {(rules/alias.html)}
     
     {(common/extraction-tmpl.html)}
 
@@ -41,11 +41,11 @@
     {(common/selector-edit.html)}
 
     {(common/common_js.html)}<!-- 通用js -->
-    <script src="/static/js/rewrite.js"></script>
+    <script src="/static/js/alias.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            APP.Common.resetNav("nav-rewrite");
-            APP.Rewrite.init();
+            APP.Common.resetNav("nav-alias");
+            APP.Alias.init();
             $(".sortable-list").sortable().disableSelection();
         });
     </script>

@@ -52,6 +52,7 @@ function set_resolver_type_tencent()
     RESOLVERS="10.225.30.181 10.225.30.223"
     return $?
 }
+
 set_if_choice "TMP_SET_RESOLVER_TYPE" "[$PROJECT_NAME]DNS: Please ender ${red}resolver address type${reset}" "default,alibaba,tencent" "" "set_resolver_type_"
 sed -i "s@\$resolvers@$RESOLVERS@g" conf/nginx-master.conf
 
