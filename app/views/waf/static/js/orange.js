@@ -136,41 +136,17 @@
         },
 
         //变量提取器增加、删除按钮事件
-        initFilterAddOrRemove: function () {
+        initPairAddOrRemove: function () {
 
             //添加规则框里的事件
             //点击“加号“添加新的输入行
-            $('#filter-area .pair .btn-add').unbind("click").on('click', _this.addNewFilter);
+            $('#pair-area .btn-add').unbind("click").on('click', _this.addNewFilter);
 
             //删除输入行
-            $('#filter-area .pair .btn-remove').unbind("click").on('click', function (event) {
+            $('#pair-area .btn-remove').unbind("click").on('click', function (event) {
                 $(this).parents('.form-group').remove();//删除本行输入
                 _this.resetAddFilterBtn();
             });
-        },
-
-        initFilterComponent: function () {
-            var row;
-            var current_es = $('.filter-holder');
-            if (current_es && current_es.length) {
-                row = current_es[current_es.length - 1];
-            }
-            
-            if (row) {//至少存在了一个提取项
-                var new_row = $(row).clone(true);
-
-                var old_type = $(row).find("select[name=rule-filter-type]").val();
-                $(new_row).find("select[name=rule-filter-type]").val(old_type);
-                $(new_row).find("label").text("");
-
-                $("#filter-area").append($(new_row));
-            } else {//没有任何提取项，从模板创建一个
-                var html = $("#single-filter-tmpl").html();
-                $("#filter-area").append(html);
-                $("#filter-area").find(".control-label").text("处理");
-            }
-
-            _this.resetAddFilterBtn();
         },
 
         //selector类型选择事件
@@ -386,22 +362,22 @@
             });
         },
 
-        initFilterTypeChangeEvent: function () {
-            $(document).on("change", 'select[name=rule-filter-type]', function () {
+        initPairTypeChangeEvent: function () {
+            $(document).on("change", 'select[name=rule-pair-type]', function () {
                 var filter_type = $(this).val();
 
                 if (filter_type == "0") {
-                    $(this).parents(".filter-holder").each(function () {
+                    $(this).parents(".pair-holder").each(function () {
                         $(this).find(".filter-key-hodler").show();
                         $(this).find(".filter-value-hodler").show();
-                        $(this).find("select[name=rule-filter-body]").hide();
+                        $(this).find("select[name=rule-pair-body]").hide();
                     });
                 } else if (filter_type == "1") {
                     console.log(1111);
-                    $(this).parents(".filter-holder").each(function () {
+                    $(this).parents(".pair-holder").each(function () {
                         $(this).find(".filter-key-hodler").hide();
                         $(this).find(".filter-value-hodler").hide();
-                        $(this).find("select[name=rule-filter-body]").show();
+                        $(this).find("select[name=rule-pair-body]").show();
                     });
                 }
             });
@@ -798,19 +774,12 @@
 
         addNewFilter: function (event) {
             var self = $(this);
-            var row = self.parents('.filter-holder');
+            var row = self.parents('.pair-holder');
             var new_row = row.clone(true);
-
-            var old_type = $(row).find("select[name=rule-filter-type]").val();
-            $(new_row).find("select[name=rule-filter-type]").val(old_type);
-
-            if (old_type == "0") {//如果拷贝的是URI类型，则不显示default
-                $(new_row).find("select[name=rule-filter-body]").hide();
-            }
 
             $(new_row).find("label").text("");
 
-            $(new_row).insertAfter($(this).parents('.filter-holder'))
+            $(new_row).insertAfter($(this).parents('.pair-holder'))
             _this.resetAddFilterBtn();
         },
 
@@ -858,20 +827,18 @@
         },
 
         resetAddFilterBtn: function () {
-            var l = $("#filter-area .pair").length;
+            var l = $("#pair-area .pair-holder").length;
             var c = 0;
-
-            $("#filter-area .pair").eq(0).find(".btn-remove").hide();
-            $("#filter-area .pair").each(function () {
+            $("#pair-area .pair-holder").each(function () {
                 c++;
                 if (c == l) {
                     $(this).find(".btn-add").show();
-                    $(this).find(".btn-remove").hide();
+                    $(this).find(".btn-remove").show();
                 } else {
                     $(this).find(".btn-add").hide();
                     $(this).find(".btn-remove").show();
                 }
-            });
+            })
         },
 
         //数据/表格视图转换和下载事件
@@ -1052,10 +1019,9 @@
                     modal: true,
                     onshow: function () {
                         L.Common.initMicroTypeChangeEvent();//condition类型选择事件
-                        L.Common.initFilterComponent();//添加提前项按钮事件
-                        L.Common.initFilterAddOrRemove();//添加或删除条件
-                        L.Common.initFilterTypeChangeEvent();//添加或删除条件
-                        $('select[name=rule-filter-type]').trigger("change");
+                        L.Common.initPairAddOrRemove();//添加或删除条件
+                        L.Common.initPairTypeChangeEvent();//添加或删除条件
+                        $('select[name=rule-pair-type]').trigger("change");
                     },
                     button: [{
                         value: '取消'
@@ -1228,9 +1194,8 @@
                     modal: true,
                     onshow: function () {
                         L.Common.initMicroTypeChangeEvent();//condition类型选择事件
-                        L.Common.initFilterComponent();//添加提前项按钮事件
-                        L.Common.initFilterAddOrRemove();//添加或删除条件
-                        L.Common.initFilterTypeChangeEvent();//添加或删除条件
+                        L.Common.initPairAddOrRemove();//添加或删除条件
+                        L.Common.initPairTypeChangeEvent();//添加或删除条件
                     },
                     button: [{
                         value: '取消'

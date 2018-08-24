@@ -1,0 +1,27 @@
+<div id="pair-area">
+    <div class="form-group pair-holder">
+        <label class="col-sm-1 control-label">{@if index == 0}处理{@/if}</label>
+
+        <div class="col-sm-3 pair-key-hodler">
+            <input type="text" class="form-control" name="pair-key" placeholder="pair key" value="${pair.key}" />
+        </div>
+        <div class="col-sm-4 pair-value-hodler" style="padding:0;">
+            <input type="text" class="form-control" name="pair-value" placeholder="pair value" value="${pair.value}" />
+        </div>
+        <div class="col-sm-1" style="margin-top:5px;float:right;margin-right: 50px;">
+            <span class="input-group-btn">
+                {@if index == 0}
+                <!-- ${remove_style="display: none"} -->
+                {@/if}
+                <a class="btn btn-remove" style="padding:0 5px;${remove_style}">
+                    <i class="fa fa-remove"></i>
+                </a>
+                {@if index == total - 1}
+                <a class="btn btn-add" style="padding:0 5px;">
+                    <i class="fa fa-plus"></i>
+                </a>
+                {@/if}
+            </span>
+        </div>
+    </div>
+</div>

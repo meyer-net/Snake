@@ -14,13 +14,10 @@
                     <td class="rule-name-td">
                         <b class="namep">${r.name}</b>
                     </td>
-
-
                     <td class="left rule-condition-td">
                         <p>
                             {@if r.plugin}
-                            <b>插件</b>: ${r.plugin}
-                            {@/if}
+                            <b>插件</b>: ${r.plugin} {@/if}
                         </p>
                         <p>
                             <b>类型</b>: {@if r.judge.type==0 } 单一条件匹配 {@/if} {@if r.judge.type==1 } and匹配 {@/if} {@if r.judge.type==2
@@ -42,7 +39,9 @@
                         </p>
 
                         {@if r.extractor && r.extractor.extractions } {@each r.extractor.extractions as e, index} {@if !r.extractor.type || r.extractor.type==1
-                        } {@if e.type!="URI" }
+                        }
+                        <!-- 索引式提取 -->
+                        {@if e.type!="URI" }
                         <span>$</span>
                         <span>{</span>${ parseInt(index)+1 }
                         <span>}</span>: ${e.type}{@if e.name }[${e.name}]{@/if} {@if e.default=="" || e.default }
@@ -56,7 +55,9 @@
                         <span>}</span>:
                         <i style="text-decoration:underline">${e.name}</i>
                         {@/if}
-                        <br/> {@/if} {@if r.extractor.type==2 } {@if e.type!="URI" }
+                        <br/> {@/if} {@if r.extractor.type==2 }
+                        <!-- 模板式提取 -->
+                        {@if e.type!="URI" }
                         <span>{</span>
                         <span>{</span>
                         {@if e.type=="Query" }query.
@@ -86,13 +87,9 @@
                     </td>
 
                     <td class="left rule-urltmpl-td">
-                        <b>URL模板</b>:
+                        <b>URI模板</b>:
                         <br/>
-                        <p class="urltmplp">${r.handle.url_tmpl}</p>
-                        <b>清除Query</b>: ${r.handle.trim_qs}
-                        <br/>
-                        <b>状态码</b>: ${r.handle.redirect_status}
-                        <br/>
+                        <p class="urltmplp">${r.handle.uri_tmpl}</p>
                         <b>继续规则</b>: ${r.handle.continue}
                         <br />
                         <b>记录日志</b>: ${r.handle.log}
@@ -115,7 +112,6 @@
     </li>
     {@/each}
 </script>
-
 <script id="add-tpl" type="application/template">
     <div id="rule-edit-area">
         <form id="add-rule-form" class="form-horizontal">
@@ -134,28 +130,12 @@
             <!-- add - 变量提取器模板 start -->
             {(common/extraction-add.html)}
             <!-- add - 变量提取器模板 end -->
-
-            <div class="form-group handle-holder">
-                <label class="col-sm-1 control-label">处理</label>
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" id="rule-handle-url-template" placeholder="url template to redirect">
-                </div>
-            </div>
+            
+            {(common/pair-add.html)}
+            
             <!-- handle url template-->
             <div class="form-group handle-holder">
                 <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-4">
-                    <select class="form-control" id="rule-handle-trim-qs">
-                        <option value="true">清除Query</option>
-                        <option value="false" selected>不清除Query</option>
-                    </select>
-                </div>
-                <div class="col-sm-3">
-                    <select class="form-control" id="rule-handle-redirect-status">
-                        <option value="301">301</option>
-                        <option value="302">302</option>
-                    </select>
-                </div>
                 <div class="col-sm-4">
                     <select class="form-control" id="rule-continue">
                         <option value="0">匹配则略过后续规则</option>
@@ -171,8 +151,6 @@
                 </div>
             </div>
             <!-- handle log-->
-
-
 
             <div class="form-group">
                 <div class="col-sm-offset-1 col-sm-11">
@@ -207,28 +185,14 @@
             {(common/extraction-edit.html)}
             <!-- edit - 变量提取器模板 end -->
 
+            <!-- ${total=r.handle.tmpl_vars.length} -->
+            {@each r.handle.tmpl_vars as pair, index}
+                {(common/pair-edit.html)}
+            {@/each}
 
-            <div class="form-group handle-holder">
-                <label class="col-sm-1 control-label">处理</label>
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" id="rule-handle-url-template" placeholder="url template to redirect" value="${r.handle.url_tmpl}">
-                </div>
-            </div>
             <!-- handle url template-->
             <div class="form-group handle-holder">
                 <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-4">
-                    <select class="form-control" id="rule-handle-trim-qs">
-                        <option value="true" {@if r.handle.trim_qs==true} selected {@/if}>清除Query</option>
-                        <option value="false" {@if r.handle.trim_qs==false} selected {@/if}>不清除Query</option>
-                    </select>
-                </div>
-                <div class="col-sm-3">
-                    <select class="form-control" id="rule-handle-redirect-status">
-                        <option value="301" {@if r.handle.redirect_status=="301" } selected {@/if}>301</option>
-                        <option value="302" {@if r.handle.redirect_status=="302" } selected {@/if}>302</option>
-                    </select>
-                </div>
                 <div class="col-sm-4">
                     <select class="form-control" id="rule-continue">
                         <option {@if r.handle.continue === 0 } selected {@/if} value="0">匹配则略过后续规则</option>

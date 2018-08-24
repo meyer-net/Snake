@@ -3,9 +3,6 @@
 
 <head>
     {(common/meta.html)}
-<script type="text/javascript">
-    global_settings.c_name = "插件";
-    </script>
 </head>
 
 <body class="fixed-sidebar full-height-layout gray-bg">
@@ -21,7 +18,7 @@
                 <div class="row content-header">
                     <div class="col-md-12">
                         <div class="pull-left">
-                            <h4 class="head_title">映射</h4>
+                            <h4 class="head_title">模板变量</h4>
                         </div>
                         <div class="pull-right">
                             {(common/title-op.html)}
@@ -37,36 +34,21 @@
         <!--右侧部分结束-->
     </div>
 
-    <div id="map-rule-rewrite">
-        {(rules/rewrite.html)}
-    </div>
-    <div id="map-rule-redirect">
-        {(rules/redirect.html)}
-    </div>
-    <div id="map-rule-divide">
-        {(rules/divide.html)}
-    </div>
-    <div id="map-rule-alias">
-        {(rules/alias.html)}
-    </div>
-    <div id="map-rule-ssi">
-        {(rules/ssi.html)}
-    </div>
-
-    {(common/extraction-tmpl.html)} {(common/selector-item-tpl.html)} {(common/selector-add.html)} {(common/selector-edit.html)}
-    {(common/common_js.html)}
+    {(rules/tmpl_vars.html)} 
+    
+    {(common/extraction-tmpl.html)}
+    {(common/selector-item-tpl.html)}
+    {(common/selector-add.html)}
+    {(common/selector-edit.html)}
+    
+    {(common/selector-edit.html)} {(common/common_js.html)}
 
     <!-- 通用js -->
-    <script src="/static/js/rewrite.js"></script>
-    <script src="/static/js/redirect.js"></script>
-    <script src="/static/js/divide.js"></script>
-    <script src="/static/js/alias.js"></script>
-    <script src="/static/js/map.js"></script>
-    <script src="/static/js/ssi.js"></script>
+    <script src="/static/js/tmpl_vars.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            APP.Common.resetNav("nav-map");
-            APP.Map.init();
+            APP.Common.resetNav("nav-tmpl_vars");
+            APP.TmplVars.init();
             $(".sortable-list").sortable().disableSelection();
         });
     </script>

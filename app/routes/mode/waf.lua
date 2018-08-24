@@ -40,7 +40,7 @@ local base_router = require("app.routes.base_router")
 return function(app, conf, store)
     ---> 管理员用户操作
     -- app:use("/user", router_simple_user(conf, store))
-
+    
     if conf.waf and u_object.check(conf.waf.auth) then
         -- session support
         app:use(middleware_session({
@@ -66,6 +66,7 @@ return function(app, conf, store)
         -- 没有特殊的数据渲染，则按请求路径展示HTML
         app:erroruse(middleware_er4xx(function (req, res, next)
             local uri = u_string.ltrim(ngx.var.uri, "/")
+            res:status(ngx.HTTP_OK)
             res:render(uri)
         end))
 

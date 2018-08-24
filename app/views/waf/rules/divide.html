@@ -142,14 +142,14 @@
             <!-- handle rewrite to-->
             <div class="form-group handle-holder">
                 <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                     <select class="form-control" id="rule-continue">
                         <option value="0">匹配则略过后续规则</option>
                         <option value="true">继续后续规则</option>
                         <option value="false">略过后续规则</option>
                     </select>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3" style="padding:0;">
                     <select class="form-control" id="rule-log">
                         <option value="true">记录日志</option>
                         <option value="false">不记录日志</option>
@@ -198,14 +198,14 @@
             <!-- handle rewrite to-->
             <div class="form-group handle-holder">
                 <label class="col-sm-1 control-label"></label>
-                <div class="col-sm-3">
+                <div class="col-sm-4">
                     <select class="form-control" id="rule-continue">
                         <option {@if r.handle.continue === 0 } selected {@/if} value="0">匹配则略过后续规则</option>
                         <option {@if r.handle.continue === true } selected {@/if} value="true">继续后续规则</option>
                         <option {@if r.handle.continue === false } selected {@/if} value="false">略过后续规则</option>
                     </select>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3" style="padding:0;">
                     <select class="form-control" id="rule-handle-log">
                         <option value="true" {@if r.handle.log==true} selected {@/if}>记录日志</option>
                         <option value="false" {@if r.handle.log==false} selected {@/if}>不记录日志</option>

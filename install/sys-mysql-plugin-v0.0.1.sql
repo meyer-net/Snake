@@ -68,6 +68,13 @@ VALUES
     (1,'1','{}','meta', now());
 UNLOCK TABLES;
 
+CREATE TABLE IF NOT EXISTS `tmpl_vars` LIKE monitor;
+LOCK TABLES `tmpl_vars` WRITE;
+INSERT INTO `tmpl_vars` (`id`, `key`, `value`, `type`, `op_time`)
+VALUES
+    (1,'1','{}','meta', now());
+UNLOCK TABLES;
+
 CREATE TABLE IF NOT EXISTS `alias` LIKE monitor;
 LOCK TABLES `alias` WRITE;
 INSERT INTO `alias` (`id`, `key`, `value`, `type`, `op_time`)
