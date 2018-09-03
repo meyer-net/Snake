@@ -498,5 +498,25 @@ return function ( config, store )
     res:json(confs)
   end)
 
+  router:get("/rpc_leaf", function(req, res, next)
+	
+	local server_address = "172.30.10.115"
+	local server_port = 2182
+
+		local rpc = require "resty.skynet_rpc"
+            local r= rpc.new()	
+						r:set_timeout(1000)
+						r:connect(server_address, server_port)
+						local v = r:call("getID","GET","a")
+            ngx.log(ngx.ERR, v)
+						r:set_keepalive(5000)
+
+	-- local proxy = luarpc.createProxy(server_address, server_port, interface_file)
+
+	-- local t = proxy.getID()
+	
+    res:json({r=v})
+  end)
+
 	return router
 end

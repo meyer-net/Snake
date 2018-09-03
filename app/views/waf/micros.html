@@ -5,13 +5,13 @@
     {(common/meta.html)}
     <script type="text/javascript">
         global_settings.t_name = "";
-        global_settings.c_name = "服务";    //分组子名称
-        global_settings.g_name = "服务组";  //分组名称
+        global_settings.c_name = "服务"; //分组子名称
+        global_settings.g_name = "服务组"; //分组名称
     </script>
 </head>
 
 <body class="fixed-sidebar full-height-layout gray-bg">
-    
+
     <div id="wrapper">
         <!-- {(common/left_nav.html)} -->
         <!-- 左侧导航 -->
@@ -37,9 +37,9 @@
             </div>
         </div>
         <!--右侧部分结束-->
-</div>
-<script id="rule-item-tpl" type="text/template">
-    {@each rules as r, index}
+    </div>
+    <script id="rule-item-tpl" type="text/template">
+        {@each rules as r, index}
     <li data-id="${r.id}" {@if r.enable==true } class="info-element" {@/if} {@if r.enable!=true } class="warning-element" {@/if}>
         <table class="table table-hover single-rule-table">
             <tbody>
@@ -112,12 +112,12 @@
                     </div>
                 </div>
                 <!-- name -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="input-name" class="col-sm-1 control-label">标记</label>
                     <div class="col-sm-11">
                         <input type="text" class="form-control" id="rule-key" placeholder="标记">
                     </div>
-                </div>
+                </div> -->
                 <!-- name -->
 
                 <div class="form-group">
@@ -182,12 +182,12 @@
                     </div>
                 </div>
                 <!-- name -->
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="input-name" class="col-sm-1 control-label">标记</label>
                     <div class="col-sm-11">
                         <input type="text" class="form-control" id="rule-key" value="${r.key}" placeholder="标记">
                     </div>
-                </div>
+                </div> -->
                 <!-- name -->
 
                 <div class="form-group">

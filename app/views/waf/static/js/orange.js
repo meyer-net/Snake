@@ -7,12 +7,12 @@
         findTemplate: function (selectors, plugin) {
             var selected_plugin = plugin || $("#add-plugin-select option:selected").val();
             if (selected_plugin && selected_plugin.length > 0) {
-                var template = $("#map-rule-"+selected_plugin)
+                var template = $("#map-rule-" + selected_plugin)
                 if (template.length > 0) {
                     return template.find(selectors)
                 }
             }
-            
+
             return $(selectors);
         },
 
@@ -37,7 +37,7 @@
         init: function () {
             $(document).ready(function () {
                 var start_plugin = false;
-                $("#side-menu li").each(function() {
+                $("#side-menu li").each(function () {
                     var li = $(this);
                     var span = li.find("span");
                     var link = li.find("a");
@@ -51,8 +51,7 @@
                         return false;
                     }
 
-                    if (start_plugin)
-                    {
+                    if (start_plugin) {
                         $("#add-plugin-select select").append("<option value='" + link.attr("href").substring(1) + "'>" + span.text() + "</option>");
                     }
                 });
@@ -92,7 +91,7 @@
 
             //删除输入行
             $(document).on('click', '#judge-area .pair .btn-remove', function (event) {
-                $(this).parents('.form-group').remove();//删除本行输入
+                $(this).parents('.form-group').remove(); //删除本行输入
                 _this.resetAddConditionBtn();
             });
         },
@@ -106,7 +105,7 @@
 
             //删除输入行
             $(document).on('click', '#extractor-area .pair .btn-remove', function (event) {
-                $(this).parents('.form-group').remove();//删除本行输入
+                $(this).parents('.form-group').remove(); //删除本行输入
                 _this.resetAddExtractionBtn();
             });
         },
@@ -118,7 +117,7 @@
                 if (current_es && current_es.length) {
                     row = current_es[current_es.length - 1];
                 }
-                if (row) {//至少存在了一个提取项
+                if (row) { //至少存在了一个提取项
                     var new_row = $(row).clone(true);
 
                     var old_type = $(row).find("select[name=rule-extractor-extraction-type]").val();
@@ -126,7 +125,7 @@
                     $(new_row).find("label").text("");
 
                     $("#extractor-area").append($(new_row));
-                } else {//没有任何提取项，从模板创建一个
+                } else { //没有任何提取项，从模板创建一个
                     var html = $("#single-extraction-tmpl").html();
                     $("#extractor-area").append(html);
                 }
@@ -136,22 +135,23 @@
         },
 
         //变量提取器增加、删除按钮事件
-        initPairAddOrRemove: function () {
-
+        initPairAddOrRemove: function (id) {
             //添加规则框里的事件
             //点击“加号“添加新的输入行
-            $('#pair-area .btn-add').unbind("click").on('click', _this.addNewFilter);
+            $('#' + id + ' .btn-add').unbind("click").on('click', function (event) {
+                _this.addNewPair(this, id);
+            });
 
             //删除输入行
-            $('#pair-area .btn-remove').unbind("click").on('click', function (event) {
-                $(this).parents('.form-group').remove();//删除本行输入
-                _this.resetAddFilterBtn();
+            $('#' + id + ' .btn-remove').unbind("click").on('click', function (event) {
+                $(this).parents('.form-group').remove(); //删除本行输入
+                _this.resetAddFilterBtn(id);
             });
         },
 
         //selector类型选择事件
         initSelectorTypeChangeEvent: function () {
-            $(document).on("change", '#'+global_settings.i_key+'-type', function () {
+            $(document).on("change", '#' + global_settings.i_key + '-type', function () {
                 var selector_type = $(this).val();
                 if (selector_type == "1") {
                     $("#judge-area").show();
@@ -221,7 +221,7 @@
                             if (result.success) {
                                 elem_rule_micro_group.empty();
                                 _this.renderToSelectBySelectors(rule_micro_group_id, result.data.selectors);
-                                
+
                                 var selectors_keys = Object.keys(result.data.selectors);
                                 if (selectors_keys.length > 0) {
                                     var rule_micros_id = "select[id=rule-micros]";
@@ -276,7 +276,7 @@
                                                     prev_doing = false;
                                                     return;
                                                 }
-                                                
+
                                                 prev_doing = false;
                                             });
                                         }
@@ -320,7 +320,7 @@
             $(document).on("change", 'select[name=rule-extractor-extraction-has-default]', function () {
                 var has_default = $(this).val();
 
-                if (has_default=="1") {
+                if (has_default == "1") {
                     $(this).parents(".extraction-default-hodler").each(function () {
                         $(this).find("div[name=rule-extractor-extraction-default]").show();
                     });
@@ -336,8 +336,8 @@
             $(document).on("change", 'select[name=rule-extractor-extraction-type]', function () {
                 var extraction_type = $(this).val();
 
-                if (extraction_type != "Header" && extraction_type != "Query"
-                    && extraction_type != "PostParams" && extraction_type != "URI") {
+                if (extraction_type != "Header" && extraction_type != "Query" &&
+                    extraction_type != "PostParams" && extraction_type != "URI") {
                     $(this).parents(".extraction-holder").each(function () {
                         $(this).find(".extraction-name-hodler").hide();
                     });
@@ -348,12 +348,12 @@
                 }
 
                 //URI类型没有默认值选项
-                if(extraction_type=="URI"){
+                if (extraction_type == "URI") {
                     $(this).parents(".extraction-holder").each(function () {
                         $(this).find("select[name=rule-extractor-extraction-has-default]").hide();
                         $(this).find("div[name=rule-extractor-extraction-default]").hide();
                     });
-                }else{
+                } else {
                     $(this).parents(".extraction-holder").each(function () {
                         $(this).find("select[name=rule-extractor-extraction-has-default]").val("0").show();
                         $(this).find("div[name=rule-extractor-extraction-default]").hide();
@@ -373,7 +373,7 @@
                         $(this).find("select[name=rule-pair-body]").hide();
                     });
                 } else if (filter_type == "1") {
-                    console.log(1111);
+                    // console.log(1111);
                     $(this).parents(".pair-holder").each(function () {
                         $(this).find(".filter-key-hodler").hide();
                         $(this).find(".filter-value-hodler").hide();
@@ -383,7 +383,7 @@
             });
         },
 
-        buildSelector: function(){
+        buildSelector: function () {
             var result = {
                 success: false,
                 data: {
@@ -424,8 +424,8 @@
             if (elem_type.length > 0) {
                 var type = elem_type.val();
                 if (!type) {
-                result.success = false;
-                result.data = "类型不能为空";
+                    result.success = false;
+                    result.data = "类型不能为空";
                     return result;
                 }
                 result.data.type = parseInt(type);
@@ -447,9 +447,12 @@
             }
 
             //build handle
-            var elem_continue = $("#selector-continue");
-            if (elem_continue.length > 0) {
-                result.data.handle.continue = (elem_continue.val() === "true");
+            var string_continue = $("#selector-continue").val();
+            var int_continue = parseInt(string_continue);
+            if (isNaN(int_continue)) {
+                result.data.handle.continue = string_continue === "true";
+            } else {
+                result.data.handle.continue = int_continue
             }
 
             //build handle
@@ -460,18 +463,17 @@
                 delete result.data.open
             }
 
-            result.data.handle.log = ($("#selector-log").val() === "true");
+            result.data.handle.log = ($("#selector-log").val() === "true"); 
 
             //enable or not
-            var enable = $('#'+global_settings.i_key+'-enable').is(':checked');
+            var enable = $('#' + global_settings.i_key + '-enable').is(':checked');
             result.data.enable = enable;
 
             result.success = true;
             return result;
         },
 
-        buildName:function()
-        {
+        buildName: function () {
             var result = {
                 success: false,
                 data: {
@@ -481,7 +483,7 @@
 
             var name = $("#rule-name").val();
             if (!name) {
-                result.data = global_settings.c_name+"名称不能为空";
+                result.data = global_settings.c_name + "名称不能为空";
                 return result;
             }
 
@@ -518,11 +520,11 @@
                 }
             };
 
-            if(ignore_name != true) {
+            if (ignore_name != true) {
                 var temp_result = L.Common.buildName();
-                if(!temp_result.success){
+                if (!temp_result.success) {
                     return temp_result;
-                }else{
+                } else {
                     result.data.name = temp_result.data.name
                 }
             }
@@ -533,7 +535,7 @@
             } else {
                 result.data.key = temp_result.data.key
             }
-          
+
             var judge_type = parseInt($("#rule-judge-type").val());
             result.data.judge.type = judge_type;
 
@@ -541,7 +543,7 @@
                 var judge_expression = $("#rule-judge-expression").val();
                 if (!judge_expression) {
                     result.success = false;
-                    result.data = "复杂匹配的" + global_settings.c_name +"表达式不得为空";
+                    result.data = "复杂匹配的" + global_settings.c_name + "表达式不得为空";
                     return result;
                 }
                 result.data.judge.expression = judge_expression;
@@ -594,12 +596,12 @@
                     result.data = "单一条件匹配模式只能有一条condition，请删除多余配置";
                     return result;
                 }
-                if (result.data.judge.type == 3) {//判断条件表达式与条件个数等
+                if (result.data.judge.type == 3) { //判断条件表达式与条件个数等
                     try {
                         var condition_count = result.data.judge.conditions.length;
                         var regrex1 = /(v\[[0-9]+\])/g;
                         var regrex2 = /([0-9]+)/g;
-                        var expression_v_array = [];// 提取条件变量
+                        var expression_v_array = []; // 提取条件变量
                         expression_v_array = result.data.judge.expression.match(regrex1);
                         if (!expression_v_array || expression_v_array.length < 1) {
                             result.success = false;
@@ -644,22 +646,21 @@
         buildExtractor: function () {
             var result = {
                 success: false,
-                data: {
-                }
+                data: {}
             };
 
             //提取器类型
             var elem_extractor = $("#rule-extractor-type")
 
             if (elem_extractor.length > 0) {
-                result.data.extractor = { }
+                result.data.extractor = {}
                 var extractor_type = elem_extractor.val();
-                try{
+                try {
                     extractor_type = parseInt(extractor_type);
-                    if(!extractor_type || extractor_type != 2){
+                    if (!extractor_type || extractor_type != 2) {
                         extractor_type = 1;
                     }
-                }catch(e){
+                } catch (e) {
                     extractor_type = 1;
                 }
 
@@ -675,7 +676,7 @@
                     extraction.type = type;
 
                     //如果允许子key则提取
-                    if (type == "Header" || type == "Query" || type == "PostParams"|| type == "URI") {
+                    if (type == "Header" || type == "Query" || type == "PostParams" || type == "URI") {
                         var name = self.find("input[name=rule-extractor-extraction-name]").val();
                         if (!name) {
                             tmp_success = false;
@@ -685,9 +686,9 @@
                     }
 
                     //如果允许默认值则提取
-                    var allow_default = (type == "Header" || type == "Query" || type == "PostParams"|| type == "Host"|| type == "IP"|| type == "Method");
+                    var allow_default = (type == "Header" || type == "Query" || type == "PostParams" || type == "Host" || type == "IP" || type == "Method");
                     var has_default = self.find("select[name=rule-extractor-extraction-has-default]").val();
-                    if (allow_default && has_default=="1") {//只有允许提取&&有默认值的才取默认值
+                    if (allow_default && has_default == "1") { //只有允许提取&&有默认值的才取默认值
                         var default_value = self.find("div[name=rule-extractor-extraction-default]>input").val();
                         if (!default_value) {
                             default_value = "";
@@ -713,7 +714,7 @@
 
         showRulePreview: function (rule) {
             var content = "";
-            
+
             if (rule.success == true) {
                 content = '<pre id="preview_rule"><code></code></pre>';
             } else {
@@ -721,7 +722,7 @@
             }
 
             var d = dialog({
-                title: global_settings.c_name+'预览',
+                title: global_settings.c_name + '预览',
                 width: 500,
                 content: content,
                 modal: true,
@@ -733,7 +734,7 @@
                 }]
             });
             d.show();
-            
+
             $("#preview_rule code").text(JSON.stringify(rule.data, null, 2));
             $('pre code').each(function () {
                 hljs.highlightBlock($(this)[0]);
@@ -764,7 +765,11 @@
                 c++;
                 if (c == l) {
                     $(this).find(".btn-add").show();
-                    $(this).find(".btn-remove").show();
+                    if (l != 1) {
+                        $(this).find(".btn-remove").show();
+                    } else {
+                        $(this).find(".btn-remove").hide();
+                    }
                 } else {
                     $(this).find(".btn-add").hide();
                     $(this).find(".btn-remove").show();
@@ -772,17 +777,18 @@
             })
         },
 
-        addNewFilter: function (event) {
-            var self = $(this);
+        addNewPair: function (event, id) {
+
+            var self = $(event);
             var row = self.parents('.pair-holder');
+
             var new_row = row.clone(true);
 
             $(new_row).find("label").text("");
 
-            $(new_row).insertAfter($(this).parents('.pair-holder'))
-            _this.resetAddFilterBtn();
+            $(new_row).insertAfter($(event).parents('.pair-holder'))
+            _this.resetAddFilterBtn(id);
         },
-
 
         addNewExtraction: function (event) {
             var self = $(this);
@@ -794,13 +800,13 @@
 
             var old_has_default_value = $(row).find("select[name=rule-extractor-extraction-has-default]").val();
             $(new_row).find("select[name=rule-extractor-extraction-has-default]").val(old_has_default_value);
-            if(old_has_default_value=="1"){
+            if (old_has_default_value == "1") {
                 $(new_row).find("input[name=rule-extractor-extraction-default]").show().val("");
-            }else{
+            } else {
                 $(new_row).find("input[name=rule-extractor-extraction-default]").hide();
             }
 
-            if(old_type=="URI"){//如果拷贝的是URI类型，则不显示default
+            if (old_type == "URI") { //如果拷贝的是URI类型，则不显示default
                 $(new_row).find("input[name=rule-extractor-extraction-default]").hide();
                 $(new_row).find("select[name=rule-extractor-extraction-has-default]").hide();
             }
@@ -818,7 +824,11 @@
                 c++;
                 if (c == l) {
                     $(this).find(".btn-add").show();
-                    $(this).find(".btn-remove").show();
+                    if (l != 1) {
+                        $(this).find(".btn-remove").show();
+                    } else {
+                        $(this).find(".btn-remove").hide();
+                    }
                 } else {
                     $(this).find(".btn-add").hide();
                     $(this).find(".btn-remove").show();
@@ -826,14 +836,18 @@
             })
         },
 
-        resetAddFilterBtn: function () {
-            var l = $("#pair-area .pair-holder").length;
+        resetAddFilterBtn: function (id) {
+            var l = $("#" + id + " .pair-holder").length;
             var c = 0;
-            $("#pair-area .pair-holder").each(function () {
+            $("#" + id + " .pair-holder").each(function () {
                 c++;
                 if (c == l) {
                     $(this).find(".btn-add").show();
-                    $(this).find(".btn-remove").show();
+                    if (l != 1) {
+                        $(this).find(".btn-remove").show();
+                    } else {
+                        $(this).find(".btn-remove").hide();
+                    }
                 } else {
                     $(this).find(".btn-add").hide();
                     $(this).find(".btn-remove").show();
@@ -845,10 +859,10 @@
         initViewAndDownloadEvent: function (type, context) {
             var data = context.data;
 
-            $("#view-btn").click(function () {//试图转换
+            $("#view-btn").click(function () { //试图转换
                 var self = $(this);
                 var now_state = $(this).attr("data-type");
-                if (now_state == "table") {//当前是表格视图，点击切换到数据视图
+                if (now_state == "table") { //当前是表格视图，点击切换到数据视图
                     self.attr("data-type", "database");
                     self.find("i").removeClass("fa-database").addClass("fa-table");
                     self.find("span").text("表格视图");
@@ -873,11 +887,13 @@
                 }
             });
 
-            $(document).on("click", "#btnDownload", function () {//规则json下载
+            $(document).on("click", "#btnDownload", function () { //规则json下载
                 var downloadData = {};
                 downloadData.enable = data.enable;
                 downloadData.selectors = data.selectors;
-                var blob = new Blob([JSON.stringify(downloadData, null, 4)], {type: "text/plain;charset=utf-8"});
+                var blob = new Blob([JSON.stringify(downloadData, null, 4)], {
+                    type: "text/plain;charset=utf-8"
+                });
                 saveAs(blob, "data.json");
             });
 
@@ -886,10 +902,10 @@
         initSwitchBtn: function (type, context) {
             var op_type = type;
 
-            $("#switch-btn").click(function () {//是否开启
+            $("#switch-btn").click(function () { //是否开启
                 var self = $(this);
                 var now_state = $(this).attr("data-on");
-                if (now_state == "yes") {//当前是开启状态，点击则“关闭”
+                if (now_state == "yes") { //当前是开启状态，点击则“关闭”
                     var d = dialog({
                         title: op_type + '设置',
                         width: 300,
@@ -904,7 +920,7 @@
                                 $.ajax({
                                     url: '/' + op_type + '/enable',
                                     type: 'post',
-                                    cache:false,
+                                    cache: false,
                                     data: {
                                         enable: "0"
                                     },
@@ -930,8 +946,7 @@
                                     }
                                 });
                             }
-                        }
-                        ]
+                        }]
                     });
                     d.show();
 
@@ -951,7 +966,7 @@
                                 $.ajax({
                                     url: '/' + op_type + '/enable',
                                     type: 'post',
-                                    cache:false,
+                                    cache: false,
                                     data: {
                                         enable: "1"
                                     },
@@ -981,8 +996,7 @@
                                     }
                                 });
                             }
-                        }
-                        ]
+                        }]
                     });
                     d.show();
                 }
@@ -995,10 +1009,9 @@
 
             $("#add-plugin-select select").change(function () {
                 var selected_plugin = $(this).find('option:selected').val();
-                if (selected_plugin && selected_plugin.length > 0)
-                {
+                if (selected_plugin && selected_plugin.length > 0) {
                     if ($("#map-rule-" + selected_plugin).length <= 0) {
-                        L.Common.showErrorTip("提示", "获取插件" + selected_plugin + "发生异常，请确认 {(rules/"+selected_plugin+".html)} 是否存在或是否有添加到当前页面内!");
+                        L.Common.showErrorTip("提示", "获取插件" + selected_plugin + "发生异常，请确认 {(rules/" + selected_plugin + ".html)} 是否存在或是否有添加到当前页面内!");
                         return
                     }
                     showAddDialog(selected_plugin);
@@ -1018,9 +1031,10 @@
                     content: content,
                     modal: true,
                     onshow: function () {
-                        L.Common.initMicroTypeChangeEvent();//condition类型选择事件
-                        L.Common.initPairAddOrRemove();//添加或删除条件
-                        L.Common.initPairTypeChangeEvent();//添加或删除条件
+                        L.Common.initMicroTypeChangeEvent(); //condition类型选择事件
+                        L.Common.initPairAddOrRemove('pair-area'); //添加或删除条件
+                        L.Common.initPairAddOrRemove('filter-area'); //添加或删除条件
+                        L.Common.initPairTypeChangeEvent(); //添加或删除条件
                         $('select[name=rule-pair-type]').trigger("change");
                     },
                     button: [{
@@ -1068,11 +1082,12 @@
                                 return false;
                             }
                         }
-                    }
-                    ]
+                    }]
                 });
 
-                L.Common.resetAddConditionBtn();//删除增加按钮显示与否
+                L.Common.resetAddConditionBtn(); //删除增加按钮显示与否
+                L.Common.resetAddFilterBtn('pair-area'); //删除增加按钮显示与否
+                L.Common.resetAddFilterBtn('filter-area'); //删除增加按钮显示与否
                 d.show();
             };
 
@@ -1091,7 +1106,7 @@
                 $.ajax({
                     url: '/' + op_type + '/fetch_config',
                     type: 'get',
-                    cache:false,
+                    cache: false,
                     data: {},
                     dataType: 'json',
                     success: function (result) {
@@ -1110,7 +1125,7 @@
                                         $.ajax({
                                             url: '/' + op_type + '/sync',
                                             type: 'post',
-                                            cache:false,
+                                            cache: false,
                                             data: {},
                                             dataType: 'json',
                                             success: function (r) {
@@ -1159,7 +1174,7 @@
                 var active_plugin = $(this).attr("data-type");
                 var rule = {};
                 var rules = context.data.selector_rules[selector_id];
-                
+
                 for (var i = 0; i < rules.length; i++) {
                     var r = rules[i];
                     if (r.id == rule_id) {
@@ -1171,7 +1186,7 @@
                     }
                 }
                 if (!rule_id || !rule) {
-                    L.Common.showErrorTip("提示", "要编辑的" + global_settings.c_name +"不存在或者查找出错");
+                    L.Common.showErrorTip("提示", "要编辑的" + global_settings.c_name + "不存在或者查找出错");
                     return;
                 }
 
@@ -1182,7 +1197,7 @@
                         r: rule
                     }
                 });
-                
+
                 // var html = juicer(tpl, {
                 //     r: rule
                 // });
@@ -1193,9 +1208,10 @@
                     content: html,
                     modal: true,
                     onshow: function () {
-                        L.Common.initMicroTypeChangeEvent();//condition类型选择事件
-                        L.Common.initPairAddOrRemove();//添加或删除条件
-                        L.Common.initPairTypeChangeEvent();//添加或删除条件
+                        L.Common.initMicroTypeChangeEvent(); //condition类型选择事件
+                        L.Common.initPairAddOrRemove('pair-area'); //添加或删除条件
+                        L.Common.initPairAddOrRemove('filter-area'); //添加或删除条件
+                        L.Common.initPairTypeChangeEvent(); //添加或删除条件
                     },
                     button: [{
                         value: '取消'
@@ -1212,7 +1228,7 @@
                         autofocus: false,
                         callback: function () {
                             var result = context.buildRule(active_plugin);
-                            result.data.id = rule.id;//拼上要修改的id
+                            result.data.id = rule.id; //拼上要修改的id
 
                             if (result.success == true) {
                                 $.ajax({
@@ -1228,12 +1244,12 @@
                                             _this.loadRules(op_type, context, selector_id);
                                             return true;
                                         } else {
-                                            L.Common.showErrorTip("提示", result.msg || "编辑" + global_settings.c_name +"发生错误");
+                                            L.Common.showErrorTip("提示", result.msg || "编辑" + global_settings.c_name + "发生错误");
                                             return false;
                                         }
                                     },
                                     error: function () {
-                                        L.Common.showErrorTip("提示", "编辑" + global_settings.c_name +"请求发生异常");
+                                        L.Common.showErrorTip("提示", "编辑" + global_settings.c_name + "请求发生异常");
                                         return false;
                                     }
                                 });
@@ -1243,11 +1259,12 @@
                                 return false;
                             }
                         }
-                    }
-                    ]
+                    }]
                 });
 
-                L.Common.resetAddConditionBtn();//删除增加按钮显示与否
+                L.Common.resetAddConditionBtn(); //删除增加按钮显示与否
+                L.Common.resetAddFilterBtn('pair-area'); //删除增加按钮显示与否
+                L.Common.resetAddFilterBtn('filter-area'); //删除增加按钮显示与否
                 L.Common.resetAddExtractionBtn();
                 context.resetAddCredentialBtn && context.resetAddCredentialBtn();
                 d.show();
@@ -1265,7 +1282,7 @@
                 var d = dialog({
                     title: '提示',
                     width: 480,
-                    content: "确定要删除" + global_settings.c_name +"【" + name + "】吗？",
+                    content: "确定要删除" + global_settings.c_name + "【" + name + "】吗？",
                     modal: true,
                     button: [{
                         value: '取消'
@@ -1284,15 +1301,15 @@
                                     if (result.success) {
                                         //重新渲染规则
                                         _this.loadRules(op_type, context, selector_id);
-                                        _this.refreshConfigs(op_type, context);//刷新本地缓存
+                                        _this.refreshConfigs(op_type, context); //刷新本地缓存
                                         return true;
                                     } else {
-                                        L.Common.showErrorTip("提示", result.msg || "删除" + global_settings.c_name +"发生错误");
+                                        L.Common.showErrorTip("提示", result.msg || "删除" + global_settings.c_name + "发生错误");
                                         return false;
                                     }
                                 },
                                 error: function () {
-                                    L.Common.showErrorTip("提示", "删除" + global_settings.c_name +"请求发生异常");
+                                    L.Common.showErrorTip("提示", "删除" + global_settings.c_name + "请求发生异常");
                                     return false;
                                 }
                             });
@@ -1304,39 +1321,39 @@
             });
         },
 
-        initRuleSortEvent: function (type, context){
+        initRuleSortEvent: function (type, context) {
             var op_type = type;
             $(document).on("click", "#rule-sort-btn", function () {
                 var new_order = [];
-                if($("#rules li")){
-                    $("#rules li").each(function(item){
+                if ($("#rules li")) {
+                    $("#rules li").each(function (item) {
                         new_order.push($(this).attr("data-id"));
                     });
                 }
 
                 var new_order_str = new_order.join(",");
-                if(!new_order_str||new_order_str==""){
-                    L.Common.showErrorTip("提示", global_settings.c_name+"列表为空， 无需排序");
+                if (!new_order_str || new_order_str == "") {
+                    L.Common.showErrorTip("提示", global_settings.c_name + "列表为空， 无需排序");
                     return;
                 }
 
                 var selector_id = $("#add-btn").attr("data-id");
-                if(!selector_id || selector_id==""){
-                    L.Common.showErrorTip("提示", "操作异常， 未选中"+global_settings.g_name+"， 无法排序");
+                if (!selector_id || selector_id == "") {
+                    L.Common.showErrorTip("提示", "操作异常， 未选中" + global_settings.g_name + "， 无法排序");
                     return;
                 }
 
                 var d = dialog({
                     title: "提示",
-                    content: "确定要保存新的" + global_settings.c_name +"顺序吗？",
+                    content: "确定要保存新的" + global_settings.c_name + "顺序吗？",
                     width: 350,
                     modal: true,
-                    cancel: function(){},
+                    cancel: function () {},
                     cancelValue: "取消",
                     okValue: "确定",
                     ok: function () {
                         $.ajax({
-                            url: '/' + op_type + '/selectors/' +selector_id + '/rules/order',
+                            url: '/' + op_type + '/selectors/' + selector_id + '/rules/order',
                             type: 'put',
                             data: {
                                 order: new_order_str
@@ -1368,7 +1385,7 @@
             $("#add-selector-btn").click(function () {
                 var current_selected_id;
                 var current_selected_selector = $("#selector-list li.selected-selector");
-                if(current_selected_selector){
+                if (current_selected_selector) {
                     current_selected_id = $(current_selected_selector[0]).attr("data-id");
                 }
 
@@ -1380,14 +1397,14 @@
                     modal: true,
                     button: [{
                         value: '取消'
-                    },{
+                    }, {
                         value: '确定',
                         autofocus: false,
                         callback: function () {
                             var result = _this.buildSelector();
                             if (result.success) {
                                 $.ajax({
-                                    url: '/' + op_type + '/'+global_settings.i_key+'s',
+                                    url: '/' + op_type + '/' + global_settings.i_key + 's',
                                     type: 'post',
                                     data: {
                                         selector: JSON.stringify(result.data)
@@ -1396,17 +1413,17 @@
                                     success: function (result) {
                                         if (result.success) {
                                             //重新渲染
-                                            _this.loadConfigs(op_type, context, false, function(){
-                                                $("#selector-list li[data-id=" + current_selected_id+"]").addClass("selected-selector");
+                                            _this.loadConfigs(op_type, context, false, function () {
+                                                $("#selector-list li[data-id=" + current_selected_id + "]").addClass("selected-selector");
                                             });
                                             return true;
                                         } else {
-                                            L.Common.showErrorTip("提示", result.msg || "添加"+global_settings.g_name+"发生错误");
+                                            L.Common.showErrorTip("提示", result.msg || "添加" + global_settings.g_name + "发生错误");
                                             return false;
                                         }
                                     },
                                     error: function () {
-                                        L.Common.showErrorTip("提示", "添加"+global_settings.g_name+"请求发生异常");
+                                        L.Common.showErrorTip("提示", "添加" + global_settings.g_name + "请求发生异常");
                                         return false;
                                     }
                                 });
@@ -1416,10 +1433,11 @@
                                 return false;
                             }
                         }
-                    }
-                    ]
+                    }]
                 });
-                L.Common.resetAddConditionBtn();//删除增加按钮显示与否
+                L.Common.resetAddConditionBtn(); //删除增加按钮显示与否
+                L.Common.resetAddFilterBtn('pair-area'); //删除增加按钮显示与否
+                L.Common.resetAddFilterBtn('filter-area'); //删除增加按钮显示与否
                 d.show();
             });
         },
@@ -1427,24 +1445,24 @@
         initSelectorDeleteDialog: function (type, context) {
             var op_type = type;
             $(document).on("click", ".delete-selector-btn", function (e) {
-                e.stopPropagation();// 阻止冒泡
+                e.stopPropagation(); // 阻止冒泡
                 var name = $(this).attr("data-name");
                 var selector_id = $(this).attr("data-id");
-                if(!selector_id){
-                    L.Common.showErrorTip("提示", "参数错误，要删除的"+global_settings.g_name+"不存在！");
+                if (!selector_id) {
+                    L.Common.showErrorTip("提示", "参数错误，要删除的" + global_settings.g_name + "不存在！");
                     return;
                 }
 
                 var current_selected_id;
                 var current_selected_selector = $("#selector-list li.selected-selector");
-                if(current_selected_selector){
+                if (current_selected_selector) {
                     current_selected_id = $(current_selected_selector[0]).attr("data-id");
                 }
 
                 var d = dialog({
                     title: '提示',
                     width: 480,
-                    content: "确定要删除" + global_settings.g_name + "【" + name + "】吗? 删除" + global_settings.g_name + "将同时删除它的所有" + global_settings.c_name +"!",
+                    content: "确定要删除" + global_settings.g_name + "【" + name + "】吗? 删除" + global_settings.g_name + "将同时删除它的所有" + global_settings.c_name + "!",
                     modal: true,
                     button: [{
                         value: '取消'
@@ -1453,7 +1471,7 @@
                         autofocus: false,
                         callback: function () {
                             $.ajax({
-                                url: '/' + op_type + '/'+global_settings.i_key+'s',
+                                url: '/' + op_type + '/' + global_settings.i_key + 's',
                                 type: 'delete',
                                 data: {
                                     selector_id: selector_id
@@ -1462,19 +1480,19 @@
                                 success: function (result) {
                                     if (result.success) {
                                         //重新渲染规则
-                                        _this.loadConfigs(op_type, context, false, function(){
+                                        _this.loadConfigs(op_type, context, false, function () {
                                             //删除的是原先选中的"+global_settings.g_name+", 重新选中第一个
-                                            if(current_selected_id == selector_id){
+                                            if (current_selected_id == selector_id) {
                                                 var selector_list = $("#selector-list li");
-                                                if(selector_list && selector_list.length>0){
+                                                if (selector_list && selector_list.length > 0) {
                                                     $(selector_list[0]).click();
-                                                }else{
+                                                } else {
                                                     _this.emptyRules();
                                                 }
-                                            }else{
-                                                if(current_selected_id){
-                                                    $("#selector-list li[data-id=" + current_selected_id+"]").addClass("selected-selector");
-                                                }else{
+                                            } else {
+                                                if (current_selected_id) {
+                                                    $("#selector-list li[data-id=" + current_selected_id + "]").addClass("selected-selector");
+                                                } else {
                                                     _this.emptyRules();
                                                 }
                                             }
@@ -1482,44 +1500,43 @@
 
                                         return true;
                                     } else {
-                                        L.Common.showErrorTip("提示", result.msg || "删除"+global_settings.g_name+"发生错误");
+                                        L.Common.showErrorTip("提示", result.msg || "删除" + global_settings.g_name + "发生错误");
                                         return false;
                                     }
                                 },
                                 error: function () {
-                                    L.Common.showErrorTip("提示", "删除"+global_settings.g_name+"请求发生异常");
+                                    L.Common.showErrorTip("提示", "删除" + global_settings.g_name + "请求发生异常");
                                     return false;
                                 }
                             });
                         }
-                    }
-                    ]
+                    }]
                 });
 
                 d.show();
             });
         },
 
-        initSelectorEditDialog: function(type, context){
+        initSelectorEditDialog: function (type, context) {
             var op_type = type;
 
             $(document).on("click", ".edit-selector-btn", function (e) {
-                e.stopPropagation();// 阻止冒泡
+                e.stopPropagation(); // 阻止冒泡
                 var tpl = $("#edit-selector-tpl").html();
                 var selector_id = $(this).attr("data-id");
                 var selectors = context.data.selectors;
                 selector = selectors[selector_id];
                 if (!selector_id || !selector) {
-                    L.Common.showErrorTip("提示", "要编辑的"+global_settings.g_name+"不存在或者查找出错");
+                    L.Common.showErrorTip("提示", "要编辑的" + global_settings.g_name + "不存在或者查找出错");
                     return;
                 }
-                
+
                 var html = juicer(tpl, {
                     s: selector
                 });
 
                 var d = dialog({
-                    title: "编辑"+global_settings.g_name+"",
+                    title: "编辑" + global_settings.g_name + "",
                     width: 680,
                     content: html,
                     modal: true,
@@ -1538,12 +1555,12 @@
                         autofocus: false,
                         callback: function () {
                             var result = _this.buildSelector();
-                            result.data.id = selector.id;//拼上要修改的id
-                            result.data.rules = selector.rules;//拼上已有的rules
+                            result.data.id = selector.id; //拼上要修改的id
+                            result.data.rules = selector.rules; //拼上已有的rules
 
                             if (result.success == true) {
                                 $.ajax({
-                                    url: '/' + op_type + '/'+global_settings.i_key+'s',
+                                    url: '/' + op_type + '/' + global_settings.i_key + 's',
                                     type: 'put',
                                     data: {
                                         selector: JSON.stringify(result.data)
@@ -1555,12 +1572,12 @@
                                             _this.loadConfigs(op_type, context);
                                             return true;
                                         } else {
-                                            L.Common.showErrorTip("提示", result.msg || "编辑"+global_settings.g_name+"发生错误");
+                                            L.Common.showErrorTip("提示", result.msg || "编辑" + global_settings.g_name + "发生错误");
                                             return false;
                                         }
                                     },
                                     error: function () {
-                                        L.Common.showErrorTip("提示", "编辑"+global_settings.g_name+"请求发生异常");
+                                        L.Common.showErrorTip("提示", "编辑" + global_settings.g_name + "请求发生异常");
                                         return false;
                                     }
                                 });
@@ -1570,44 +1587,45 @@
                                 return false;
                             }
                         }
-                    }
-                    ]
+                    }]
                 });
 
-                L.Common.resetAddConditionBtn();//删除增加按钮显示与否
+                L.Common.resetAddConditionBtn(); //删除增加按钮显示与否
+                L.Common.resetAddFilterBtn('pair-area'); //删除增加按钮显示与否
+                L.Common.resetAddFilterBtn('filter-area'); //删除增加按钮显示与否
                 L.Common.resetAddExtractionBtn();
                 d.show();
             });
         },
 
-        initSelectorSortEvent: function (type, context){
+        initSelectorSortEvent: function (type, context) {
             var op_type = type;
             $(document).on("click", "#selector-sort-btn", function () {
                 var new_order = [];
-                if($("#selector-list li")){
-                    $("#selector-list li").each(function(item){
+                if ($("#selector-list li")) {
+                    $("#selector-list li").each(function (item) {
                         new_order.push($(this).attr("data-id"));
                     });
                 }
 
                 var new_order_str = new_order.join(",");
-                if(!new_order_str||new_order_str==""){
-                    L.Common.showErrorTip("提示", global_settings.g_name+"列表为空， 无需排序");
+                if (!new_order_str || new_order_str == "") {
+                    L.Common.showErrorTip("提示", global_settings.g_name + "列表为空， 无需排序");
                     return;
                 }
 
                 var current_selected_id;
                 var current_selected_selector = $("#selector-list li.selected-selector");
-                if(current_selected_selector){
+                if (current_selected_selector) {
                     current_selected_id = $(current_selected_selector[0]).attr("data-id");
                 }
 
                 var d = dialog({
                     title: "提示",
-                    content: "确定要保存新的"+global_settings.g_name+"顺序吗？",
+                    content: "确定要保存新的" + global_settings.g_name + "顺序吗？",
                     width: 350,
                     modal: true,
-                    cancel: function(){},
+                    cancel: function () {},
                     cancelValue: "取消",
                     okValue: "确定",
                     ok: function () {
@@ -1621,9 +1639,9 @@
                             success: function (result) {
                                 if (result.success) {
                                     //重新渲染规则
-                                    _this.loadConfigs(op_type, context, false, function(){
-                                        if(current_selected_id){//高亮原来选中的li
-                                            $("#selector-list li[data-id=" + current_selected_id+"]").addClass("selected-selector");
+                                    _this.loadConfigs(op_type, context, false, function () {
+                                        if (current_selected_id) { //高亮原来选中的li
+                                            $("#selector-list li[data-id=" + current_selected_id + "]").addClass("selected-selector");
                                         }
                                     });
                                     return true;
@@ -1643,17 +1661,17 @@
             });
         },
 
-        initSelectorClickEvent: function (type, context){
+        initSelectorClickEvent: function (type, context) {
             var op_type = type;
             $(document).on("click", ".selector-item", function () {
                 var self = $(this);
                 var selector_id = self.attr("data-id");
                 var selector_name = self.attr("data-name");
-                if(selector_name){
+                if (selector_name) {
                     $("#rules-section-header").text(global_settings.g_name + "【" + selector_name + "】" + global_settings.c_name + "列表");
                 }
 
-                $(".selector-item").each(function(){
+                $(".selector-item").each(function () {
                     $(this).removeClass("selected-selector");
                 })
                 self.addClass("selected-selector");
@@ -1665,13 +1683,13 @@
 
         resetSwitchBtn: function (enable, type) {
             var op_type = type;
-            
+
             var self = $("#switch-btn");
             var parent = self.parent()
             var switch_name = global_settings.t_name
 
             if (global_settings.t_name && global_settings.t_name.length > 0) {
-                if (enable == true) {//当前是开启状态，则应显示“关闭”按钮
+                if (enable == true) { //当前是开启状态，则应显示“关闭”按钮
                     self.attr("data-on", "yes");
                     self.removeClass("btn-info").addClass("btn-danger");
                     self.find("i").removeClass("fa-play").addClass("fa-pause");
@@ -1696,7 +1714,7 @@
             } else {
                 $("#add-plugin-select").remove()
             }
-            
+
             var api_name = global_settings.i_key + 's'
             $.ajax({
                 url: '/' + op_type + '/' + api_name,
@@ -1713,7 +1731,7 @@
                         var enable = result.data.enable;
                         var meta = result.data.meta;
                         var selectors = result.data[api_name];
-                        
+
                         //重新设置数据
                         context.data.enable = enable;
                         context.data.meta = meta;
@@ -1721,9 +1739,9 @@
 
                         _this.renderSelectors(meta, selectors);
 
-                        if(page_load){//第一次加载页面
+                        if (page_load) { //第一次加载页面
                             var selector_lis = $("#selector-list li");
-                            if(selector_lis && selector_lis.length>0){
+                            if (selector_lis && selector_lis.length > 0) {
                                 $(selector_lis[0]).click();
                             }
                         }
@@ -1739,10 +1757,10 @@
             });
         },
 
-        refreshConfigs: function (type, context) {//刷新本地缓存，fix  issue #110 (https://github.com/sumory/orange/issues/110)
+        refreshConfigs: function (type, context) { //刷新本地缓存，fix  issue #110 (https://github.com/sumory/orange/issues/110)
             var op_type = type;
             $.ajax({
-                url: '/' + op_type + '/'+global_settings.i_key+'s',
+                url: '/' + op_type + '/' + global_settings.i_key + 's',
                 type: 'get',
                 cache: false,
                 data: {},
@@ -1785,29 +1803,29 @@
                         context.data.selector_rules[selector_id] = result.data.rules;
                         _this.renderRules(result.data);
                     } else {
-                        _this.showErrorTip("错误提示", "查询" + op_type + global_settings.c_name +"发生错误");
+                        _this.showErrorTip("错误提示", "查询" + op_type + global_settings.c_name + "发生错误");
                     }
                 },
                 error: function () {
-                    _this.showErrorTip("提示", "查询" + op_type + global_settings.c_name+"发生异常");
+                    _this.showErrorTip("提示", "查询" + op_type + global_settings.c_name + "发生异常");
                 }
             });
         },
 
-        emptyRules: function(){
-            $("#rules-section-header").text(global_settings.g_name + "-" + global_settings.c_name +"列表");
+        emptyRules: function () {
+            $("#rules-section-header").text(global_settings.g_name + "-" + global_settings.c_name + "列表");
             $("#rules").html("");
             $("#add-btn").removeAttr("data-id");
         },
 
-        renderSelectors: function(meta, selectors){
+        renderSelectors: function (meta, selectors) {
             var tpl = L.Common.findTemplate("#selector-item-tpl").html();
             var to_render_selectors = [];
             if (meta && selectors) {
-                var to_render_ids = meta[global_settings.i_key+"s"];
-                if(to_render_ids){
-                    for(var i = 0; i < to_render_ids.length; i++){
-                        if(selectors[to_render_ids[i]]){
+                var to_render_ids = meta[global_settings.i_key + "s"];
+                if (to_render_ids) {
+                    for (var i = 0; i < to_render_ids.length; i++) {
+                        if (selectors[to_render_ids[i]]) {
                             to_render_selectors.push(selectors[to_render_ids[i]]);
                         }
                     }
@@ -1829,57 +1847,57 @@
 
         renderRules: function (data) {
             data = data || {};
-            if(!data.rules || data.rules.length<1){
-                var html = '<div class="alert alert-warning" style="margin: 25px 0 10px 0;">'+
-                        '<p>该列表下没有'+global_settings.c_name+',请添加!</p>'+
-                '</div>';
+            if (!data.rules || data.rules.length < 1) {
+                var html = '<div class="alert alert-warning" style="margin: 25px 0 10px 0;">' +
+                    '<p>该列表下没有' + global_settings.c_name + ',请添加!</p>' +
+                    '</div>';
                 $("#rules").html(html);
-            }else{
+            } else {
 
-                var html = _this.findTemplateHtmls("#rule-item-tpl", data.rules, function(rule) {
+                var html = _this.findTemplateHtmls("#rule-item-tpl", data.rules, function (rule) {
                     return {
                         "rules": [rule]
                     }
                 });
-                
+
                 $("#rules").html(html);
             }
         },
 
         showErrorTip: function (title, content) {
             toastr.options = {
-              "closeButton": true,
-              "debug": false,
-              "progressBar": true,
-              "positionClass": "toast-top-right",
-              "onclick": null,
-              "showDuration": "400",
-              "hideDuration": "10000",
-              "timeOut": "7000",
-              "extendedTimeOut": "10000",
-              "showEasing": "swing",
-              "hideEasing": "linear",
-              "showMethod": "fadeIn",
-              "hideMethod": "fadeOut"
+                "closeButton": true,
+                "debug": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "400",
+                "hideDuration": "10000",
+                "timeOut": "7000",
+                "extendedTimeOut": "10000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
             }
-            toastr.error(content,title || "错误提示");
+            toastr.error(content, title || "错误提示");
         },
 
         showTipDialog: function (title, content) {
             toastr.options = {
-              "closeButton": true,
-              "debug": false,
-              "progressBar": true,
-              "positionClass": "toast-top-right",
-              "onclick": null,
-              "showDuration": "400",
-              "hideDuration": "3000",
-              "timeOut": "7000",
-              "extendedTimeOut": "3000",
-              "showEasing": "swing",
-              "hideEasing": "linear",
-              "showMethod": "fadeIn",
-              "hideMethod": "fadeOut"
+                "closeButton": true,
+                "debug": false,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "onclick": null,
+                "showDuration": "400",
+                "hideDuration": "3000",
+                "timeOut": "7000",
+                "extendedTimeOut": "3000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
             }
             toastr.success(content, title || "提示");
         },

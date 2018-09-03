@@ -53,7 +53,7 @@ return function ( conf, store )
 		n_var.args = u_lor.get_args(req)
 		
 		local current_svr = s_buffer(conf, store)
-		local current_group = s_sub(n_var.uri, 2)   --s_gsub(n_var.uri, "/", "#")
+		local current_group = s_format("%s#%s", n_var.host, s_sub(n_var.uri, 2))   --s_gsub(n_var.uri, "/", "#")
 		local ok, err, offset = current_svr:write_request(current_group)
 
 		res:status(202):json({

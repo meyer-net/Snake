@@ -19,7 +19,7 @@
                             {@if r.plugin}
                             <b>插件</b>: ${r.plugin} {@/if}
                         </p>
-                        <p>
+                        <p> 
                             <b>类型</b>: {@if r.judge.type==0 } 单一条件匹配 {@/if} {@if r.judge.type==1 } and匹配 {@/if} {@if r.judge.type==2
                             } or匹配 {@/if} {@if r.judge.type==3 } 复杂匹配 {@/if} {@if r.judge.type==3 }
                             <br/>
@@ -131,9 +131,8 @@
             <!-- add - 变量提取器模板 start -->
             {(common/extraction-add.html)}
             <!-- add - 变量提取器模板 end -->
-
-            <div id="filter-area">
-            </div>
+            
+            {(common/filter-add.html)}
 
             <!-- handle url template-->
             <div class="form-group handle-holder">
@@ -187,13 +186,8 @@
             {(common/extraction-edit.html)}
             <!-- edit - 变量提取器模板 end -->
 
+            {(common/filter-edit.html)}
 
-            <div class="form-group handle-holder">
-                <label class="col-sm-1 control-label">处理</label>
-                <div class="col-sm-11">
-                    <input type="text" class="form-control" id="rule-handle-uri-template" placeholder="uri template to rewrite" value="${r.handle.uri_tmpl}">
-                </div>
-            </div>
             <!-- handle url template-->
             <div class="form-group handle-holder">
                 <label class="col-sm-1 control-label"></label>

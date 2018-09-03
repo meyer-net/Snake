@@ -12,7 +12,7 @@
     padding: 4px 10px;
     text-decoration: none;
     color: #454545;
-    margin-right: 10px;
+    margin-right: 10px; 
     display: inline-block;
 }
 #buttonFormatted:hover,#buttonPlain:hover,#btnDownload:hover{-webkit-box-shadow:0px 1px 3px rgba(0,0,0,0.2);

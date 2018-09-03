@@ -2,8 +2,7 @@
     var _this = null;
     L.Alias = L.Alias || {};
     _this = L.Alias = {
-        data: {
-        },
+        data: {},
 
         init: function () {
             L.Common.loadConfigs("alias", _this, true);
@@ -11,9 +10,9 @@
         },
 
         initEvents: function () {
-            L.Common.initRuleAddDialog("alias", _this);//添加规则对话框
-            L.Common.initRuleDeleteDialog("alias", _this);//删除规则对话框
-            L.Common.initRuleEditDialog("alias", _this);//编辑规则对话框
+            L.Common.initRuleAddDialog("alias", _this); //添加规则对话框
+            L.Common.initRuleDeleteDialog("alias", _this); //删除规则对话框
+            L.Common.initRuleEditDialog("alias", _this); //编辑规则对话框
             L.Common.initRuleSortEvent("alias", _this);
 
             L.Common.initSelectorAddDialog("alias", _this);
@@ -22,19 +21,19 @@
             L.Common.initSelectorSortEvent("alias", _this);
             L.Common.initSelectorClickEvent("alias", _this);
 
-            L.Common.initSelectorTypeChangeEvent();//选择器类型选择事件
-            L.Common.initConditionAddOrRemove();//添加或删除条件
-            L.Common.initJudgeTypeChangeEvent();//judge类型选择事件
-            L.Common.initConditionTypeChangeEvent();//condition类型选择事件
+            L.Common.initSelectorTypeChangeEvent(); //选择器类型选择事件
+            L.Common.initConditionAddOrRemove(); //添加或删除条件
+            L.Common.initJudgeTypeChangeEvent(); //judge类型选择事件
+            L.Common.initConditionTypeChangeEvent(); //condition类型选择事件
 
-            L.Common.initExtractionAddOrRemove();//添加或删除条件
-            L.Common.initExtractionTypeChangeEvent();//extraction类型选择事件
-            L.Common.initExtractionAddBtnEvent();//添加提前项按钮事件
-            L.Common.initExtractionHasDefaultValueOrNotEvent();//提取项是否有默认值选择事件
+            L.Common.initExtractionAddOrRemove(); //添加或删除条件
+            L.Common.initExtractionTypeChangeEvent(); //extraction类型选择事件
+            L.Common.initExtractionAddBtnEvent(); //添加提前项按钮事件
+            L.Common.initExtractionHasDefaultValueOrNotEvent(); //提取项是否有默认值选择事件
 
             L.Common.initViewAndDownloadEvent("alias", _this);
-            L.Common.initSwitchBtn("alias", _this);//redirect关闭、开启
-            L.Common.initSyncDialog("alias", _this);//编辑规则对话框
+            L.Common.initSwitchBtn("alias", _this); //redirect关闭、开启
+            L.Common.initSyncDialog("alias", _this); //编辑规则对话框
         },
 
 
@@ -100,7 +99,7 @@
             handle.alias = alias;
 
             var string_continue = $("#rule-continue").val()
-            var int_continue = parseInt(string_continue) 
+            var int_continue = parseInt(string_continue)
             if (isNaN(int_continue)) {
                 handle.continue = string_continue === "true";
             } else {

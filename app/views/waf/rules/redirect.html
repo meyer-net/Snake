@@ -156,6 +156,9 @@
                         <option value="302">302</option>
                     </select>
                 </div>
+            </div>
+            <div class="form-group handle-holder"> 
+                <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-4">
                     <select class="form-control" id="rule-continue">
                         <option value="0">匹配则略过后续规则</option>
@@ -229,6 +232,9 @@
                         <option value="302" {@if r.handle.redirect_status=="302" } selected {@/if}>302</option>
                     </select>
                 </div>
+            </div>
+            <div class="form-group handle-holder">
+                <label class="col-sm-1 control-label"></label>
                 <div class="col-sm-4">
                     <select class="form-control" id="rule-continue">
                         <option {@if r.handle.continue === 0 } selected {@/if} value="0">匹配则略过后续规则</option>

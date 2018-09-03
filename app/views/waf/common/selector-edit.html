@@ -34,7 +34,7 @@
                     <div class="col-sm-8" id="expression-area" {@if s.judge.type != "3" } style="display:none;" {@/if}>
                          <input type="text" class="form-control" id="rule-judge-expression" value="${s.judge.expression}" placeholder="规则表达式，示例: (v[1] or v[2]) and v[3]">
                     </div>
-                </div><!-- 类型 -->
+                </div><!-- 类型 --> 
 
                 {@if s.judge.conditions && s.judge.conditions.length>0 }
                     {@each s.judge.conditions as c, index}
@@ -106,8 +106,9 @@
                 <label class="col-sm-1 control-label">处理</label>
                 <div class="col-sm-3">
                     <select class="form-control" id="selector-continue">
-                        <option {@if s.handle.continue == true } selected {@/if} value="true">继续后续<span class="replace">{!g_name!}</span></option>
-                        <option {@if s.handle.continue == false } selected {@/if} value="false">略过后续<span class="replace">{!g_name!}</span></option>
+                        <option {@if s.handle.continue === 0 } selected {@/if} value="0">匹配则略过后续<span class="replace">{!g_name!}</span></option>
+                        <option {@if s.handle.continue === true } selected {@/if} value="true">继续后续<span class="replace">{!g_name!}</span></option>
+                        <option {@if s.handle.continue === false } selected {@/if} value="false">略过后续<span class="replace">{!g_name!}</span></option>
                     </select>
                 </div>
                 <div class="col-sm-3" style="padding-left:0;">

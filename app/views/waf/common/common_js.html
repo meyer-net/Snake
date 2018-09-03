@@ -57,10 +57,9 @@
 
         // 菜单切换
         $('.navbar-minimalize').click(function () {
-            if($("body").hasClass("mini-navbar")){
+            if ($("body").hasClass("mini-navbar")) {
                 $("body").removeClass("mini-navbar");
-            }
-            else{
+            } else {
                 $("body").addClass("mini-navbar");
             }
             SmoothlyMenu();
@@ -104,11 +103,10 @@
             }
         });
 
-        $('.nav-close').click(function(){
-             if($("body").hasClass("mini-navbar")){
+        $('.nav-close').click(function () {
+            if ($("body").hasClass("mini-navbar")) {
                 $("body").removeClass("mini-navbar");
-            }
-            else{
+            } else {
                 $("body").addClass("mini-navbar");
             }
             SmoothlyMenu();
@@ -120,14 +118,14 @@
         }
 
         //nav close 事件
-        $("#nav-section").mouseenter(function(){
-          $(".nav-close").css("display","block");
+        $("#nav-section").mouseenter(function () {
+            $(".nav-close").css("display", "block");
         });
-        $("#nav-section").mouseover(function(){
-          $(".nav-close").css("display","block");
+        $("#nav-section").mouseover(function () {
+            $(".nav-close").css("display", "block");
         });
-        $("#nav-section").mouseout(function(){
-          $(".nav-close").css("display","none");
+        $("#nav-section").mouseout(function () {
+            $(".nav-close").css("display", "none");
         });
 
     });

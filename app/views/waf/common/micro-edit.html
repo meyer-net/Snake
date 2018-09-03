@@ -4,48 +4,45 @@
         <div class="col-sm-11">
             <div class="col-sm-3" style="padding-left:0px;">
                 <select class="form-control" id="rule-micro-type">
-                    <option value="0" {@if r.type==0 } selected {@/if}>自定义</option>
-                    <option value="1" {@if r.type==1 } selected {@/if}>服务组</option>
-                </select>
-            </div>
-            <!-- <div class="col-sm-1" style="line-height: 30px;">
-                <a id="add-micro-btn" class="btn btn-success" style="padding:0 5px;">
-                    <i class="fa fa-plus"></i>
-                </a>
+                    <option value="0" {@if r.type==0 } selected {@/if}>自定义 </option> <option value="1" {@if r.type==1 }
+                        selected {@/if}>服务组 </option> </select> </div> <!-- <div class="col-sm-1" style="line-height: 30px;">
+                        <a id="add-micro-btn" class="btn btn-success" style="padding:0 5px;">
+                            <i class="fa fa-plus"></i>
+                        </a>
             </div>-->
         </div>
         <!-- add - <span class="replace">{!g_name!}</span>-条件编辑器模板 end -->
     </div>
     <!-- 描述 -->
-    <div id="micro-define" {@if r.type!="0" } style="display: none" {@/if}>
-        <div class="form-group">
-            <label class="col-sm-1 control-label">处理</label>
-            <div class="col-sm-11">
-                <input type="text" class="form-control" id="rule-host" placeholder="服务主机，如果未设置则默认取 ngx.var.host" value="${r.handle.host}" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-1 control-label"></label>
-            <div class="col-sm-11">
-            <input type="text" class="form-control" id="rule-url" placeholder="服务默认访问URL地址, ex: http://127.0.0.1:8080" value="${r.handle.url}" />
-            </div>
+    <div id="micro-define" {@if r.type!="0" } style="display: none" {@/if}> <div class="form-group">
+        <label class="col-sm-1 control-label">处理</label>
+        <div class="col-sm-11">
+            <input type="text" class="form-control" id="rule-host" placeholder="服务主机，如果未设置则默认取 ngx.var.host" value="${r.handle.host}" />
         </div>
     </div>
-    <div id="micro-area" actived-micro="${r.handle.micro}" {@if r.type!="1" } style="display: none" {@/if}>
-        <!-- add - 服务编辑器模板 start -->
-        <div class="form-group">
-            <label for="input-micro-type" class="col-sm-1 control-label">处理</label>
-            <div class="col-sm-3">
-                <select class="form-control" id="rule-micro-group">
-                    <option value="">-- 请选择服务组 --</option>
-                </select>
-            </div>
-            <div class="col-sm-3" style="padding-left:0;">
-                <select class="form-control" id="rule-micros">
-                    <option value="">-- 请选择服务 --</option>
-                </select>
-            </div>
+    <div class="form-group">
+        <label class="col-sm-1 control-label"></label>
+        <div class="col-sm-11">
+            <input type="text" class="form-control" id="rule-url" placeholder="服务默认访问URL地址, ex: http://127.0.0.1:8080"
+                value="${r.handle.url}" />
         </div>
     </div>
+</div>
+<div id="micro-area" actived-micro="${r.handle.micro}" {@if r.type!="1" } style="display: none" {@/if}> <!-- add -
+    服务编辑器模板 start -->
+    <div class="form-group">
+        <label for="input-micro-type" class="col-sm-1 control-label">处理</label>
+        <div class="col-sm-3">
+            <select class="form-control" id="rule-micro-group">
+                <option value="">-- 请选择服务组 --</option>
+            </select>
+        </div>
+        <div class="col-sm-3" style="padding-left:0;">
+            <select class="form-control" id="rule-micros">
+                <option value="">-- 请选择服务 --</option>
+            </select>
+        </div>
+    </div>
+</div>
 </div>
 <!-- micro -->

@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     {(common/meta.html)}
 </head>
 
 <body class="fixed-sidebar full-height-layout gray-bg">
     <div id="wrapper">
-        {(common/left_nav.html)}<!-- 左侧导航 -->
+        {(common/left_nav.html)}
+        <!-- 左侧导航 -->
 
         <!--右侧部分开始-->
         <div id="page-wrapper" class="gray-bg dashbard-1">
@@ -31,28 +33,33 @@
                                     <h3>{{ v }}</h3>
                                     <p class="plugin-name">
                                         {%
-                                            local plugin_config = plugin_configs[v]
-                                            if v=="stat" or v=="micros" or (plugin_config and plugin_config.enable==true) then
+                                        local plugin_config = plugin_configs[v]
+                                        if v=="stat" or v=="micros" or (plugin_config and plugin_config.enable==true)
+                                        then
                                         %}
-                                            <span title="插件已被启用" class="badge badge-primary">已启用</span>
+                                        <span title="插件已被启用" class="badge badge-primary">已启用</span>
                                         {% else %}
-                                            <span title="插件已被停用" class="badge badge-danger">已停用</span>
+                                        <span title="插件已被停用" class="badge badge-danger">已停用</span>
                                         {% end %}
                                     </p>
 
                                     {% if v=="stat" then %}
-                                        <p class="title-op">
-                                            全局统计插件
-                                        </p>
+                                    <p class="title-op">
+                                        全局统计插件
+                                    </p>
                                     {% elseif v=="kvstore" then %}
-                                        <p class="title-op">
-                                            Shared Dict存取插件
-                                        </p>
+                                    <p class="title-op">
+                                        Shared Dict存取插件
+                                    </p>
                                     {% else %}
-                                        <p class="title-op">
-                                            <span href="javascript:void(0)" class="label rule-badge" title="开启的规则条数为{{plugin_config.active_rule_count}}"><i class="glyphicon glyphicon-ok-circle"></i> {{plugin_config.active_rule_count}}</span>
-                                            <span href="javascript:void(0)" class="label rule-badge" title="关闭的规则条数为{{plugin_config.inactive_rule_count}}"><i class="glyphicon glyphicon-remove-circle"></i> {{plugin_config.inactive_rule_count}}</span>
-                                        </p>
+                                    <p class="title-op">
+                                        <span href="javascript:void(0)" class="label rule-badge" title="开启的规则条数为{{plugin_config.active_rule_count}}"><i
+                                                class="glyphicon glyphicon-ok-circle"></i>
+                                            {{plugin_config.active_rule_count}}</span>
+                                        <span href="javascript:void(0)" class="label rule-badge" title="关闭的规则条数为{{plugin_config.inactive_rule_count}}"><i
+                                                class="glyphicon glyphicon-remove-circle"></i>
+                                            {{plugin_config.inactive_rule_count}}</span>
+                                    </p>
                                     {% end %}
                                 </div>
 
@@ -63,7 +70,8 @@
                     </div>
                 </div>
             </div>
-        </div><!--右侧部分结束-->
+        </div>
+        <!--右侧部分结束-->
 
     </div>
 
@@ -296,32 +304,35 @@
     </script>
 
 
-    {(common/common_js.html)}<!-- 通用js -->
+    {(common/common_js.html)}
+    <!-- 通用js -->
     <script type="text/javascript">
         APP.Common.resetNav("nav-index");
-        $(document).ready(function(){
-            $(document).on('click', '.plugin-item', function(){
-                var uri =  $(this).attr("data-uri");
-                if(uri){
-                    if(uri=="/stat") uri="/status";
+        $(document).ready(function () {
+            $(document).on('click', '.plugin-item', function () {
+                var uri = $(this).attr("data-uri");
+                if (uri) {
+                    if (uri == "/stat") uri = "/status";
                     window.location.href = uri;
                 }
             });
             $.ajax({
-                url : '/stat/status',
-                type : 'get',
+                url: '/stat/status',
+                type: 'get',
                 cache: false,
-                data : {},
-                dataType : 'json',
-                success : function(result) {
-                    if(result.success){
-                        $("#start_time_span").text(APP.Common.formatDate(new Date(result.data.start_time*1000)));
+                data: {},
+                dataType: 'json',
+                success: function (result) {
+                    if (result.success) {
+                        $("#start_time_span").text(APP.Common.formatDate(new Date(result.data.start_time *
+                            1000)));
                         $("#node_tip").show();
                     }
                 },
-                error : function() {}
+                error: function () {}
             });
         });
     </script>
 </body>
+
 </html>

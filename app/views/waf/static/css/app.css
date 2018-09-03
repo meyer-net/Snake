@@ -14,7 +14,7 @@
 .plugin-item:hover{
     cursor: pointer;
     background-color:#efefef;
-}
+} 
 
 .plugin-item .thumbnail {
     min-height: 160px;

@@ -2,8 +2,7 @@
     var _this = null;
     L.SignatureAuth = L.SignatureAuth || {};
     _this = L.SignatureAuth = {
-        data: {
-        },
+        data: {},
 
         init: function () {
             L.Common.loadConfigs("signature_auth", _this, true);
@@ -11,9 +10,9 @@
         },
 
         initEvents: function () {
-            L.Common.initRuleAddDialog("signature_auth", _this);//添加规则对话框
-            L.Common.initRuleDeleteDialog("signature_auth", _this);//删除规则对话框
-            L.Common.initRuleEditDialog("signature_auth", _this);//编辑规则对话框
+            L.Common.initRuleAddDialog("signature_auth", _this); //添加规则对话框
+            L.Common.initRuleDeleteDialog("signature_auth", _this); //删除规则对话框
+            L.Common.initRuleEditDialog("signature_auth", _this); //编辑规则对话框
             L.Common.initRuleSortEvent("signature_auth", _this);
 
             L.Common.initSelectorAddDialog("signature_auth", _this);
@@ -22,22 +21,22 @@
             L.Common.initSelectorSortEvent("signature_auth", _this);
             L.Common.initSelectorClickEvent("signature_auth", _this);
 
-            L.Common.initSelectorTypeChangeEvent();//选择器类型选择事件
-            L.Common.initConditionAddOrRemove();//添加或删除条件
-            L.Common.initJudgeTypeChangeEvent();//judge类型选择事件
-            L.Common.initConditionTypeChangeEvent();//condition类型选择事件
+            L.Common.initSelectorTypeChangeEvent(); //选择器类型选择事件
+            L.Common.initConditionAddOrRemove(); //添加或删除条件
+            L.Common.initJudgeTypeChangeEvent(); //judge类型选择事件
+            L.Common.initConditionTypeChangeEvent(); //condition类型选择事件
 
-            _this.initCredentialAddOrRemove();//添加或删除credential
+            _this.initCredentialAddOrRemove(); //添加或删除credential
             _this.initCredentialAddBtnEvent();
 
-            L.Common.initExtractionAddOrRemove();//添加或删除条件
-            L.Common.initExtractionTypeChangeEvent();//extraction类型选择事件
-            L.Common.initExtractionAddBtnEvent();//添加提前项按钮事件
-            L.Common.initExtractionHasDefaultValueOrNotEvent();//提取项是否有默认值选择事件
+            L.Common.initExtractionAddOrRemove(); //添加或删除条件
+            L.Common.initExtractionTypeChangeEvent(); //extraction类型选择事件
+            L.Common.initExtractionAddBtnEvent(); //添加提前项按钮事件
+            L.Common.initExtractionHasDefaultValueOrNotEvent(); //提取项是否有默认值选择事件
 
             L.Common.initViewAndDownloadEvent("signature_auth", _this);
-            L.Common.initSwitchBtn("signature_auth", _this);//redirect关闭、开启
-            L.Common.initSyncDialog("signature_auth", _this);//编辑规则对话框
+            L.Common.initSwitchBtn("signature_auth", _this); //redirect关闭、开启
+            L.Common.initSyncDialog("signature_auth", _this); //编辑规则对话框
         },
 
         //增加、删除credential按钮事件
@@ -48,7 +47,7 @@
 
             //删除输入行
             $(document).on('click', '#credential-area .pair .btn-remove', function (event) {
-                $(this).parents('.form-group').remove();//删除本行输入
+                $(this).parents('.form-group').remove(); //删除本行输入
                 _this.resetAddCredentialBtn();
             });
         },
@@ -60,11 +59,11 @@
                 if (current_es && current_es.length) {
                     row = current_es[current_es.length - 1];
                 }
-                if (row) {//至少存在了一个提取项
+                if (row) { //至少存在了一个提取项
                     var new_row = $(row).clone(true);
                     $(new_row).find("label").text("");
                     $("#credential-area").append($(new_row));
-                } else {//没有任何提取项，从模板创建一个
+                } else { //没有任何提取项，从模板创建一个
                     var html = $("#single-credential-tmpl").html();
                     $("#credential-area").append(html);
                 }
@@ -94,7 +93,11 @@
                 c++;
                 if (c == l) {
                     $(this).find(".btn-add").show();
-                    $(this).find(".btn-remove").show();
+                    if (l != 1) {
+                        $(this).find(".btn-remove").show();
+                    } else {
+                        $(this).find(".btn-remove").hide();
+                    }
                 } else {
                     $(this).find(".btn-add").hide();
                     $(this).find(".btn-remove").show();
@@ -158,11 +161,11 @@
             var handle = {};
 
             var handle_credentials = _this.buildCredentials();
-            if(!handle_credentials.success){
+            if (!handle_credentials.success) {
                 result.success = false;
                 result.data = handle_credentials.data;
                 return result;
-            }else{
+            } else {
                 handle.credentials = handle_credentials.data;
             }
 

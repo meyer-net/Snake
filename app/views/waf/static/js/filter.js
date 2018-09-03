@@ -2,8 +2,7 @@
     var _this = null;
     L.Filter = L.Filter || {};
     _this = L.Filter = {
-        data: {
-        },
+        data: {},
 
         init: function () {
             L.Common.loadConfigs("filter", _this, true);
@@ -12,9 +11,9 @@
 
         initEvents: function () {
             var op_type = "filter";
-            L.Common.initRuleAddDialog(op_type, _this);//添加规则对话框
-            L.Common.initRuleDeleteDialog(op_type, _this);//删除规则对话框
-            L.Common.initRuleEditDialog(op_type, _this);//编辑规则对话框
+            L.Common.initRuleAddDialog(op_type, _this); //添加规则对话框
+            L.Common.initRuleDeleteDialog(op_type, _this); //删除规则对话框
+            L.Common.initRuleEditDialog(op_type, _this); //编辑规则对话框
             L.Common.initRuleSortEvent(op_type, _this);
 
             L.Common.initSelectorAddDialog(op_type, _this);
@@ -23,39 +22,39 @@
             L.Common.initSelectorSortEvent(op_type, _this);
             L.Common.initSelectorClickEvent(op_type, _this);
 
-            L.Common.initSelectorTypeChangeEvent();//选择器类型选择事件
-            L.Common.initConditionAddOrRemove();//添加或删除条件
-            L.Common.initJudgeTypeChangeEvent();//judge类型选择事件
-            L.Common.initConditionTypeChangeEvent();//condition类型选择事件
+            L.Common.initSelectorTypeChangeEvent(); //选择器类型选择事件
+            L.Common.initConditionAddOrRemove(); //添加或删除条件
+            L.Common.initJudgeTypeChangeEvent(); //judge类型选择事件
+            L.Common.initConditionTypeChangeEvent(); //condition类型选择事件
 
-            L.Common.initExtractionAddOrRemove();//添加或删除条件
-            L.Common.initExtractionTypeChangeEvent();//extraction类型选择事件
-            L.Common.initExtractionAddBtnEvent();//添加提前项按钮事件
-            L.Common.initExtractionHasDefaultValueOrNotEvent();//提取项是否有默认值选择事件
+            L.Common.initExtractionAddOrRemove(); //添加或删除条件
+            L.Common.initExtractionTypeChangeEvent(); //extraction类型选择事件
+            L.Common.initExtractionAddBtnEvent(); //添加提前项按钮事件
+            L.Common.initExtractionHasDefaultValueOrNotEvent(); //提取项是否有默认值选择事件
 
             L.Common.initViewAndDownloadEvent(op_type, _this);
-            L.Common.initSwitchBtn(op_type, _this);//redirect关闭、开启
-            L.Common.initSyncDialog(op_type, _this);//编辑规则对话框
+            L.Common.initSwitchBtn(op_type, _this); //redirect关闭、开启
+            L.Common.initSyncDialog(op_type, _this); //编辑规则对话框
         },
 
-        
-        buildRule: function(){
+
+        buildRule: function () {
             var result = {
                 success: false,
                 data: {
                     name: null,
-                    judge:{},
+                    judge: {},
                     extractor: {},
-                    handle:{}
+                    handle: {}
                 }
             };
 
             //build name and judge
             var buildJudgeResult = L.Common.buildJudge();
-            if(buildJudgeResult.success == true){
+            if (buildJudgeResult.success == true) {
                 result.data.name = buildJudgeResult.data.name;
                 result.data.judge = buildJudgeResult.data.judge;
-            }else{
+            } else {
                 result.success = false;
                 result.data = buildJudgeResult.data;
                 return result;
@@ -73,9 +72,9 @@
 
             //build handle
             var buildHandleResult = _this.buildHandle();
-            if(buildHandleResult.success == true){
+            if (buildHandleResult.success == true) {
                 result.data.handle = buildHandleResult.handle;
-            }else{
+            } else {
                 result.success = false;
                 result.data = buildHandleResult.data;
                 return result;
@@ -89,38 +88,34 @@
             return result;
         },
 
-        buildHandle: function(){
+        buildHandle: function () {
             var result = {};
             var handle = {
-                header: [],
-                body: []
+                filter_vars: []
             };
 
-            $("#filter-area .filter-holder").each(function() {
-                var filter_type = $(this).find("select[name=rule-filter-type]").val();
-                var filter_header_key = $(this).find(".filter-key-hodler input").val();
-                var filter_header_value = $(this).find(".filter-value-hodler input").val();
-                var filter_body = $(this).find("select[name=rule-filter-body]").val();
-                
-                if (filter_type == "0") {
-                    handle.header.push({
-                        key: filter_header_key,
-                        value: filter_header_value
-                    })
-                } else if (filter_type == "1") {
-                    handle.body.push({
-                        type: parseInt(filter_body)
+            $("#filter-area .pair-holder").each(function () {
+                var filter_key = $(this).find("select[name='rule-judge-filter-type']").val();
+                var filter_value = $(this).find("input[name='rule-judge-filter-final']").val();
+                var match_key = $(this).find("select[name='rule-judge-filter-operator']").val();
+                var match_value = $(this).find("input[name='rule-judge-filter-match']").val();
+
+                if (filter_key) {
+                    handle.filter_vars.push({
+                        key: filter_key,
+                        value: filter_value,
+                        operator: match_key,
+                        mValue: match_value
                     })
                 }
-
             })
-            // var uri_tmpl = $("#rule-handle-uri-template").val();
-            // if (!uri_tmpl) {
-            //     result.success = false;
-            //     result.data = "rewrite使用的uri template不得为空";
-            //     return result;
-            // }
-            // handle.uri_tmpl = uri_tmpl;
+
+            if (handle.filter_vars.length == 0) {
+                result.success = false;
+                result.data = "未检查到有效的模板变量，请确认输入是否有误";
+                return result;
+            }
+
             var string_continue = $("#rule-continue").val()
             var int_continue = parseInt(string_continue)
             if (isNaN(int_continue)) {

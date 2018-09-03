@@ -2,8 +2,7 @@
     var _this = null;
     L.BasicAuth = L.BasicAuth || {};
     _this = L.BasicAuth = {
-        data: {
-        },
+        data: {},
 
         init: function () {
             L.Common.loadConfigs("basic_auth", _this, true);
@@ -11,9 +10,9 @@
         },
 
         initEvents: function () {
-            L.Common.initRuleAddDialog("basic_auth", _this);//添加规则对话框
-            L.Common.initRuleDeleteDialog("basic_auth", _this);//删除规则对话框
-            L.Common.initRuleEditDialog("basic_auth", _this);//编辑规则对话框
+            L.Common.initRuleAddDialog("basic_auth", _this); //添加规则对话框
+            L.Common.initRuleDeleteDialog("basic_auth", _this); //删除规则对话框
+            L.Common.initRuleEditDialog("basic_auth", _this); //编辑规则对话框
             L.Common.initRuleSortEvent("basic_auth", _this);
 
             L.Common.initSelectorAddDialog("basic_auth", _this);
@@ -22,17 +21,17 @@
             L.Common.initSelectorSortEvent("basic_auth", _this);
             L.Common.initSelectorClickEvent("basic_auth", _this);
 
-            L.Common.initSelectorTypeChangeEvent();//选择器类型选择事件
-            L.Common.initConditionAddOrRemove();//添加或删除条件
-            L.Common.initJudgeTypeChangeEvent();//judge类型选择事件
-            L.Common.initConditionTypeChangeEvent();//condition类型选择事件
+            L.Common.initSelectorTypeChangeEvent(); //选择器类型选择事件
+            L.Common.initConditionAddOrRemove(); //添加或删除条件
+            L.Common.initJudgeTypeChangeEvent(); //judge类型选择事件
+            L.Common.initConditionTypeChangeEvent(); //condition类型选择事件
 
-            _this.initCredentialAddOrRemove();//添加或删除credential
+            _this.initCredentialAddOrRemove(); //添加或删除credential
             _this.initCredentialAddBtnEvent();
 
             L.Common.initViewAndDownloadEvent("basic_auth", _this);
-            L.Common.initSwitchBtn("basic_auth", _this);//redirect关闭、开启
-            L.Common.initSyncDialog("basic_auth", _this);//编辑规则对话框
+            L.Common.initSwitchBtn("basic_auth", _this); //redirect关闭、开启
+            L.Common.initSyncDialog("basic_auth", _this); //编辑规则对话框
         },
 
         //增加、删除credential按钮事件
@@ -41,9 +40,9 @@
             //点击“加号“添加新的输入行
             $(document).on('click', '#credential-area .pair .btn-add', _this.addNewCredential);
 
-            //删除输入行
+            //删除输入行 
             $(document).on('click', '#credential-area .pair .btn-remove', function (event) {
-                $(this).parents('.form-group').remove();//删除本行输入
+                $(this).parents('.form-group').remove(); //删除本行输入
                 _this.resetAddCredentialBtn();
             });
         },
@@ -55,11 +54,11 @@
                 if (current_es && current_es.length) {
                     row = current_es[current_es.length - 1];
                 }
-                if (row) {//至少存在了一个提取项
+                if (row) { //至少存在了一个提取项
                     var new_row = $(row).clone(true);
                     $(new_row).find("label").text("");
                     $("#credential-area").append($(new_row));
-                } else {//没有任何提取项，从模板创建一个
+                } else { //没有任何提取项，从模板创建一个
                     var html = $("#single-credential-tmpl").html();
                     $("#credential-area").append(html);
                 }
@@ -89,7 +88,11 @@
                 c++;
                 if (c == l) {
                     $(this).find(".btn-add").show();
-                    $(this).find(".btn-remove").show();
+                    if (l != 1) {
+                        $(this).find(".btn-remove").show();
+                    } else {
+                        $(this).find(".btn-remove").hide();
+                    }
                 } else {
                     $(this).find(".btn-add").hide();
                     $(this).find(".btn-remove").show();
@@ -142,11 +145,11 @@
             var handle = {};
 
             var handle_credentials = _this.buildCredentials();
-            if(!handle_credentials.success){
+            if (!handle_credentials.success) {
                 result.success = false;
                 result.data = handle_credentials.data;
                 return result;
-            }else{
+            } else {
                 handle.credentials = handle_credentials.data;
             }
 

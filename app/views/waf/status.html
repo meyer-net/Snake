@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     {(common/meta.html)}
     <style>
-    .widget{
+        .widget{
         height:140px;
         border: 1px solid #ddd;
         border-radius: 4px;
@@ -38,7 +39,8 @@
 
 <body class="fixed-sidebar full-height-layout gray-bg">
     <div id="wrapper">
-        {(common/left_nav.html)}<!-- 左侧导航 -->
+        {(common/left_nav.html)}
+        <!-- 左侧导航 -->
 
         <!--右侧部分开始-->
         <div id="page-wrapper" class="gray-bg dashbard-1">
@@ -73,15 +75,15 @@
                 </div>
 
                 <div id="data-section">
-                    
+
 
                 </div>
 
                 <div id="chart-section" style="display:none;">
                     <div class="row">
                         <div class="col-md-12">
-                         <div style="height:400px;padding-top:20px;" id="request-area"></div>
-                         </div>
+                            <div style="height:400px;padding-top:20px;" id="request-area"></div>
+                        </div>
                     </div>
                     <div class="row">
                         <div style="height:400px;padding-top:20px;" id="qps-area"></div>
@@ -100,14 +102,15 @@
                         <div style="height:400px;padding-top:20px;" id="status-area"></div>
                     </div>
                 </div>
-            
+
             </div><!-- content end -->
-        </div><!--右侧部分结束-->
+        </div>
+        <!--右侧部分结束-->
     </div>
 
 
     <script id="status-tpl" type="text/template">
-            <div id="basic-info-section" class="row status-row">
+        <div id="basic-info-section" class="row status-row">
                 <div class="col-sm-2">
                     <div class="widget text-center">
                         <div class="m-b-md">
@@ -313,14 +316,16 @@
             </div>
     </script>
 
-    {(common/common_js.html)}<!-- 通用js -->
+    {(common/common_js.html)}
+    <!-- 通用js -->
     <script src="/static/js/echarts3/echarts.common.min.js"></script>
     <script src="/static/js/status.js"></script>
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function () {
             APP.Common.resetNav("nav-status");
             APP.Status.init();
         });
     </script>
 </body>
+
 </html>

@@ -3,8 +3,8 @@
 
 <head>
     {(common/meta.html)}
-<script type="text/javascript">
-    global_settings.c_name = "插件";
+    <script type="text/javascript">
+        global_settings.c_name = "插件";
     </script>
 </head>
 
@@ -37,6 +37,12 @@
         <!--右侧部分结束-->
     </div>
 
+    <div id="map-rule-capture">
+        {(rules/capture.html)}
+    </div>
+    <div id="map-rule-filter">
+        {(rules/filter.html)}
+    </div>
     <div id="map-rule-rewrite">
         {(rules/rewrite.html)}
     </div>
@@ -49,11 +55,13 @@
     <div id="map-rule-alias">
         {(rules/alias.html)}
     </div>
-    <div id="map-rule-ssi">
-        {(rules/ssi.html)}
+    <div id="map-rule-tmpl_vars">
+        {(rules/tmpl_vars.html)}
     </div>
 
-    {(common/extraction-tmpl.html)} {(common/selector-item-tpl.html)} {(common/selector-add.html)} {(common/selector-edit.html)}
+
+    {(common/extraction-tmpl.html)} {(common/selector-item-tpl.html)} {(common/selector-add.html)}
+    {(common/selector-edit.html)}
     {(common/common_js.html)}
 
     <!-- 通用js -->
@@ -62,7 +70,9 @@
     <script src="/static/js/divide.js"></script>
     <script src="/static/js/alias.js"></script>
     <script src="/static/js/map.js"></script>
-    <script src="/static/js/ssi.js"></script>
+    <script src="/static/js/filter.js"></script>
+    <script src="/static/js/capture.js"></script>
+    <script src="/static/js/tmpl_vars.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             APP.Common.resetNav("nav-map");

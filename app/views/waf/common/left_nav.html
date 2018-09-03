@@ -1,4 +1,4 @@
- <!--左侧导航开始-->
+<!--左侧导航开始-->
 <nav id="nav-section" class="navbar-default navbar-static-side" role="navigation">
     <div class="nav-close" style="display: none"><i class="glyphicon glyphicon-transfer"></i>
     </div>
@@ -6,13 +6,14 @@
         <ul class="nav" id="side-menu">
             <li class="nav-header">
                 <div class="dropdown profile-element">
-                        <p>
-                            <span style="display: inline-block;height: 50px;width:50px;line-height: 50px;vertical-align: middle;margin-left: -6px;padding-top: 10px;">{(common/logo.html)}</span>
-                            <span style="display: inline-block;height: 50px;line-height: 50px;vertical-align: middle;color: #fff;padding-top:6px;font-size: 18px;padding-left: 10px;"><strong class="font-bold">Orange</strong></span>
-                        </p>
+                    <p>
+                        <span style="display: inline-block;height: 50px;width:50px;line-height: 50px;vertical-align: middle;margin-left: -6px;padding-top: 10px;">{(common/logo.html)}</span>
+                        <span style="display: inline-block;height: 50px;line-height: 50px;vertical-align: middle;color: #fff;padding-top:6px;font-size: 18px;padding-left: 10px;"><strong
+                                class="font-bold">Orange</strong></span>
+                    </p>
                 </div>
                 <div class="logo-element">
-                     <span style="display: inline-block;height: 50px;width:50px;line-height: 50px;vertical-align: middle;margin-left: -6px;padding-top: 10px;">{(common/logo.html)}</span>
+                    <span style="display: inline-block;height: 50px;width:50px;line-height: 50px;vertical-align: middle;margin-left: -6px;padding-top: 10px;">{(common/logo.html)}</span>
                 </div>
             </li>
             <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
@@ -65,18 +66,18 @@
                     <span class="nav-label">代理&分流</span>
                 </a>
             </li>
-            <!-- <li id="nav-filter">
+            <li id="nav-filter">
                 <a href="/filter">
                     <i class="fa fa-filter"></i>
                     <span class="nav-label">响应过滤</span>
                 </a>
-            </li>  -->
-            <li id="nav-ident_ctx">
+            </li>
+            <!-- <li id="nav-ident_ctx">
                 <a href="/ident_ctx">
                     <i class="fa fa-credit-card"></i>
                     <span class="nav-label">鉴权&代理</span>
                 </a>
-            </li>
+            </li> -->
             <li id="nav-tmpl_vars">
                 <a href="/tmpl_vars">
                     <i class="fa fa-refresh"></i>
@@ -124,7 +125,7 @@
                     <i class="fa fa-warning"></i>
                     <span class="nav-label">WAF</span>
                 </a>
-            </li>
+            </li> 
             <li id="nav-kvstore">
                 <a href="/kvstore">
                     <i class="fa fa-th"></i>
@@ -150,14 +151,14 @@
             </li>
 
             {%
-                if locals and locals.login and locals.login == true then
+            if locals and locals.login and locals.login == true then
             %}
             <li class="line dk"></li>
             <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
                 <span class="ng-scope">管理</span>
             </li>
             {%
-            	if locals.is_admin then
+            if locals.is_admin then
             %}
             <li id="nav-user-manage">
                 <a href="/admin/user/manage">

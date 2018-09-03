@@ -2,8 +2,7 @@
     var _this = null;
     L.KVStore = L.KVStore || {};
     _this = L.KVStore = {
-        data: {
-        },
+        data: {},
 
         init: function () {
             _this.initEvents();
@@ -38,11 +37,11 @@
             });
         },
 
-        initEvents: function(){
+        initEvents: function () {
             var op_type = "kvstore";
             L.Common.initViewAndDownloadEvent(op_type, _this);
-            L.Common.initSwitchBtn(op_type, _this);//redirect关闭、开启
-            L.Common.initSyncDialog(op_type, _this);//编辑规则对话框
+            L.Common.initSwitchBtn(op_type, _this); //redirect关闭、开启
+            L.Common.initSyncDialog(op_type, _this); //编辑规则对话框
         },
     };
 }(APP));

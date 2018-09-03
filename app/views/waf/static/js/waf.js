@@ -2,19 +2,18 @@
     var _this = null;
     L.WAF = L.WAF || {};
     _this = L.WAF = {
-        data: {
-        },
+        data: {},
 
         init: function () {
-             L.Common.loadConfigs("waf", _this, true);
+            L.Common.loadConfigs("waf", _this, true);
             _this.initEvents();
         },
 
         initEvents: function () {
             var op_type = "waf";
-            L.Common.initRuleAddDialog(op_type, _this);//添加规则对话框
-            L.Common.initRuleDeleteDialog(op_type, _this);//删除规则对话框
-            L.Common.initRuleEditDialog(op_type, _this);//编辑规则对话框
+            L.Common.initRuleAddDialog(op_type, _this); //添加规则对话框
+            L.Common.initRuleDeleteDialog(op_type, _this); //删除规则对话框
+            L.Common.initRuleEditDialog(op_type, _this); //编辑规则对话框
             L.Common.initRuleSortEvent(op_type, _this);
 
             L.Common.initSelectorAddDialog(op_type, _this);
@@ -23,27 +22,27 @@
             L.Common.initSelectorSortEvent(op_type, _this);
             L.Common.initSelectorClickEvent(op_type, _this);
 
-            L.Common.initSelectorTypeChangeEvent();//选择器类型选择事件
-            L.Common.initConditionAddOrRemove();//添加或删除条件
-            L.Common.initJudgeTypeChangeEvent();//judge类型选择事件
-            L.Common.initConditionTypeChangeEvent();//condition类型选择事件
-            L.Common.initExtractionHasDefaultValueOrNotEvent();//提取项是否有默认值选择事件
+            L.Common.initSelectorTypeChangeEvent(); //选择器类型选择事件
+            L.Common.initConditionAddOrRemove(); //添加或删除条件
+            L.Common.initJudgeTypeChangeEvent(); //judge类型选择事件
+            L.Common.initConditionTypeChangeEvent(); //condition类型选择事件
+            L.Common.initExtractionHasDefaultValueOrNotEvent(); //提取项是否有默认值选择事件
 
-            L.Common.initExtractionAddOrRemove();//添加或删除条件
-            L.Common.initExtractionTypeChangeEvent();//extraction类型选择事件
-            L.Common.initExtractionAddBtnEvent();//添加提前项按钮事件
-            L.Common.initExtractionHasDefaultValueOrNotEvent();//提取项是否有默认值选择事件
+            L.Common.initExtractionAddOrRemove(); //添加或删除条件
+            L.Common.initExtractionTypeChangeEvent(); //extraction类型选择事件
+            L.Common.initExtractionAddBtnEvent(); //添加提前项按钮事件
+            L.Common.initExtractionHasDefaultValueOrNotEvent(); //提取项是否有默认值选择事件
 
-            _this.initHandleTypeChangeEvent();//handle类型选择事件
-            _this.initStatBtnEvent();//统计按钮事件
+            _this.initHandleTypeChangeEvent(); //handle类型选择事件
+            _this.initStatBtnEvent(); //统计按钮事件
 
             L.Common.initViewAndDownloadEvent(op_type, _this);
-            L.Common.initSwitchBtn(op_type, _this);//redirect关闭、开启
-            L.Common.initSyncDialog(op_type, _this);//编辑规则对话框
+            L.Common.initSwitchBtn(op_type, _this); //redirect关闭、开启
+            L.Common.initSyncDialog(op_type, _this); //编辑规则对话框
         },
 
         initStatBtnEvent: function () {
-            $("#stat-btn").click(function () {//试图转换
+            $("#stat-btn").click(function () { //试图转换
                 var self = $(this);
                 var now_state = $(this).attr("data-show");
                 if (now_state == "true") {
@@ -51,7 +50,7 @@
                     $.ajax({
                         url: '/waf/stat',
                         type: 'get',
-                        cache:false,
+                        cache: false,
                         data: {},
                         dataType: 'json',
                         success: function (result) {
@@ -87,10 +86,10 @@
             var outer_data = [];
 
             var statistics = data.statistics;
-            for(var i=0; i < statistics.length;i++){
+            for (var i = 0; i < statistics.length; i++) {
                 var s = statistics[i];
                 keys.push(s.rule_id);
-                
+
                 outer_data.push({
                     value: s.count,
                     name: s.rule_id
@@ -108,7 +107,7 @@
                     data: keys
                 },
                 series: [
-                    
+
                     {
                         name: '规则',
                         type: 'pie',

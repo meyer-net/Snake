@@ -103,7 +103,7 @@ function model:write_request(key)
     -- 交给异步子线程跑（ngx.timer.at 貌似有次数限制，有待确认）
     -- local ok, err = ngx.timer.at(0, function()
     -- end)
-    return self:write(key or n_var.uri, data_packet, true)
+    return self:write(key, data_packet, true)
 end
 
 --[[

@@ -2,8 +2,7 @@
     var _this = null;
     L.Micros = L.Micros || {};
     _this = L.Micros = {
-        data: {
-        },
+        data: {},
 
         init: function () {
             L.Common.loadConfigs("micros", _this, true);
@@ -13,9 +12,9 @@
         initEvents: function () {
             // console.log(111);
             var op_type = "micros";
-            L.Common.initRuleAddDialog(op_type, _this);//添加规则对话框
-            L.Common.initRuleDeleteDialog(op_type, _this);//删除规则对话框
-            L.Common.initRuleEditDialog(op_type, _this);//编辑规则对话框
+            L.Common.initRuleAddDialog(op_type, _this); //添加规则对话框
+            L.Common.initRuleDeleteDialog(op_type, _this); //删除规则对话框
+            L.Common.initRuleEditDialog(op_type, _this); //编辑规则对话框
             L.Common.initRuleSortEvent(op_type, _this);
 
             L.Common.initSelectorAddDialog(op_type, _this);
@@ -23,10 +22,10 @@
             L.Common.initSelectorEditDialog(op_type, _this);
             L.Common.initSelectorSortEvent(op_type, _this);
             L.Common.initSelectorClickEvent(op_type, _this);
-            
+
             L.Common.initViewAndDownloadEvent(op_type, _this);
-            L.Common.initSwitchBtn(op_type, _this);//redirect关闭、开启
-            L.Common.initSyncDialog(op_type, _this);//编辑规则对话框
+            L.Common.initSwitchBtn(op_type, _this); //redirect关闭、开启
+            L.Common.initSyncDialog(op_type, _this); //编辑规则对话框
         },
 
 
@@ -81,7 +80,7 @@
             var handle = {};
 
             var host = $("#rule-host").val();
-            handle.host = host || "127.0.0.1";
+            handle.host = host;
 
             var url = $("#rule-url").val();
             if (!url) {

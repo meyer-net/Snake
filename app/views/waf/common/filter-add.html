@@ -1,0 +1,39 @@
+<div id="filter-area">
+    <div class="form-group pair-holder">
+        <label class="col-sm-1 control-label">处理</label>
+        <div class="col-sm-2">
+            <select class="form-control" name="rule-judge-filter-type">
+                <option value="body">Body</option>
+                <option value="header">Header</option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <select class="form-control" name="rule-judge-filter-operator">
+                <option value="match">Match</option>
+                <option value="not_match">Not Match</option>
+                <option value="=">=</option>
+                <option value="!=">!=</option>
+                <option value=">">&gt;</option>
+                <option value=">=">&ge;</option>
+                <option value="<">&lt;</option>
+                <option value="<=">&le;</option>
+            </select>
+        </div>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" name="rule-judge-filter-match" placeholder="match">
+        </div>
+        <div class="col-sm-2">
+            <input type="text" class="form-control" name="rule-judge-filter-final" placeholder="final">
+        </div>
+        <div class="col-sm-1" style="margin-top:5px;">
+            <span class="input-group-btn">
+                <a class="btn btn-remove" style="padding:0 5px;">
+                    <i class="fa fa-remove"></i>
+                </a>
+                <a class="btn btn-add" style="padding:0 5px;">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </span>
+        </div>
+    </div>
+</div>
