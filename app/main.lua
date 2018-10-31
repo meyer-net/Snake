@@ -17,4 +17,4 @@ local server = require("app.server")
 
 -----------------------------------------------------------------------------------------------------------------
 
-return server:new(context.config, context.store, context.views_path):get_app()
+return server:new(context.config, context.store, ngx.ctx.views_path):get_app()

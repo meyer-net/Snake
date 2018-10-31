@@ -1757,7 +1757,7 @@
             });
         },
 
-        refreshConfigs: function (type, context) { //刷新本地缓存，fix  issue #110 (https://github.com/sumory/orange/issues/110)
+        refreshConfigs: function (type, context) { //刷新本地缓存，fix  issue #110 (https://github.com/meyer-net/snake/issues/110)
             var op_type = type;
             $.ajax({
                 url: '/' + op_type + '/' + global_settings.i_key + 's',

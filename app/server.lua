@@ -37,10 +37,10 @@ local _M = {}
 --[[
 ---> 实例构造器
 --]]
-function _M:new(config, store, views_path)
+function _M:new(conf, store, views_path)
 	local instance = {}
-	config.view_config.views = u_string.rtrim(views_path or config.view_config.views, "/")
-    instance.config = config
+	instance.views_path = u_string.rtrim(views_path or conf.view_conf.views, "/")
+    instance.conf = conf
     instance.store = store
 
     instance.app = lor()
@@ -54,12 +54,12 @@ end
 ---> 生产APP
 --]]
 function _M:build_app()
-    local config = self.config
+    local conf = self.conf
     local store = self.store
     local app = self.app
 
 	---> 配置文件
-	local view_config = config.view_config
+	local view_conf = conf.view_conf
 
 	-------------------------------------------------------------------------------------------------------------
 	--[[
@@ -67,9 +67,9 @@ function _M:build_app()
 	--]]
 	---> 配置：模板内容项
 	app:conf("view enable", true)  -- 开启模板
-	app:conf("view engine", view_config.engine)  -- 模板引擎，当前lor只支持lua-resty-template，所以这个值暂时固定为"tmpl"
-	app:conf("view ext", view_config.ext)  -- 模板文件后缀，可自定义
-	app:conf("views", view_config.views)
+	app:conf("view engine", view_conf.engine)  -- 模板引擎，当前lor只支持lua-resty-template，所以这个值暂时固定为"tmpl"
+	app:conf("view ext", view_conf.ext)  -- 模板文件后缀，可自定义
+	app:conf("views", self.views_path)
 
 	---> 插件引用：
 	app:use(function(req, res, next)
@@ -78,9 +78,9 @@ function _M:build_app()
 	end)
 
 	---> 业务路由处理：
-	local crumbs = u_string.split(view_config.views, "/")
-	config.view_config.mode = crumbs[#crumbs]
-    app:use(router(app, config, store)())
+	local crumbs = u_string.split(self.views_path, "/")
+	conf.view_conf.mode = crumbs[#crumbs]
+    app:use(router(app, conf, store)())
 
 	--[[
 	---> 公共部分的插件引用

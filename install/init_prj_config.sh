@@ -52,12 +52,14 @@ function set_project_config()
 	TMP_NAME=$PROJECT_NAME
 	input_if_empty "PROJECT_NAME" "Init: Please ender ${red}project name${reset}"
 	FMT_PROJECT_NAME=`echo "$PROJECT_NAME" | sed 's@\.@_@g'`
-	sed -i "s@\$TMP_NAME@$FMT_PROJECT_NAME@g" $WORK_PATH/conf/vhosts/sys.conf
-	sed -i "s@\$project_name@$FMT_PROJECT_NAME@g" $WORK_PATH/conf/vhosts/sys.conf
-	sed -i "s@\$project_db_name@$FMT_PROJECT_NAME@g" $WORK_PATH/conf/vhosts/sys.conf
+	sed -i "s@\$TMP_NAME@$FMT_PROJECT_NAME@g" conf/vhosts/sys.conf
+	sed -i "s@\$project_name@$FMT_PROJECT_NAME@g" conf/vhosts/sys.conf
+	sed -i "s@\$project_db_name@$FMT_PROJECT_NAME@g" conf/vhosts/sys.conf
 	mv conf/vhosts/sys/$TMP_NAME.conf conf/vhosts/sys/$PROJECT_NAME.conf
 	RAM_REDIS_HPWD=$TMP_NAME
 
+	sed -i "s@\$project_name@$FMT_PROJECT_NAME@g" conf/vhosts/$PROJECT_NAME.conf
+	
 	input_if_empty "LOR_PORT" "Init: Please ender the ${red}lor-port${reset} of Project '${red}$PROJECT_NAME${reset}'"
 	sed -i "s@\$lor_port@$LOR_PORT@g" conf/vhosts/sys/$PROJECT_NAME.conf
 
@@ -69,6 +71,7 @@ function set_project_config()
 
 	input_if_empty "BIZ_PORT" "Init: Please ender the ${red}biz-port${reset} of Project '${red}$PROJECT_NAME${reset}'"
 	sed -i "s@\$biz_port@$BIZ_PORT@g" conf/vhosts/sys/$PROJECT_NAME.conf
+
 	return $?
 }
 
@@ -95,6 +98,7 @@ function set_mysql_config() {
 	exit"
 
 	sed -i "s@\$project_name@$FMT_PROJECT_NAME@g" $WORK_PATH/install/sys-clickhouse-log-v0.0.1.sh
+	DB_PORT=8123
 	input_if_empty "DB_HOST" "[$PROJECT_NAME]Clickhouse: Please ender clickhouse server ${red}address${reset}"
 	input_if_empty "DB_PORT" "[$PROJECT_NAME]Clickhouse: Please ender clickhouse server ${red}port${reset} of '${red}$DB_HOST${reset}'"
 	input_if_empty "DB_UPWD" "[$PROJECT_NAME]Clickhouse: Please ender clickhouse ${red}password${reset} of '${red}$DB_HOST${reset}(${red}$DB_UNAME${reset})'"

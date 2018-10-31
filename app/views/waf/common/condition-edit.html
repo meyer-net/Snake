@@ -25,7 +25,7 @@
                     </option> <option value="IP" {@if c.type=="IP" } selected {@/if}>IP </option> <option value="UserAgent"
                     {@if c.type=="UserAgent" } selected {@/if}>UserAgent </option> <option value="Method" {@if c.type=="Method"
                     } selected {@/if}>Method </option> <option value="Host" {@if c.type=="Host" } selected {@/if}>Host
-                    </option> <option value="Referer" {@if c.type=="Referer" } selected {@/if}>Referer </option> </select>
+                    </option> <option value="Referer" {@if c.type=="Referer" } selected {@/if}>Referer </option> <option value="Domain" {@if c.type=="Domain" } selected {@/if}>Domain </option></select>
                     </div> <div class="col-sm-2 condition-name-hodler" {@if c.type!="Header" &&c.type!="Query"
                     &&c.type!="PostParams" } style="display:none;padding-left:0px;" {@else} style="padding-left:0px;"
                     {@/if}> <input type="text" class="form-control" name="rule-judge-condition-name" placeholder="name"
