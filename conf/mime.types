@@ -39,6 +39,7 @@ types {
     application/vnd.wap.wmlc              wmlc;
     application/vnd.google-earth.kml+xml  kml;
     application/vnd.google-earth.kmz      kmz;
+    application/vnd.android.package-archive apk;
     application/x-7z-compressed           7z;
     application/x-cocoa                   cco;
     application/x-java-archive-diff       jardiff;
@@ -58,6 +59,7 @@ types {
     application/xspf+xml                  xspf;
     application/zip                       zip;
 
+    application/octet-stream              ipa;
     application/octet-stream              bin exe dll;
     application/octet-stream              deb;
     application/octet-stream              dmg;

@@ -20,5 +20,5 @@ return function(app, conf, store)
     ---> 相关参考：http://lor.sumory.com/guide/strict_route.html
     app:conf("strict_route", false)
     
-    return require(s_format("app.routes.mode.%s", conf.view_config.mode))(app, conf, store)
+    return require(s_format("app.routes.mode.%s", conf.view_conf.mode))(app, conf, store)
 end

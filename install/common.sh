@@ -10,6 +10,49 @@ red=`tput setaf 1`
 green=`tput setaf 2`
 reset=`tput sgr0`
 
+# ret, err, code = run_cmd(check_java_cmd)
+# def run_cmd(cmd):
+#     result_str = ""
+#     errors = ""
+#     process = sub.Popen(cmd, stdout=sub.PIPE, shell=True)
+#     # result_str, err = process.communicate()
+#     p_result = process.stdout
+#     p_error = process.stderr
+    
+#     code = process.returncode
+#     process.wait()
+#     if p_error:
+#         errors = p_error.read().strip()
+#         p_error.close()
+#         if errors:
+#             return "", errors, code
+
+#     if p_result:
+#         result_str = p_result.read().strip()
+#         p_result.close()
+
+#     return result_str, errors, code
+
+#随机数
+#参数1：需要设置的变量名
+#参数2：最小值
+#参数3：最大值
+#调用：$(rand_val 1000 2000)
+function rand_val(){
+	if [ $? -ne 0 ]; then
+		return $?
+	fi
+	local TMP_VAR_NAME=$1
+
+    local MIN_PORT=$2 
+    local MAX_PORT=$(($3-$MIN_PORT+1))  
+    local CURR_NUM=$(cat /proc/sys/kernel/random/uuid | cksum | awk -F ' ' '{print $1}')
+
+    eval ${1}=$(($CURR_NUM%$MAX_PORT+$MIN_PORT))
+
+	return $?
+}
+
 #安装软件基础
 #参数1：软件安装名称
 #参数2：软件安装需调用的函数
@@ -296,7 +339,7 @@ function set_if_empty()
 	TMP_DFT=`eval echo '$'$TMP_VAR_NAME`
 
 	if [ -n "$TMP_VAR_VAL" ]; then
-		eval ${1}='$TMP_VAR_VAL'
+		eval ${1}=`echo '$TMP_DFT'`
 	fi
 
 	return $?
@@ -321,7 +364,7 @@ function input_if_empty()
 	echo ""
 
 	if [ -n "$INPUT_CURRENT" ]; then
-		eval ${1}=`echo '$INPUT_CURRENT'`
+		eval ${1}='$INPUT_CURRENT'
 	fi
 
 	return $?
@@ -741,7 +784,7 @@ function echo_startup_config()
 		return $?
 	fi
 	
-	set_if_empty "SUPERVISOR_CONF_ROOT" "/clouddisk/attach/supervisor"
+	set_if_empty "SUPERVISOR_CONF_ROOT" "$ATT_DIR/supervisor"
 
 	local STARTUP_NAME="$1"
 	local STARTUP_FILENAME="$STARTUP_NAME.conf"
@@ -752,7 +795,7 @@ function echo_startup_config()
 
 	SUPERVISOR_LOGS_DIR="$SUPERVISOR_CONF_ROOT/logs"
 	SUPERVISOR_SCRIPTS_DIR="$SUPERVISOR_CONF_ROOT/scripts"
-	SUPERVISOR_FILE_DIR="$SUPERVISOR_CONF_ROOT/conf/"
+	SUPERVISOR_FILE_DIR="$SUPERVISOR_CONF_ROOT/conf"
 
 	mkdir -pv $SUPERVISOR_LOGS_DIR
 	mkdir -pv $SUPERVISOR_SCRIPTS_DIR

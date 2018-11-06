@@ -58,7 +58,7 @@ function set_project_config()
 	mv conf/vhosts/sys/$TMP_NAME.conf conf/vhosts/sys/$PROJECT_NAME.conf
 	RAM_REDIS_HPWD=$TMP_NAME
 
-	sed -i "s@\$project_name@$FMT_PROJECT_NAME@g" conf/vhosts/$PROJECT_NAME.conf
+	sed -i "s@\$project_name@$FMT_PROJECT_NAME@g" conf/vhosts/sys/$PROJECT_NAME.conf
 	
 	input_if_empty "LOR_PORT" "Init: Please ender the ${red}lor-port${reset} of Project '${red}$PROJECT_NAME${reset}'"
 	sed -i "s@\$lor_port@$LOR_PORT@g" conf/vhosts/sys/$PROJECT_NAME.conf
@@ -71,6 +71,11 @@ function set_project_config()
 
 	input_if_empty "BIZ_PORT" "Init: Please ender the ${red}biz-port${reset} of Project '${red}$PROJECT_NAME${reset}'"
 	sed -i "s@\$biz_port@$BIZ_PORT@g" conf/vhosts/sys/$PROJECT_NAME.conf
+
+	local LOCAL_FREE_PORT=9000
+	rand_val "LOCAL_FREE_PORT" 9000 10000
+	sed -i "s@\$plugins_alias_port@$LOCAL_FREE_PORT@g" conf/vhosts/sys.conf
+	sed -i "s@\$plugins_alias_port@$LOCAL_FREE_PORT@g" conf/vhosts/sys/plugins/alias.conf
 
 	return $?
 }
