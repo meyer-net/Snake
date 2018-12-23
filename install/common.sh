@@ -37,18 +37,83 @@ reset=`tput sgr0`
 #参数1：需要设置的变量名
 #参数2：最小值
 #参数3：最大值
-#调用：$(rand_val 1000 2000)
+#调用：rand_val "TMP_CURR_RAND" 1000 2000
 function rand_val(){
 	if [ $? -ne 0 ]; then
 		return $?
 	fi
 	local TMP_VAR_NAME=$1
 
-    local MIN_PORT=$2 
-    local MAX_PORT=$(($3-$MIN_PORT+1))  
-    local CURR_NUM=$(cat /proc/sys/kernel/random/uuid | cksum | awk -F ' ' '{print $1}')
+    local TMP_MIN_PORT=$2 
+    local TMP_MAX_PORT=$(($3-$TMP_MIN_PORT+1))  
+    local TMP_RAND_CURR_NUM=$(cat /proc/sys/kernel/random/uuid | cksum | awk -F ' ' '{print $1}')
 
-    eval ${1}=$(($CURR_NUM%$MAX_PORT+$MIN_PORT))
+    eval ${1}=$(($TMP_RAND_CURR_NUM%$TMP_MAX_PORT+$TMP_MIN_PORT))
+
+	return $?
+}
+
+#复制nginx启动器
+#参数1：程序命名
+#参数2：程序启动的目录
+#参数3：程序启动的端口
+function cp_nginx_starter()
+{
+	local TMP_NGINX_PROJECT_NAME=$1
+	local TMP_NGINX_PROJECT_RUNNING_DIR=$2
+	local TMP_NGINX_PROJECT_RUNNING_PORT=$3
+
+	local TMP_NGINX_PROJECT_CONTAINER_DIR=$NGINX_DIR/$1_$3
+
+	mkdir -pv $NGINX_DIR
+
+	#if [ ! -d $WORK_PATH/nginx ]; then
+	#	git clone https://github.com/meyer-net/env-scripts.git "nginx"
+	#fi
+
+	echo "Copy '$WORK_PATH/nginx/server' To '$TMP_NGINX_PROJECT_CONTAINER_DIR'"
+	cp -r $WORK_PATH/nginx/server $TMP_NGINX_PROJECT_CONTAINER_DIR
+	
+	if [ ! -d "$TMP_NGINX_PROJECT_RUNNING_DIR" ]; then
+		echo "Copy '$WORK_PATH/nginx/template' To '$TMP_NGINX_PROJECT_RUNNING_DIR'"
+		cp -r $WORK_PATH/nginx/template $TMP_NGINX_PROJECT_RUNNING_DIR
+	fi
+
+	cd $TMP_NGINX_PROJECT_CONTAINER_DIR
+
+	sed -i "s@\%prj_port\%@$TMP_NGINX_PROJECT_RUNNING_PORT@g" conf/vhosts/project.conf
+	sed -i "s@\%prj_name\%@$TMP_NGINX_PROJECT_NAME@g" conf/vhosts/project.conf
+	sed -i "s@\%prj_dir\%@$TMP_NGINX_PROJECT_RUNNING_DIR@g" conf/vhosts/project.conf
+
+	mv conf/vhosts/project.conf conf/vhosts/$TMP_NGINX_PROJECT_NAME.conf
+	bash start.sh master
+
+    echo_soft_port $TMP_NGINX_PROJECT_RUNNING_PORT
+    echo_startup_config "$TMP_NGINX_PROJECT_NAME" "$TMP_NGINX_PROJECT_CONTAINER_DIR" "bash start.sh master" "" "99"
+
+	return $?
+}
+
+#生成nginx启动器
+function gen_nginx_starter()
+{
+    local TMP_DATE=`date +%Y%m%d%H%M%S`
+
+    local TMP_NGX_APP_NAME="tmp"
+    local TMP_NGX_APP_PATH="$HTML_DIR/tmp"
+    local TMP_NGX_APP_PORT=""
+	rand_val "TMP_NGX_APP_PORT" 1024 2048
+    
+    input_if_empty "TMP_NGX_APP_NAME" "NGX_CONF: Please Ender Application Name Like 'nginx' Or Else"
+	set_if_empty "TMP_NGX_APP_NAME" "prj_$TMP_DATE"
+    
+    input_if_empty "TMP_NGX_APP_PATH" "NGX_CONF: Please Ender Application Path Like '/usr/bin' Or Else"
+	set_if_empty "TMP_NGX_APP_PATH" "$NGINX_DIR"
+    
+    input_if_empty "TMP_NGX_APP_PORT" "Please Ender Application Port Like '8080' Or Else"
+	set_if_empty "TMP_NGX_APP_PORT" "$TMP_NGX_CONF_PORT"
+
+	cp_nginx_starter "$TMP_NGX_APP_NAME" "$TMP_NGX_APP_PATH" "$TMP_NGX_APP_PORT"
 
 	return $?
 }
@@ -98,8 +163,8 @@ function path_not_exits_action()
 		return $?
 	fi
 
-	TMP_NOT_EXITS_PATH=$1
-	TMP_NOT_EXITS_PATH_FUNC=$2
+	local TMP_NOT_EXITS_PATH=$1
+	local TMP_NOT_EXITS_PATH_FUNC=$2
     ls -d $TMP_NOT_EXITS_PATH   #ps -fe | grep $TMP_SOFT_WGET_NAME | grep -v grep
 	if [ $? -ne 0 ]; then
 		$TMP_NOT_EXITS_PATH_FUNC
@@ -671,7 +736,7 @@ function exec_while_read()
 
 		echo "Item of '${red}$CURRENT${reset}' inputed"
 		
-		if [ ! -n "$CURRENT" ]; then
+		if [ -z "$CURRENT" ]; then
 			if [ $I -eq 1 ] && [ -n "$TMP_EXEC_WHILE_READ_DFT" ]; then
 				echo "No input, set value to default '$TMP_EXEC_WHILE_READ_DFT'"
 				CURRENT="$TMP_EXEC_WHILE_READ_DFT"
@@ -778,6 +843,7 @@ function exec_while_read_json()
 #参数3：程序启动的命令
 #参数4：程序启动的环境
 #参数5：优先级序号
+#参数6：运行环境，默认/etc/profile
 function echo_startup_config()
 {
 	if [ $? -ne 0 ]; then
@@ -792,6 +858,11 @@ function echo_startup_config()
 	local STARTUP_COMMAND="$3"
 	local STARTUP_ENV="$4"
 	local STARTUP_PRIORITY="$5"
+	local STARTUP_ENVIRONMENT="$5"
+
+	if [ -z "$STARTUP_ENVIRONMENT" ]; then
+		STARTUP_ENVIRONMENT="/etc/profile"
+	fi
 
 	SUPERVISOR_LOGS_DIR="$SUPERVISOR_CONF_ROOT/logs"
 	SUPERVISOR_SCRIPTS_DIR="$SUPERVISOR_CONF_ROOT/scripts"
@@ -801,14 +872,14 @@ function echo_startup_config()
 	mkdir -pv $SUPERVISOR_SCRIPTS_DIR
 	mkdir -pv $SUPERVISOR_FILE_DIR
 
-	SUPERVISOR_FILE_OUTPUT_PATH=${SUPERVISOR_FILE_DIR}${STARTUP_FILENAME}
+	SUPERVISOR_FILE_OUTPUT_PATH=${SUPERVISOR_FILE_DIR}/${STARTUP_FILENAME}
 	mkdir -pv $SUPERVISOR_FILE_DIR
 
-	if [ "$STARTUP_DIR" != "" ]; then
+	if [ -n "$STARTUP_DIR" ]; then
 		STARTUP_DIR="directory = $STARTUP_DIR ; 程序的启动目录"
 	fi
 
-	if [ "$STARTUP_ENV" != "" ]; then
+	if [ -n "$STARTUP_ENV" ]; then
 		local EQUAL_CHECK="$(echo $STARTUP_ENV | grep '=')"
 		local ENV_STRING="$EQUAL_CHECK"
 		if [ -n "$EQUAL_CHECK" ]; then
@@ -818,13 +889,13 @@ function echo_startup_config()
 		STARTUP_ENV="environment = $ENV_STRING ; 程序启动的环境变量信息"
 	fi
 
-	if [ "$STARTUP_PRIORITY" != "" ]; then
+	if [ -n "$STARTUP_PRIORITY" ]; then
 		STARTUP_PRIORITY="priority = $STARTUP_PRIORITY ; 启动优先级，默认999"
 	fi
 	
 	cat >$SUPERVISOR_FILE_OUTPUT_PATH<<EOF
 [program:$STARTUP_NAME]
-command = $STARTUP_COMMAND  ; 启动命令，可以看出与手动在命令行启动的命令是一样的
+command = /bin/bash -c 'source "$0" && exec "$@"' $STARTUP_ENVIRONMENT $STARTUP_COMMAND ; 启动命令，可以看出与手动在命令行启动的命令是一样的
 autostart = true     ; 在 supervisord 启动的时候也自动启动
 startsecs = 60       ; 启动 60 秒后没有异常退出，就当作已经正常启动了
 autorestart = false   ; 程序异常退出后自动重启
@@ -853,15 +924,28 @@ function echo_soft_port()
 		return $?
 	fi
 
-	TMP_ECHO_SOFT_PORT=$1
-	TMP_ECHO_SOFT_PORT_IP=$2
+	local TMP_ECHO_SOFT_PORT=$1
+	local TMP_ECHO_SOFT_PORT_IP=$2
+
+	local TMP_IPTABLES=`cat /etc/sysconfig/iptables`
+	local TMP_QUERY_IPTABLES_EXISTS="echo $TMP_IPTABLES | grep '\-\-dport $TMP_ECHO_SOFT_PORT'"
 
 	if [ -n "$TMP_ECHO_SOFT_PORT_IP" ]; then
 		TMP_ECHO_SOFT_PORT_IP="-s $TMP_ECHO_SOFT_PORT_IP "
+		TMP_QUERY_IPTABLES_EXISTS="${TMP_QUERY_IPTABLES_EXISTS} | grep '\\${TMP_ECHO_SOFT_PORT_IP}'"
+	fi
+	
+	TMP_QUERY_IPTABLES_EXISTS=`$TMP_QUERY_IPTABLES_EXISTS`
+	if [ -n "$TMP_QUERY_IPTABLES_EXISTS" ]; then
+		echo "Port $TMP_ECHO_SOFT_PORT for '$TMP_ECHO_SOFT_PORT_IP' exists"
+		return $?
 	fi
 
+	# firewall-cmd --zone=public --add-port=80/tcp --permanent  # nginx 端口
+	# firewall-cmd --zone=public --add-port=2222/tcp --permanent  # 用户SSH登录端口 coco
 	sed -i "11a-A INPUT $TMP_ECHO_SOFT_PORT_IP-p tcp -m state --state NEW -m tcp --dport $TMP_ECHO_SOFT_PORT -j ACCEPT" /etc/sysconfig/iptables
 
+	# firewall-cmd --reload  # 重新载入规则
 	service iptables restart
 
 	sleep 2

@@ -53,7 +53,9 @@ function set_resolver_type_tencent()
     return $?
 }
 
-set_if_choice "TMP_SET_RESOLVER_TYPE" "[$PROJECT_NAME]DNS: Please ender ${red}resolver address type${reset}" "default,alibaba,tencent" "" "set_resolver_type_"
+set_if_choice "TMP_SET_RESOLVER_TYPE" "[$PROJECT_NAME]DNS: Please ender ${red}resolver address type${reset}" "default,alibaba,tencent" ""
+set_resolver_type_${TMP_SET_RESOLVER_TYPE}
+
 sed -i "s@\$resolvers@$RESOLVERS@g" conf/nginx-master.conf
 
 #添加开机启动

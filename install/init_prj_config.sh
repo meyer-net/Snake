@@ -103,6 +103,7 @@ function set_mysql_config() {
 	exit"
 
 	sed -i "s@\$project_name@$FMT_PROJECT_NAME@g" $WORK_PATH/install/sys-clickhouse-log-v0.0.1.sh
+	DB_UNAME=default
 	DB_PORT=8123
 	input_if_empty "DB_HOST" "[$PROJECT_NAME]Clickhouse: Please ender clickhouse server ${red}address${reset}"
 	input_if_empty "DB_PORT" "[$PROJECT_NAME]Clickhouse: Please ender clickhouse server ${red}port${reset} of '${red}$DB_HOST${reset}'"
