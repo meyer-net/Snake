@@ -730,7 +730,7 @@ function exec_while_read()
 	I=1
 	for I in $(seq 99);
 	do
-		TMP_EXEC_WHILE_READ_CURRENT_NOTICE=`eval echo "$TMP_EXEC_WHILE_READ_NOTICE"`
+		TMP_EXEC_WHILE_READ_CURRENT_NOTICE=`echo "$TMP_EXEC_WHILE_READ_NOTICE"`
 		echo "$TMP_EXEC_WHILE_READ_CURRENT_NOTICE Or '${red}enter key${reset}' To Quit"
 		read -e CURRENT
 
