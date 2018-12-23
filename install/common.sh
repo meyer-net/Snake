@@ -701,6 +701,10 @@ function exec_text_format()
 
 	TMP_EXEC_TEXT_FORMAT_VAR_NAME=$1
 	TMP_EXEC_TEXT_FORMAT_VAR_VAL=`eval echo '$'$TMP_EXEC_TEXT_FORMAT_VAR_NAME`
+	if [ -n "$TMP_EXEC_TEXT_FORMAT_VAR_VAL" ]; then
+		return $?
+	fi
+
 	TMP_EXEC_TEXT_FORMAT_VAR_FORMAT=$2
 
 	if [ -n "$TMP_EXEC_TEXT_FORMAT_VAR_FORMAT" ]; then
@@ -770,12 +774,14 @@ function exec_while_read()
 	eval ${1}='$NEW_VAL'
 	
 	if [ -z "$NEW_VAL" ]; then
-		echo "${red}Items not set, script exit${reset}"
-		exit 1
+		echo "${red}Items not set${reset}"
+		# exit 1
 	fi
 
 	# eval ${1}=`echo "${1}" | sed "s/^[,]\{1,\}//g;s/[,]\{1,\}$//g"`
 	echo "Final value is '$NEW_VAL'"
+
+	return $?
 }
 
 #循环读取JSON值
