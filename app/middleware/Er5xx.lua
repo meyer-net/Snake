@@ -24,6 +24,10 @@ return function()
 				})
 			else
 		    	res:status(500):send(_error_text)
-		    end
+			end
+			
+			if err then
+				n_log(n_err, err)
+			end
 		end
 	end

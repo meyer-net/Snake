@@ -153,10 +153,10 @@ end
 --]]
 function model:check_user(username, password)
 	-- 查询缓存或数据库中是否包含指定信息
-    local cache_key = self.format("%s%s -> %s", self.cache_prefix, self._source, username)
+    password = s_sha256:encode(password .. "#" .. var_secret)
+    local cache_key = self.format("%s%s -> %s:%s", self.cache_prefix, self._source, username, password)
   	local timeout = 0
 	
-    password = s_sha256:encode(password .. "#" .. var_secret)
   	return self._store.cache.using:get_or_load(cache_key, function() 
         return self._model.current_repo:find_one({
                 username = username,
